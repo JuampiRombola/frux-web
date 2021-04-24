@@ -1,5 +1,8 @@
 # frux-web
 
+[![Node.js CI](https://github.com/JuampiRombola/frux-web/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/JuampiRombola/frux-web/actions/workflows/node.js.yml)
+[![Deploy](https://github.com/JuampiRombola/frux-web/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/JuampiRombola/frux-web/actions/workflows/main.yml)
+
 ## Project setup
 ```
 yarn install
