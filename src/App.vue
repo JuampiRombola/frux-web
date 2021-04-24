@@ -38,19 +38,19 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld msg="Hello world!"/>
+      <ApolloExample msg="Hello world!"/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+import ApolloExample from './components/ApolloExample'
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld
+    ApolloExample
   },
 
   data: () => ({
