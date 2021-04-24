@@ -38,7 +38,7 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <HelloWorld msg="Hello world!"/>
     </v-main>
   </v-app>
 </template>
