@@ -21,8 +21,6 @@ module.exports = {
       'error',
       {
         env: 'literal',
-        projectName: 'app',
-        schemaJsonFilepath: 'node_modules/.temp/graphql/schema.json'
       }
     ]
   },
