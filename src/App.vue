@@ -1,19 +1,61 @@
 <template>
-  <Home/>
+  <v-app>
+    <v-app-bar app dense flat clipped-left color="primary">
+      <v-app-bar-nav-icon color="white" @click="mini = !mini"></v-app-bar-nav-icon>
+
+      <v-toolbar-title>Frux</v-toolbar-title>
+    </v-app-bar>
+
+    <v-navigation-drawer
+      color="accent"
+      app
+      v-model="drawer"
+      :mini-variant.sync="mini"
+      clipped
+    >
+      <v-list dense>
+        <v-list-item
+          v-for="item in items"
+          :key="item.title"
+          link
+          class="my-2"
+        >
+          <v-list-item-icon>
+            <v-icon color="primary">{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-main>
+      <router-view></router-view>
+    </v-main>
+
+  </v-app>
 </template>
 
 <script>
-import Home from './views/Home'
 
 export default {
   name: 'App',
 
-  components: {
-    Home
-  },
-
-  data: () => ({
-    //
-  })
+  data () {
+    return {
+      drawer: true,
+      items: [
+        { title: 'Dashboard', icon: 'mdi-view-dashboard' },
+        { title: 'Usuarios', icon: 'mdi-account-group' },
+        { title: 'Proyectos', icon: 'mdi-inbox-multiple' },
+        { title: 'Transacciones', icon: 'mdi-cash-multiple' },
+        { title: 'Métricas', icon: 'mdi-chart-pie' },
+        { title: 'Servidores', icon: 'mdi-server' }
+      ],
+      mini: true
+    }
+  }
 }
 </script>
