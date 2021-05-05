@@ -19,6 +19,7 @@
           :key="item.title"
           link
           class="my-2"
+          @click="redirect(item.route)"
         >
           <v-list-item-icon>
             <v-icon color="primary">{{ item.icon }}</v-icon>
@@ -47,14 +48,20 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-        { title: 'Usuarios', icon: 'mdi-account-group' },
-        { title: 'Proyectos', icon: 'mdi-inbox-multiple' },
-        { title: 'Transacciones', icon: 'mdi-cash-multiple' },
-        { title: 'Métricas', icon: 'mdi-chart-pie' },
-        { title: 'Servidores', icon: 'mdi-server' }
+        { title: 'Dashboard', icon: 'mdi-view-dashboard', route: 'Home' },
+        { title: 'Usuarios', icon: 'mdi-account-group', route: 'Users' },
+        { title: 'Proyectos', icon: 'mdi-inbox-multiple', route: 'Projects' },
+        { title: 'Transacciones', icon: 'mdi-cash-multiple', route: 'Home' },
+        { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Home' },
+        { title: 'Servidores', icon: 'mdi-server', route: 'Home' }
       ],
       mini: true
+    }
+  },
+
+  methods: {
+    redirect (routeName) {
+      this.$router.push({ name: routeName })
     }
   }
 }
