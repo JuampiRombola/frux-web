@@ -48,12 +48,12 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: 'Dashboard', icon: 'mdi-view-dashboard', route: 'Home' },
+        { title: 'Dashboard', icon: 'mdi-view-dashboard', route: 'Dashboard' },
         { title: 'Usuarios', icon: 'mdi-account-group', route: 'Users' },
         { title: 'Proyectos', icon: 'mdi-inbox-multiple', route: 'Projects' },
-        { title: 'Transacciones', icon: 'mdi-cash-multiple', route: 'Home' },
-        { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Home' },
-        { title: 'Servidores', icon: 'mdi-server', route: 'Home' }
+        { title: 'Transacciones', icon: 'mdi-cash-multiple', route: 'Dashboard' },
+        { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Dashboard' },
+        { title: 'Servidores', icon: 'mdi-server', route: 'Dashboard' }
       ],
       mini: true
     }

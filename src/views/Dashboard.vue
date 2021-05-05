@@ -1,9 +1,15 @@
 <template>
-  <h1>Home</h1>
+  <h1>Dashboard {{ msg }} </h1>
 </template>
 
 <script>
 export default {
+  name: 'Dashboard',
+
+  props: {
+    msg: String
+  },
+
   data: () => ({
     //
   })
