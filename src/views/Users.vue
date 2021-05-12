@@ -1,15 +1,20 @@
 <template>
-  <v-container class="py-8 px-6" fluid>
+  <v-container>
     <v-row>
       <v-col>
-        <v-data-table
-          :headers="headers"
-          :items="users"
-          :options.sync="options"
-          :server-items-length="totalCount"
-          :loading="loading"
-          class="elevation-1"
-        ></v-data-table>
+        <v-card flat>
+          <v-card-title>Usuarios</v-card-title>
+          <v-card-text>
+            <v-data-table
+              :headers="headers"
+              :items="users"
+              :options.sync="options"
+              :server-items-length="totalCount"
+              :loading="loading"
+              class="elevation-1"
+            ></v-data-table>
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
