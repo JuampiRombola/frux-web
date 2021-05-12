@@ -7,13 +7,16 @@
         max-width="38"
         :src="require('@/assets/frux-logo.svg')"
         alt="frux logo"
-        class="ml-2"
+        class="ml-2 pointer"
+        @click="redirect('Dashboard')"
       ></v-img>
 
       <v-img
         max-width="80"
         :src="require('@/assets/frux-name.svg')"
-        alt="frux logo"
+        alt="frux name"
+        class="ml-1 pointer"
+        @click="redirect('Dashboard')"
       ></v-img>
 
     </v-app-bar>
@@ -23,6 +26,7 @@
       v-model="drawer"
       :mini-variant.sync="mini"
       clipped
+      color="#0D44511A"
     >
       <v-list dense>
         <v-list-item
@@ -84,5 +88,8 @@ export default {
 <style scoped>
 .selected {
   background-color: rgba(13, 68, 81, 0.2);
+}
+.pointer {
+  cursor: pointer;
 }
 </style>
