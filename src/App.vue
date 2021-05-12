@@ -66,9 +66,9 @@ export default {
         { title: 'Dashboard', icon: 'mdi-view-dashboard', route: 'Dashboard' },
         { title: 'Usuarios', icon: 'mdi-account-group', route: 'Users' },
         { title: 'Proyectos', icon: 'mdi-inbox-multiple', route: 'Projects' },
-        { title: 'Transacciones', icon: 'mdi-cash-multiple', route: 'Dashboard' },
-        { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Dashboard' },
-        { title: 'Servidores', icon: 'mdi-server', route: 'Dashboard' }
+        { title: 'Transacciones', icon: 'mdi-cash-multiple', route: 'Transactions' },
+        { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Metrics' },
+        { title: 'Servidores', icon: 'mdi-server', route: 'Servers' }
       ],
       mini: true
     }
