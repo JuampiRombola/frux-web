@@ -27,10 +27,26 @@ const routes = [
     path: '/projects',
     name: 'Projects',
     component: () => import('../views/Projects.vue')
+  },
+  {
+    path: '/transactions',
+    name: 'Transactions',
+    component: () => import('../views/Transactions.vue')
+  },
+  {
+    path: '/metrics',
+    name: 'Metrics',
+    component: () => import('../views/Metrics.vue')
+  },
+  {
+    path: '/servers',
+    name: 'Servers',
+    component: () => import('../views/Servers.vue')
   }
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 
