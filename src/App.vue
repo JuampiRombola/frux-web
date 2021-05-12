@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon @click="mini = !mini"></v-app-bar-nav-icon>
 
       <v-img
-        max-width="38"
+        max-width="30"
         :src="require('@/assets/frux-logo.svg')"
         alt="frux logo"
         class="ml-2 pointer"
@@ -12,10 +12,10 @@
       ></v-img>
 
       <v-img
-        max-width="80"
+        max-width="70"
         :src="require('@/assets/frux-name.svg')"
         alt="frux name"
-        class="ml-1 pointer"
+        class="ml-2 pointer"
         @click="redirect('Dashboard')"
       ></v-img>
 
