@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <v-app-bar app clipped-left color="white" class="elevation-1">
+    <v-app-bar app clipped-left color="white" class="elevation-1" height="56">
       <v-app-bar-nav-icon @click="mini = !mini"></v-app-bar-nav-icon>
 
       <v-img
-        max-width="30"
+        max-width="28"
         :src="require('@/assets/frux-logo.svg')"
         alt="frux logo"
         class="ml-2 pointer"
@@ -12,7 +12,7 @@
       ></v-img>
 
       <v-img
-        max-width="70"
+        max-width="56"
         :src="require('@/assets/frux-name.svg')"
         alt="frux name"
         class="ml-2 pointer"
