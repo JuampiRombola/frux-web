@@ -1,10 +1,18 @@
 <template>
-  <h1>Servidores</h1>
+  <h1>Servidores {{ msg }}</h1>
 </template>
 
 <script>
 export default {
-  name: 'Servers'
+  name: 'Servers',
+
+  props: {
+    msg: String
+  },
+
+  data: () => ({
+    //
+  })
 }
 </script>
 
