@@ -41,10 +41,6 @@ export default {
     DashboardCardNumber
   },
 
-  props: {
-    msg: String
-  },
-
   data: () => ({
     //
   })
