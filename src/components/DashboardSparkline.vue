@@ -1,16 +1,16 @@
 <template>
   <v-card
-    class="mt-6 mx-auto"
+    class="mx-auto"
   >
     <v-sheet
       class="v-sheet--offset mx-auto"
-      color="#18aa5e"
+      :color="color"
       elevation="12"
       max-width="calc(100% - 32px)"
     >
       <v-sparkline
         :labels="labels"
-        :value="value"
+        :value="values"
         color="white"
         line-width="2"
         padding="16"
@@ -19,10 +19,10 @@
 
     <v-card-text class="pt-0">
       <div class="title font-weight-light mb-2">
-        Usuarios Registrados
+        {{ title }}
       </div>
       <div class="subheading font-weight-light grey--text">
-        Últimas 24 horas
+        {{ subtitle }}
       </div>
       <v-divider class="my-2"></v-divider>
       <v-icon
@@ -31,37 +31,38 @@
       >
         mdi-clock
       </v-icon>
-      <span class="caption grey--text font-weight-light">último registro hace 12 minutos</span>
+      <span class="caption grey--text font-weight-light">{{ caption }}</span>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
 export default {
-  name: 'DashboardUserRegistrations',
+  name: 'DashboardSparkline',
 
-  data: () => ({
-    labels: [
-      '12am',
-      '3am',
-      '6am',
-      '9am',
-      '12pm',
-      '3pm',
-      '6pm',
-      '9pm'
-    ],
-    value: [
-      200,
-      675,
-      410,
-      390,
-      310,
-      460,
-      250,
-      240
-    ]
-  })
+  props: {
+    title: {
+      type: String
+    },
+    subtitle: {
+      type: String,
+      default: 'En las últimas 12 horas'
+    },
+    caption: {
+      type: String
+    },
+    color: {
+      type: String
+    },
+    labels: {
+      type: Array
+    },
+    values: {
+      type: Array
+    }
+  },
+
+  data: () => ({})
 }
 </script>
 
