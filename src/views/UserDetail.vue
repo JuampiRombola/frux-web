@@ -2,7 +2,7 @@
   <v-container>
     <v-breadcrumbs
       :items="items"
-      class="mx-0 px-0"
+      class="mx-0 px-0 mt-1 pt-1"
     ></v-breadcrumbs>
     <v-row>
       <v-col>
