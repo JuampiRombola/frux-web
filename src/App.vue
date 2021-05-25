@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon @click="mini = !mini"></v-app-bar-nav-icon>
 
       <v-img
-        max-width="30"
+        max-width="33"
         :src="require('@/assets/frux-logo.svg')"
         alt="frux logo"
         class="ml-2 pointer"
@@ -33,11 +33,11 @@
           v-for="item in items"
           :key="item.title"
           link
-          :class="['my-2', isCurrentRoute(item.route) ? 'selected' : '' ]"
+          :class="['my-2', isSelected(item.associatedRoutes) ? 'selected' : '' ]"
           @click="redirect(item.route)"
         >
           <v-list-item-icon>
-            <v-icon :color="isCurrentRoute(item.route) ? 'primary' : ''">{{ item.icon }}</v-icon>
+            <v-icon :color="isSelected(item.associatedRoutes) ? 'primary' : ''">{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
           <v-list-item-content>
@@ -63,12 +63,12 @@ export default {
     return {
       drawer: true,
       items: [
-        { title: 'Dashboard', icon: 'mdi-view-dashboard', route: 'Dashboard' },
-        { title: 'Usuarios', icon: 'mdi-account-group', route: 'Users' },
-        { title: 'Proyectos', icon: 'mdi-inbox-multiple', route: 'Projects' },
-        { title: 'Transacciones', icon: 'mdi-cash-multiple', route: 'Transactions' },
-        { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Metrics' },
-        { title: 'Servidores', icon: 'mdi-server', route: 'Servers' }
+        { title: 'Dashboard', icon: 'mdi-view-dashboard', route: 'Dashboard', associatedRoutes: ['Dashboard'] },
+        { title: 'Usuarios', icon: 'mdi-account-group', route: 'Users', associatedRoutes: ['Users', 'UserDetail'] },
+        { title: 'Proyectos', icon: 'mdi-inbox-multiple', route: 'Projects', associatedRoutes: ['Projects'] },
+        { title: 'Transacciones', icon: 'mdi-cash-multiple', route: 'Transactions', associatedRoutes: ['Transactions'] },
+        { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Metrics', associatedRoutes: ['Metrics'] },
+        { title: 'Servidores', icon: 'mdi-server', route: 'Servers', associatedRoutes: ['Servers'] }
       ],
       mini: true
     }
@@ -78,8 +78,8 @@ export default {
     redirect (routeName) {
       this.$router.push({ name: routeName })
     },
-    isCurrentRoute (routeName) {
-      return this.$router.currentRoute.name === routeName
+    isSelected (associatedRoutes) {
+      return associatedRoutes.includes(this.$router.currentRoute.name)
     }
   }
 }
