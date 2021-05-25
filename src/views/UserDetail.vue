@@ -140,14 +140,14 @@
             <v-tab href="#tab-5" v-if="isSeer">Veedor</v-tab>
           </v-tabs>
 
-          <v-divider class="mx-4"></v-divider>
+          <v-divider class="mx-7"></v-divider>
 
           <v-tabs-items v-model="tab">
             <v-tab-item value="tab-1">
               <v-card flat>
                 <v-container>
                   <v-row>
-                    <v-col cols="7">
+                    <v-col lg="12" xl="6">
                       <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Descripción</v-card-title>
@@ -166,21 +166,26 @@
                             </v-chip>
                           </v-card-text>
                         </v-col>
-                        <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Proyectos Favoritos</v-card-title>
-                          <v-card-text>Favoritos</v-card-text>
-                        </v-col>
-                        <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Consultas</v-card-title>
-                          <v-card-text>Consultas</v-card-text>
+                        <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
+                          <v-card-title>Ubicación</v-card-title>
+                          <Map :latitude="user.latitude" :longitude="user.longitude" class="px-4"></Map>
                         </v-col>
                       </v-row>
                     </v-col>
-                    <v-col cols="5" v-if="user.latitude && user.longitude">
+                    <v-divider vertical class="my-2 vertical-divider"></v-divider>
+                    <v-col lg="12" xl="6">
                       <v-row>
                         <v-col cols="12" class="mt-0 pt-0">
-                          <v-card-title>Ubicación</v-card-title>
-                          <Map :latitude="user.latitude" :longitude="user.longitude" class="px-4"></Map>
+                          <v-card-title>Proyectos Favoritos</v-card-title>
+                          <v-card-text>
+                            <ProjectsTable itemsPerPage="3"></ProjectsTable>
+                          </v-card-text>
+                        </v-col>
+                        <v-col cols="12" class="my-0 py-0">
+                          <v-card-title>Proyectos Consultados</v-card-title>
+                          <v-card-text>
+                            <ProjectsTable itemsPerPage="3"></ProjectsTable>
+                          </v-card-text>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -221,10 +226,12 @@
 
 <script>
 import Map from '@/components/Map'
+import ProjectsTable from '@/components/ProjectsTable'
 
 export default {
   components: {
-    Map
+    Map,
+    ProjectsTable
   },
 
   name: 'UserDetail',
