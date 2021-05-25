@@ -180,7 +180,7 @@
                     <v-divider vertical class="my-2 vertical-divider"></v-divider>
                     <v-col lg="12" xl="6">
                       <v-row>
-                        <v-col cols="12" class="mt-0 pt-0">
+                        <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Proyectos Favoritos</v-card-title>
                           <v-card-text>
                             <ProjectsTable :itemsPerPage="3"></ProjectsTable>
