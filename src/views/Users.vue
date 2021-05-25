@@ -12,7 +12,30 @@
               :server-items-length="totalCount"
               :loading="loading"
               class="elevation-1"
-            ></v-data-table>
+            >
+              <template v-slot:item.actions="{ item }">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      color="primary lighten-2"
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                      icon
+                      small
+                      @click="goToUserDetails(item.id)"
+                      left
+                      class="mr-2"
+                    >
+                      <v-icon dark>
+                        mdi-eye
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Ver detalles del usuario</span>
+                </v-tooltip>
+              </template>
+            </v-data-table>
           </v-card-text>
         </v-card>
       </v-col>
@@ -32,7 +55,8 @@ export default {
       headers: [
         { text: 'ID', align: 'start', sortable: false, value: 'id' },
         { text: 'Nombre', sortable: false, value: 'name' },
-        { text: 'Email', sortable: false, value: 'email' }
+        { text: 'Email', sortable: false, value: 'email' },
+        { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
       ]
     }
   },
@@ -48,6 +72,12 @@ export default {
 
     loading () {
       return this.allUsers?.loading || false
+    }
+  },
+
+  methods: {
+    goToUserDetails (id) {
+      this.$router.push({ name: 'UserDetail', params: { id: id } })
     }
   },
 

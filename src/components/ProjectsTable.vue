@@ -7,7 +7,6 @@
     :loading="loading"
     :footer-props="footerProps"
     :items-per-page="itemsPerPage"
-    class="elevation-1"
   ></v-data-table>
 </template>
 

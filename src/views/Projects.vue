@@ -5,7 +5,7 @@
         <v-card flat>
           <v-card-title>Proyectos</v-card-title>
           <v-card-text>
-            <ProjectsTable></ProjectsTable>
+            <ProjectsTable class="elevation-1"></ProjectsTable>
           </v-card-text>
         </v-card>
       </v-col>

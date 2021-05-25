@@ -1,5 +1,9 @@
 <template>
   <v-container>
+    <v-breadcrumbs
+      :items="items"
+      class="mx-0 px-0"
+    ></v-breadcrumbs>
     <v-row>
       <v-col>
         <v-card>
@@ -178,13 +182,13 @@
                         <v-col cols="12" class="mt-0 pt-0">
                           <v-card-title>Proyectos Favoritos</v-card-title>
                           <v-card-text>
-                            <ProjectsTable itemsPerPage="3"></ProjectsTable>
+                            <ProjectsTable :itemsPerPage="3"></ProjectsTable>
                           </v-card-text>
                         </v-col>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Proyectos Consultados</v-card-title>
                           <v-card-text>
-                            <ProjectsTable itemsPerPage="3"></ProjectsTable>
+                            <ProjectsTable :itemsPerPage="3"></ProjectsTable>
                           </v-card-text>
                         </v-col>
                       </v-row>
@@ -274,6 +278,17 @@ export default {
     },
     isSeer () {
       return this.user.isSeer
+    },
+    items () {
+      return [{
+        text: 'Usuarios',
+        disabled: false,
+        href: '../users'
+      },
+      {
+        text: this.user.username,
+        disabled: true
+      }]
     }
   }
 }
