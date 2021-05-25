@@ -140,13 +140,52 @@
             <v-tab href="#tab-5" v-if="isSeer">Veedor</v-tab>
           </v-tabs>
 
+          <v-divider class="mx-4"></v-divider>
+
           <v-tabs-items v-model="tab">
             <v-tab-item value="tab-1">
               <v-card flat>
-                <v-card-title>Descripción</v-card-title>
-                <v-card-text>{{ user.description }}</v-card-text>
-                <v-card-title>Intereses</v-card-title>
-                <v-card-text>Perfil | Consultas | Favoritos</v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="7">
+                      <v-row>
+                        <v-col cols="12" class="my-0 py-0">
+                          <v-card-title>Descripción</v-card-title>
+                          <v-card-text>{{ user.description }}</v-card-text>
+                        </v-col>
+                        <v-col cols="12" class="my-0 py-0">
+                          <v-card-title>Intereses</v-card-title>
+                          <v-card-text>
+                            <v-chip
+                              v-for="item in user.interests"
+                              :key="item"
+                              outlined
+                              class="mb-2 mr-2"
+                            >
+                              {{ item }}
+                            </v-chip>
+                          </v-card-text>
+                        </v-col>
+                        <v-col cols="12" class="my-0 py-0">
+                          <v-card-title>Proyectos Favoritos</v-card-title>
+                          <v-card-text>Favoritos</v-card-text>
+                        </v-col>
+                        <v-col cols="12" class="my-0 py-0">
+                          <v-card-title>Consultas</v-card-title>
+                          <v-card-text>Consultas</v-card-text>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                    <v-col cols="5">
+                      <v-row>
+                        <v-col cols="12" class="mt-0 pt-0">
+                          <v-card-title>Ubicación</v-card-title>
+                          <Map :latitude="user.latitude" :longitude="user.longitude" class="px-4"></Map>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                  </v-row>
+                </v-container>
               </v-card>
             </v-tab-item>
 
@@ -181,7 +220,13 @@
 </template>
 
 <script>
+import Map from '@/components/Map'
+
 export default {
+  components: {
+    Map
+  },
+
   name: 'UserDetail',
 
   data: () => ({
@@ -199,8 +244,8 @@ export default {
       isSponsor: true,
       isSeer: true,
       address: 'Av. Corrientes 5530, Buenos Aires, Argentina',
-      latitude: '-34.5971806',
-      longitude: '-58.4432835',
+      latitude: -34.5971806,
+      longitude: -58.4432835,
       phone: '+54 9 11 3271 8283',
       interests: ['Arte', 'Ciencia', 'Cine', 'Comida', 'Fotografía', 'Moda', 'Música', 'Tecnología', 'Teatro'],
       isBlocked: false

@@ -14,6 +14,7 @@
     "vue-apollo": "^3.0.0-beta.11",
     "vue-resize-text": "^0.1.1",
     "vue-router": "^3.2.0",
+    "vuelayers": "^0.12.0-rc.25",
     "vuetify": "^2.4.0",
     "vuex": "^3.4.0"
   },
