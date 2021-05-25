@@ -42,6 +42,7 @@
                           icon
                           small
                           class="float-right"
+                          @click="isBlocked ? unblockUser() : blockUser()"
                         >
                           <v-icon dark>
                             {{ isBlocked ? 'mdi-lock' : 'mdi-lock-open' }}
@@ -289,6 +290,15 @@ export default {
         text: this.user.username,
         disabled: true
       }]
+    }
+  },
+
+  methods: {
+    blockUser () {
+      this.user.isBlocked = true
+    },
+    unblockUser () {
+      this.user.isBlocked = false
     }
   }
 }
