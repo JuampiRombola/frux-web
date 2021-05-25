@@ -176,7 +176,7 @@
                         </v-col>
                       </v-row>
                     </v-col>
-                    <v-col cols="5">
+                    <v-col cols="5" v-if="user.latitude && user.longitude">
                       <v-row>
                         <v-col cols="12" class="mt-0 pt-0">
                           <v-card-title>Ubicación</v-card-title>
