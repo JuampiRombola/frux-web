@@ -4,7 +4,7 @@
       <v-app-bar-nav-icon @click="mini = !mini"></v-app-bar-nav-icon>
 
       <v-img
-        max-width="30"
+        max-width="33"
         :src="require('@/assets/frux-logo.svg')"
         alt="frux logo"
         class="ml-2 pointer"

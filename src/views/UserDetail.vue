@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-sheet :color="isBlocked ? 'red darken-1' : 'blue darken-1'" height="6"></v-sheet>
+          <v-sheet :color="isBlocked ? 'red lighten-2' : 'primary lighten-4'" height="6"></v-sheet>
           <v-container fill-height fluid>
             <v-row align="center">
               <v-col cols="3">
@@ -18,9 +18,9 @@
                   </v-col>
                   <v-col cols="12" class="mt-2 mb-4">
                     <div class="overline my-0">{{ user.username }}</div>
-                    <div v-show="isSeeder"><v-chip small outlined class="my-1" color="green darken-2">Emprendedor</v-chip></div>
-                    <div v-show="isSponsor"><v-chip small outlined class="my-1" color="pink darken-2">Patrocinador</v-chip></div>
-                    <div v-show="isSeer"><v-chip small outlined class="my-1" color="amber darken-4">Veedor</v-chip></div>
+                    <div v-if="isSeeder"><v-chip small outlined class="my-1" color="green darken-2">Emprendedor</v-chip></div>
+                    <div v-if="isSponsor"><v-chip small outlined class="my-1" color="pink darken-2">Patrocinador</v-chip></div>
+                    <div v-if="isSeer"><v-chip small outlined class="my-1" color="amber darken-4">Veedor</v-chip></div>
                   </v-col>
                 </v-row>
               </v-col>
@@ -129,6 +129,49 @@
             </v-row>
           </v-container>
         </v-card>
+
+        <v-card class="mt-3">
+          <v-tabs v-model="tab" centered color="primary lighten-3">
+            <v-tabs-slider></v-tabs-slider>
+            <v-tab href="#tab-1">Perfil</v-tab>
+            <v-tab href="#tab-2">Transacciones</v-tab>
+            <v-tab href="#tab-3" v-if="isSeeder">Emprendedor</v-tab>
+            <v-tab href="#tab-4" v-if="isSponsor">Patrocinador</v-tab>
+            <v-tab href="#tab-5" v-if="isSeer">Veedor</v-tab>
+          </v-tabs>
+
+          <v-tabs-items v-model="tab">
+            <v-tab-item value="tab-1">
+              <v-card flat>
+                <v-card-text>Perfil | Consultas | Favoritos</v-card-text>
+              </v-card>
+            </v-tab-item>
+
+            <v-tab-item value="tab-2">
+              <v-card flat>
+                <v-card-text>Transacciones</v-card-text>
+              </v-card>
+            </v-tab-item>
+
+            <v-tab-item value="tab-3" v-if="isSeeder">
+              <v-card flat>
+                <v-card-text>Emprendedor</v-card-text>
+              </v-card>
+            </v-tab-item>
+
+            <v-tab-item value="tab-4" v-if="isSponsor">
+              <v-card flat>
+                <v-card-text>Patrocinador</v-card-text>
+              </v-card>
+            </v-tab-item>
+
+            <v-tab-item value="tab-5" v-if="isSeer">
+              <v-card flat>
+                <v-card-text>Veedor</v-card-text>
+              </v-card>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -139,6 +182,7 @@ export default {
   name: 'UserDetail',
 
   data: () => ({
+    tab: null,
     user: {
       username: 'mgarcia',
       email: 'mgarcia@gmail.com',
