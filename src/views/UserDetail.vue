@@ -143,6 +143,9 @@
           <v-tabs-items v-model="tab">
             <v-tab-item value="tab-1">
               <v-card flat>
+                <v-card-title>Descripción</v-card-title>
+                <v-card-text>{{ user.description }}</v-card-text>
+                <v-card-title>Intereses</v-card-title>
                 <v-card-text>Perfil | Consultas | Favoritos</v-card-text>
               </v-card>
             </v-tab-item>
