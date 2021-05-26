@@ -7,7 +7,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-sheet :color="isBlocked ? 'red lighten-2' : 'primary lighten-4'" height="6"></v-sheet>
+          <v-sheet :color="isBlocked ? 'red darken-1' : 'primary lighten-4'" height="6"></v-sheet>
           <v-container fill-height fluid>
             <v-row align="center">
               <v-col cols="3">
@@ -35,18 +35,16 @@
                     <v-tooltip bottom>
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn
-                          color="red darken-3"
+                          :color="isBlocked ? 'red darken-1' : 'grey darken-1'"
                           dark
                           v-bind="attrs"
                           v-on="on"
-                          icon
                           small
+                          icon
                           class="float-right"
-                          @click="isBlocked ? unblockUser() : blockUser()"
+                          @click="dialog = true"
                         >
-                          <v-icon dark>
-                            {{ isBlocked ? 'mdi-lock' : 'mdi-lock-open' }}
-                          </v-icon>
+                          <v-icon dark>mdi-cancel</v-icon>
                         </v-btn>
                       </template>
                       <span>{{ isBlocked ? 'Desbloquear usuario' : 'Bloquear usuario' }}</span>
@@ -83,7 +81,6 @@
                     <v-text-field
                       :value="user.lastName"
                       label="APELLIDO"
-                      prepend-icon="mdi-account"
                       readonly
                       dense
                     ></v-text-field>
@@ -152,7 +149,7 @@
               <v-card flat>
                 <v-container>
                   <v-row>
-                    <v-col lg="12" xl="6">
+                    <v-col cols="12" xl="6">
                       <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Descripción</v-card-title>
@@ -178,7 +175,7 @@
                       </v-row>
                     </v-col>
                     <v-divider vertical class="my-2 vertical-divider"></v-divider>
-                    <v-col lg="12" xl="6">
+                    <v-col cols="12" xl="6">
                       <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Proyectos Favoritos</v-card-title>
@@ -226,6 +223,40 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row justify="center">
+      <v-dialog
+        v-model="dialog"
+        persistent
+        max-width="300"
+      >
+        <v-card>
+          <div class="title grey lighten-2 text-center py-1 ">Confirmación</div>
+          <v-divider></v-divider>
+          <v-card-text class="mt-5 text-center">
+            <v-icon left size="20" color="primary lighten-2">mdi-help-circle</v-icon>
+            {{ isBlocked ? 'Desbloquear usuario' : 'Bloquear usuario' }}
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-btn
+              color="grey darken-1"
+              text
+              @click="dialog = false"
+            >
+              Volver
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary lighten-2"
+              text
+              @click="isBlocked ? unblockUser() : blockUser()"
+            >
+              Continuar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </v-container>
 </template>
 
@@ -242,6 +273,7 @@ export default {
   name: 'UserDetail',
 
   data: () => ({
+    dialog: false,
     tab: null,
     user: {
       username: 'mgarcia',
@@ -296,9 +328,11 @@ export default {
   methods: {
     blockUser () {
       this.user.isBlocked = true
+      this.dialog = false
     },
     unblockUser () {
       this.user.isBlocked = false
+      this.dialog = false
     }
   }
 }
