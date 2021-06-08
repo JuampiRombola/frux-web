@@ -1,0 +1,277 @@
+<template>
+  <v-container>
+    <v-breadcrumbs
+      :items="items"
+      class="mx-0 px-0 mt-1 pt-1"
+    ></v-breadcrumbs>
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-sheet :color="isBlocked ? 'red darken-1' : 'primary lighten-4'" height="6"></v-sheet>
+          <v-container fill-height fluid>
+            <v-row align="center" no-gutters class="my-3">
+              <v-col cols="11" class="my-0">
+                <div class="display-1 pb-0 mb-0 mt-2 text-center px-4">{{ project.title }}</div>
+              </v-col>
+              <v-col cols="1" class="my-0">
+                <v-tooltip bottom>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      :color="isBlocked ? 'red darken-1' : 'grey darken-1'"
+                      dark
+                      v-bind="attrs"
+                      v-on="on"
+                      small
+                      class="float-right"
+                      @click="dialog = true"
+                    >
+                      <v-icon left>mdi-cancel</v-icon>
+                      {{ isBlocked ? 'Desbloquear' : 'Bloquear' }}
+                    </v-btn>
+                  </template>
+                  <span>{{ isBlocked ? 'Desbloquear proyecto' : 'Bloquear proyecto' }}</span>
+                </v-tooltip>
+              </v-col>
+              <v-col cols="12">
+                <v-card-text class="text-center px-16">{{ project.description }}</v-card-text>
+              </v-col>
+            </v-row>
+            <v-row align="top" justify="center" class="mt-0 pt-0">
+              <v-col cols="6">
+                <v-row class="px-2">
+                  <v-col cols="2" class="px-2">
+                    <v-text-field
+                      :value="id"
+                      label="PROJECT ID"
+                      prepend-icon="mdi-tag"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="10" class="px-2">
+                    <v-text-field
+                      :value="project.category"
+                      label="CATEGORÍA"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2">
+                    <v-text-field
+                      :value="project.creationDatetime"
+                      label="FECHA DE CREACIÓN"
+                      prepend-icon="mdi-calendar-plus"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2 py-2">
+                    <v-text-field
+                      :value="project.endDateTime"
+                      label="FECHA DE FINALIZACIÓN"
+                      prepend-icon="mdi-calendar-plus"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" class="px-2 py-2">
+                    <v-select
+                      v-model="project.hashtags"
+                      :items="project.hashtags"
+                      chips
+                      label="HASHTAGS"
+                      multiple
+                      prepend-icon="mdi-calendar-plus"
+                      readonly
+                      append-icon=""
+                    ></v-select>
+                  </v-col>
+                </v-row>
+              </v-col>
+              <v-divider vertical class="my-2 vertical-divider"></v-divider>
+              <v-col cols="6" class="mt-0 pt-0">
+                <v-row no-gutters class="text-center">
+                  <v-col cols="12" class="mt-2 mb-4">
+                    <v-carousel hide-delimiters v-if="project.photos.length !== 0">
+                      <v-carousel-item
+                        v-for="(item, i) in project.photos"
+                        :key="i"
+                        :src="item.src"
+                      ></v-carousel-item>
+                    </v-carousel>
+                    <v-carousel v-else hide-delimiter-background hide-delimiters :show-arrows="false">
+                      <v-carousel-item>
+                        <v-sheet color="grey" height="100%" tile>
+                          <v-row class="fill-height" align="center" justify="center">
+                            <div class="text-h2">Sin imágenes</div>
+                          </v-row>
+                        </v-sheet>
+                      </v-carousel-item>
+                    </v-carousel>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
+
+        <v-card class="mt-3">
+          <v-tabs v-model="tab" centered color="primary lighten-3">
+            <v-tabs-slider></v-tabs-slider>
+            <v-tab href="#tab-1">Perfil</v-tab>
+            <v-tab href="#tab-2">Transacciones</v-tab>
+            <v-tab href="#tab-3">Emprendedor</v-tab>
+            <v-tab href="#tab-4">Patrocinador</v-tab>
+            <v-tab href="#tab-5">Veedor</v-tab>
+          </v-tabs>
+
+          <v-divider class="mx-7"></v-divider>
+
+          <v-tabs-items v-model="tab">
+            <v-tab-item value="tab-1">
+              <v-card flat>
+                <v-card-text>Perfil</v-card-text>
+              </v-card>
+            </v-tab-item>
+
+            <v-tab-item value="tab-2">
+              <v-card flat>
+                <v-card-text>Transacciones</v-card-text>
+              </v-card>
+            </v-tab-item>
+
+            <v-tab-item value="tab-3">
+              <v-card flat>
+                <v-card-text>Emprendedor</v-card-text>
+              </v-card>
+            </v-tab-item>
+
+            <v-tab-item value="tab-4">
+              <v-card flat>
+                <v-card-text>Patrocinador</v-card-text>
+              </v-card>
+            </v-tab-item>
+
+            <v-tab-item value="tab-5">
+              <v-card flat>
+                <v-card-text>Veedor</v-card-text>
+              </v-card>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-dialog
+        v-model="dialog"
+        persistent
+        max-width="300"
+      >
+        <v-card>
+          <div class="title grey lighten-2 text-center py-1 ">Confirmación</div>
+          <v-divider></v-divider>
+          <v-card-text class="mt-5 text-center">
+            <v-icon left size="20" color="primary lighten-2">mdi-help-circle</v-icon>
+            {{ isBlocked ? 'Desbloquear proyecto' : 'Bloquear proyecto' }}
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-btn
+              color="grey darken-1"
+              text
+              @click="dialog = false"
+            >
+              Volver
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="primary lighten-2"
+              text
+              @click="isBlocked ? unblockProject() : blockProject()"
+            >
+              Continuar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+
+export default {
+  components: {
+  },
+
+  name: 'ProjectDetail',
+
+  data: () => ({
+    dialog: false,
+    tab: null,
+    project: {
+      title: 'Nuevo Sistema de Gestión Universitaria (SIU Guaraní)',
+      user: {
+        id: 1,
+        username: 'mgarcia'
+      },
+      description: 'SIU GUARANÍ es un sistema de gestión académica que registra y administra todas las actividades académicas de la Universidad y sus Facultades, desde que los alumnos ingresan como aspirantes hasta que obtienen el diploma. Fue concebido para administrar la gestión de alumnos en forma segura.',
+      creationDatetime: '06-05-2021 10:41',
+      endDateTime: '07-01-2021 12:00',
+      address: 'Av. Paseo Colón 850, Buenos Aires, Argentina',
+      hashtags: ['siu', 'guarani', 'university', 'admin', 'system', 'engineer'],
+      category: 'Tecnología',
+      isBlocked: false,
+      photos: [
+        {
+          src: 'https://mediacdn.cincopa.com/v2/1078304/12!xnaFAYJFrDwqiA/4/Asc3adeslaFIUBA_8_.jpg'
+        },
+        {
+          src: 'https://mediacdn.cincopa.com/v2/1078304/6!xnaFAYJFrDAhEB/0/Asc3adeslaFIUBA_2_.JPG'
+        }
+      ]
+    }
+  }),
+
+  computed: {
+    id () {
+      return this.$route.params.id
+    },
+    isBlocked () {
+      return this.project.isBlocked
+    },
+    items () {
+      return [{
+        text: 'Proyectos',
+        disabled: false,
+        href: '../projects'
+      },
+      {
+        text: this.id,
+        disabled: true
+      }]
+    }
+  },
+
+  methods: {
+    blockProject () {
+      this.project.isBlocked = true
+      this.dialog = false
+    },
+    unblockProject () {
+      this.project.isBlocked = false
+      this.dialog = false
+    }
+  }
+}
+</script>
+
+<style scoped>
+.v-sheet {
+  border-bottom-right-radius: unset;
+  border-bottom-left-radius: unset;
+}
+.vertical-divider {
+  margin: 0 -1px;
+}
+</style>
