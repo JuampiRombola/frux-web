@@ -40,11 +40,11 @@
                           v-bind="attrs"
                           v-on="on"
                           small
-                          icon
                           class="float-right"
                           @click="dialog = true"
                         >
-                          <v-icon dark>mdi-cancel</v-icon>
+                          <v-icon left>mdi-cancel</v-icon>
+                          {{ isBlocked ? 'Desbloquear' : 'Bloquear' }}
                         </v-btn>
                       </template>
                       <span>{{ isBlocked ? 'Desbloquear usuario' : 'Bloquear usuario' }}</span>
@@ -93,7 +93,7 @@
                   <v-col cols="8" class="px-2 py-2">
                     <v-text-field
                       :value="user.address"
-                      label="UBICACIÓN"
+                      label="DIRECCIÓN"
                       prepend-icon="mdi-map-marker"
                       readonly
                       dense
