@@ -39,19 +39,20 @@
             <v-row align="top" justify="center" class="mt-0 pt-0">
               <v-col cols="6">
                 <v-row class="px-2">
-                  <v-col cols="2" class="px-2">
+                  <v-col cols="6" class="px-2">
                     <v-text-field
                       :value="id"
                       label="PROJECT ID"
-                      prepend-icon="mdi-tag"
+                      prepend-icon="mdi-identifier"
                       readonly
                       dense
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="10" class="px-2">
+                  <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.category"
-                      label="CATEGORÍA"
+                      :value="project.user.username"
+                      label="EMPRENDEDOR"
+                      prepend-icon="mdi-account"
                       readonly
                       dense
                     ></v-text-field>
@@ -69,7 +70,52 @@
                     <v-text-field
                       :value="project.endDateTime"
                       label="FECHA DE FINALIZACIÓN"
-                      prepend-icon="mdi-calendar-plus"
+                      prepend-icon="mdi-calendar-remove"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2">
+                    <v-text-field
+                      :value="project.collected"
+                      label="RECAUDADO"
+                      prepend-icon="mdi-account-cash"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2">
+                    <v-text-field
+                      :value="project.objective"
+                      label="OBJETIVO"
+                      prepend-icon="mdi-cash"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2">
+                    <v-text-field
+                      :value="project.investors"
+                      label="PATROCINADORES"
+                      prepend-icon="mdi-charity"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2">
+                    <v-text-field
+                      :value="project.favs"
+                      label="FAVORITOS"
+                      prepend-icon="mdi-star"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" class="px-2">
+                    <v-text-field
+                      :value="project.category"
+                      label="CATEGORÍA"
+                      prepend-icon="mdi-tag"
                       readonly
                       dense
                     ></v-text-field>
@@ -81,7 +127,7 @@
                       chips
                       label="HASHTAGS"
                       multiple
-                      prepend-icon="mdi-calendar-plus"
+                      prepend-icon="mdi-pound"
                       readonly
                       append-icon=""
                     ></v-select>
@@ -118,11 +164,10 @@
         <v-card class="mt-3">
           <v-tabs v-model="tab" centered color="primary lighten-3">
             <v-tabs-slider></v-tabs-slider>
-            <v-tab href="#tab-1">Perfil</v-tab>
-            <v-tab href="#tab-2">Transacciones</v-tab>
-            <v-tab href="#tab-3">Emprendedor</v-tab>
-            <v-tab href="#tab-4">Patrocinador</v-tab>
-            <v-tab href="#tab-5">Veedor</v-tab>
+            <v-tab href="#tab-1">Etapas</v-tab>
+            <v-tab href="#tab-2">Patrocinadores</v-tab>
+            <v-tab href="#tab-3">Veedores</v-tab>
+            <v-tab href="#tab-4">Transacciones</v-tab>
           </v-tabs>
 
           <v-divider class="mx-7"></v-divider>
@@ -130,31 +175,65 @@
           <v-tabs-items v-model="tab">
             <v-tab-item value="tab-1">
               <v-card flat>
-                <v-card-text>Perfil</v-card-text>
+                <v-card-text>
+                  <v-row>
+                    <v-col cols="6">
+                      <v-timeline align-top dense>
+                        <template v-for="state in project.states">
+                          <v-timeline-item
+                            :key="state.name"
+                            color="pink"
+                          >
+                            <v-row class="pt-1">
+                              <v-col cols="3">
+                                <strong>{{ state.dateTime }}</strong>
+                              </v-col>
+                              <v-col>
+                                <strong>{{ state.name }}</strong>
+                              </v-col>
+                            </v-row>
+                          </v-timeline-item>
+                          <v-timeline-item
+                            v-for="(stage, i) in state.stages"
+                            :key="stage.name"
+                            color="teal lighten-3"
+                            small
+                          >
+                            <v-row class="pt-1">
+                              <v-col cols="3">
+                                <strong>{{ stage.dateTime }}</strong>
+                              </v-col>
+                              <v-col>
+                                <strong>Etapa {{ i+1 }}</strong>
+                                <div class="text-caption">
+                                  Objetivo: {{ stage.objective }}
+                                </div>
+                              </v-col>
+                            </v-row>
+                          </v-timeline-item>
+                        </template>
+                      </v-timeline>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
               </v-card>
             </v-tab-item>
 
             <v-tab-item value="tab-2">
               <v-card flat>
-                <v-card-text>Transacciones</v-card-text>
+                <v-card-text>Patrocinadores</v-card-text>
               </v-card>
             </v-tab-item>
 
             <v-tab-item value="tab-3">
               <v-card flat>
-                <v-card-text>Emprendedor</v-card-text>
+                <v-card-text>Veedores</v-card-text>
               </v-card>
             </v-tab-item>
 
             <v-tab-item value="tab-4">
               <v-card flat>
-                <v-card-text>Patrocinador</v-card-text>
-              </v-card>
-            </v-tab-item>
-
-            <v-tab-item value="tab-5">
-              <v-card flat>
-                <v-card-text>Veedor</v-card-text>
+                <v-card-text>Transacciones</v-card-text>
               </v-card>
             </v-tab-item>
           </v-tabs-items>
@@ -211,6 +290,10 @@ export default {
     tab: null,
     project: {
       title: 'Nuevo Sistema de Gestión Universitaria (SIU Guaraní)',
+      objective: 1000000,
+      investors: 54,
+      collected: 3400,
+      favs: 122,
       user: {
         id: 1,
         username: 'mgarcia'
@@ -219,7 +302,7 @@ export default {
       creationDatetime: '06-05-2021 10:41',
       endDateTime: '07-01-2021 12:00',
       address: 'Av. Paseo Colón 850, Buenos Aires, Argentina',
-      hashtags: ['siu', 'guarani', 'university', 'admin', 'system', 'engineer'],
+      hashtags: ['guarani', 'university', 'admin', 'system', 'engineer', 'fiuba', 'uba', 'new', 'students', 'siu'],
       category: 'Tecnología',
       isBlocked: false,
       photos: [
@@ -228,6 +311,36 @@ export default {
         },
         {
           src: 'https://mediacdn.cincopa.com/v2/1078304/6!xnaFAYJFrDAhEB/0/Asc3adeslaFIUBA_2_.JPG'
+        }
+      ],
+      states: [
+        {
+          name: 'Iniciado',
+          dateTime: '06-05-2021 10:41',
+          stages: []
+        },
+        {
+          name: 'En Progreso',
+          dateTime: '07-05-2021 05:01',
+          stages: [
+            {
+              dateTime: '07-05-2021 05:01',
+              objective: '300000'
+            },
+            {
+              dateTime: '12-05-2021 15:49',
+              objective: '200000'
+            },
+            {
+              dateTime: '28-05-2021 22:33',
+              objective: '500000'
+            }
+          ]
+        },
+        {
+          name: 'Finalizado',
+          dateTime: '06-06-2021 10:10',
+          stages: []
         }
       ]
     }

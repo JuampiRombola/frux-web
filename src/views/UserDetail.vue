@@ -54,7 +54,7 @@
                     <v-text-field
                       :value="id"
                       label="USER ID"
-                      prepend-icon="mdi-tag"
+                      prepend-icon="mdi-identifier"
                       readonly
                       dense
                     ></v-text-field>
