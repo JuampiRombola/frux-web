@@ -49,3 +49,53 @@ export const ALL_PROJECTS_QUERY = gql`
     }
   }
 `
+
+export const INVESTORS_QUERY = gql`
+  query ProjectQuery($id: Int) {
+    project(dbId: $id) {
+      investors {
+        edges {
+          node {
+            user {
+              dbId
+              name
+              email
+            }
+            investedAmount
+            dateOfInvestment
+          }
+        }
+      }
+    }
+  }
+`
+
+export const PROJECT_QUERY = gql`
+  query ProjectQuery($id: Int) {
+    project(dbId: $id) {
+      name
+      description
+      currentState
+      goal
+      amountCollected
+      category {
+        name
+      }
+      owner {
+        dbId
+        name
+      }
+    }
+  }
+`
+
+export const USER_QUERY = gql`
+  query ProjectQuery($id: Int) {
+    user(dbId: $id) {
+      name
+      email
+      latitude
+      longitude
+    }
+  }
+`

@@ -1,5 +1,14 @@
 <template>
-  <v-container>
+  <v-container v-if="loading">
+    <v-layout row justify-center>
+      <v-container fill-height>
+        <v-layout row justify-center align-center>
+          <v-progress-circular indeterminate :size="70" :width="5" color="primary lighten-3" class="mt-5"></v-progress-circular>
+        </v-layout>
+      </v-container>
+    </v-layout>
+  </v-container>
+  <v-container v-else>
     <v-card-actions class="mx-0 px-0 mt-0 pt-0">
       <v-btn icon class="pa-0 ma-0" @click="$router.back()"><v-icon color="primary lighten-3">mdi-keyboard-backspace</v-icon></v-btn>
       <v-breadcrumbs
@@ -87,7 +96,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.creationDatetime"
+                      :value="mockProject.creationDatetime"
                       label="FECHA DE CREACIÓN"
                       prepend-icon="mdi-calendar-plus"
                       readonly
@@ -96,7 +105,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="project.endDateTime"
+                      :value="mockProject.endDateTime"
                       label="FECHA DE FINALIZACIÓN"
                       prepend-icon="mdi-calendar-remove"
                       readonly
@@ -123,7 +132,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.investors"
+                      :value="mockProject.investorsCount"
                       label="PATROCINADORES"
                       prepend-icon="mdi-charity"
                       readonly
@@ -132,7 +141,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.favs"
+                      :value="mockProject.favs"
                       label="FAVORITOS"
                       prepend-icon="mdi-star"
                       readonly
@@ -141,8 +150,8 @@
                   </v-col>
                   <v-col cols="12" class="px-2 py-2">
                     <v-select
-                      v-model="project.hashtags"
-                      :items="project.hashtags"
+                      v-model="mockProject.hashtags"
+                      :items="mockProject.hashtags"
                       chips
                       label="HASHTAGS"
                       multiple
@@ -157,9 +166,9 @@
               <v-col cols="6" class="mt-0 pt-0">
                 <v-row no-gutters class="text-center">
                   <v-col cols="12" class="mt-2 mb-4">
-                    <v-carousel hide-delimiters v-if="project.photos.length !== 0">
+                    <v-carousel hide-delimiters v-if="mockProject.photos.length !== 0">
                       <v-carousel-item
-                        v-for="(item, i) in project.photos"
+                        v-for="(item, i) in mockProject.photos"
                         :key="i"
                         :src="item.src"
                       ></v-carousel-item>
@@ -198,7 +207,7 @@
                   <v-row>
                     <v-col cols="6">
                       <v-timeline align-top dense>
-                        <template v-for="state in project.states">
+                        <template v-for="state in mockProject.states">
                           <v-timeline-item
                             :key="state.name"
                             color="pink"
@@ -240,7 +249,9 @@
 
             <v-tab-item value="tab-2">
               <v-card flat>
-                <v-card-text>Patrocinadores</v-card-text>
+                <v-card-text>
+                  <InvestorsTable :projectId="parseInt(id)"></InvestorsTable>
+                </v-card-text>
               </v-card>
             </v-tab-item>
 
@@ -297,9 +308,12 @@
 </template>
 
 <script>
+import InvestorsTable from '@/components/InvestorsTable'
+import { PROJECT_QUERY } from '../graphql/graphql'
 
 export default {
   components: {
+    InvestorsTable
   },
 
   name: 'ProjectDetail',
@@ -307,15 +321,15 @@ export default {
   data: () => ({
     dialog: false,
     tab: null,
-    project: {
+    mockProject: {
       name: 'Nuevo Sistema de Gestión Universitaria (SIU Guaraní)',
       currentState: 'CREADO',
       goal: 1000000,
-      investors: 54,
+      investorsCount: 54,
       amountCollected: 3400,
       favs: 122,
       owner: {
-        id: 1,
+        dbId: 1,
         name: 'mgarcia'
       },
       description: 'SIU GUARANÍ es un sistema de gestión académica que registra y administra todas las actividades académicas de la Universidad y sus Facultades, desde que los alumnos ingresan como aspirantes hasta que obtienen el diploma. Fue concebido para administrar la gestión de alumnos en forma segura.',
@@ -373,7 +387,7 @@ export default {
       return this.$route.params.id
     },
     isBlocked () {
-      return this.project.isBlocked
+      return this.mockProject.isBlocked
     },
     items () {
       return [{
@@ -385,17 +399,31 @@ export default {
         text: this.id,
         disabled: true
       }]
+    },
+    loading () {
+      return this.project === undefined
     }
   },
 
   methods: {
     blockProject () {
-      this.project.isBlocked = true
+      this.mockProject.isBlocked = true
       this.dialog = false
     },
     unblockProject () {
-      this.project.isBlocked = false
+      this.mockProject.isBlocked = false
       this.dialog = false
+    }
+  },
+
+  apollo: {
+    project: {
+      query: PROJECT_QUERY,
+      variables () {
+        return {
+          id: this.id
+        }
+      }
     }
   }
 }

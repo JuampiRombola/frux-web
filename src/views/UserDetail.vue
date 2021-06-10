@@ -1,5 +1,14 @@
 <template>
-  <v-container>
+  <v-container v-if="loading">
+    <v-layout row justify-center>
+      <v-container fill-height>
+        <v-layout row justify-center align-center>
+          <v-progress-circular indeterminate :size="70" :width="5" color="primary lighten-3" class="mt-5"></v-progress-circular>
+        </v-layout>
+      </v-container>
+    </v-layout>
+  </v-container>
+  <v-container v-else>
     <v-card-actions class="mx-0 px-0 mt-0 pt-0">
       <v-btn icon class="pa-0 ma-0" @click="$router.back()"><v-icon color="primary lighten-3">mdi-keyboard-backspace</v-icon></v-btn>
       <v-breadcrumbs
@@ -23,7 +32,7 @@
                     </v-avatar>
                   </v-col>
                   <v-col cols="12" class="mt-2 mb-4">
-                    <div class="overline my-0">{{ user.username }}</div>
+                    <div class="overline my-0">{{ mockUser.username }}</div>
                     <div v-if="isSeeder"><v-chip small outlined class="my-1" color="green darken-2">Emprendedor</v-chip></div>
                     <div v-if="isSponsor"><v-chip small outlined class="my-1" color="pink darken-2">Patrocinador</v-chip></div>
                     <div v-if="isSeer"><v-chip small outlined class="my-1" color="amber darken-4">Veedor</v-chip></div>
@@ -72,7 +81,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="user.firstName"
+                      :value="user.name"
                       label="NOMBRE"
                       prepend-icon="mdi-account"
                       readonly
@@ -81,7 +90,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="user.lastName"
+                      :value="mockUser.lastName"
                       label="APELLIDO"
                       readonly
                       dense
@@ -94,7 +103,7 @@
                 <v-row no-gutters class="mt-7">
                   <v-col cols="8" class="px-2 py-2">
                     <v-text-field
-                      :value="user.address"
+                      :value="mockUser.address"
                       label="DIRECCIÓN"
                       prepend-icon="mdi-map-marker"
                       readonly
@@ -103,7 +112,7 @@
                   </v-col>
                   <v-col cols="4" class="px-2 py-2">
                     <v-text-field
-                      :value="user.phone"
+                      :value="mockUser.phone"
                       label="TELÉFONO"
                       prepend-icon="mdi-phone"
                       readonly
@@ -112,7 +121,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="user.creationDatetime"
+                      :value="mockUser.creationDatetime"
                       label="FECHA DE CREACIÓN"
                       prepend-icon="mdi-calendar-plus"
                       readonly
@@ -121,7 +130,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="user.lastLogin"
+                      :value="mockUser.lastLogin"
                       label="ÚLTIMA CONEXIÓN"
                       prepend-icon="mdi-update"
                       readonly
@@ -155,13 +164,13 @@
                       <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Descripción</v-card-title>
-                          <v-card-text>{{ user.description }}</v-card-text>
+                          <v-card-text>{{ mockUser.description }}</v-card-text>
                         </v-col>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Intereses</v-card-title>
                           <v-card-text>
                             <v-chip
-                              v-for="item in user.interests"
+                              v-for="item in mockUser.interests"
                               :key="item"
                               outlined
                               class="mb-2 mr-2"
@@ -172,7 +181,7 @@
                         </v-col>
                         <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
                           <v-card-title>Ubicación</v-card-title>
-                          <Map :latitude="user.latitude" :longitude="user.longitude" class="px-4"></Map>
+                          <Map :latitude="parseFloat(user.latitude)" :longitude="parseFloat(user.longitude)" class="px-4"></Map>
                         </v-col>
                       </v-row>
                     </v-col>
@@ -265,6 +274,7 @@
 <script>
 import Map from '@/components/Map'
 import ProjectsTable from '@/components/ProjectsTable'
+import { USER_QUERY } from '../graphql/graphql'
 
 export default {
   components: {
@@ -277,7 +287,7 @@ export default {
   data: () => ({
     dialog: false,
     tab: null,
-    user: {
+    mockUser: {
       username: 'mgarcia',
       email: 'mgarcia@gmail.com',
       avatar: 0,
@@ -303,16 +313,16 @@ export default {
       return this.$route.params.id
     },
     isBlocked () {
-      return this.user.isBlocked
+      return this.mockUser.isBlocked
     },
     isSeeder () {
-      return this.user.isSeeder
+      return this.mockUser.isSeeder
     },
     isSponsor () {
-      return this.user.isSponsor
+      return this.mockUser.isSponsor
     },
     isSeer () {
-      return this.user.isSeer
+      return this.mockUser.isSeer
     },
     items () {
       return [{
@@ -321,20 +331,34 @@ export default {
         href: '../users'
       },
       {
-        text: this.user.username,
+        text: this.mockUser.username,
         disabled: true
       }]
+    },
+    loading () {
+      return this.user === undefined
     }
   },
 
   methods: {
     blockUser () {
-      this.user.isBlocked = true
+      this.mockUser.isBlocked = true
       this.dialog = false
     },
     unblockUser () {
-      this.user.isBlocked = false
+      this.mockUser.isBlocked = false
       this.dialog = false
+    }
+  },
+
+  apollo: {
+    user: {
+      query: USER_QUERY,
+      variables () {
+        return {
+          id: this.id
+        }
+      }
     }
   }
 }
