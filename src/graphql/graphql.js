@@ -21,8 +21,8 @@ export const ALL_USERS_QUERY = gql`
 `
 
 export const ALL_PROJECTS_QUERY = gql`
-  query AllProjectsQuery {
-    allProjects {
+  query AllProjectsQuery($limit: Int) {
+    allProjects(first: $limit) {
       edges {
         node {
           dbId
