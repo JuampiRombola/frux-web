@@ -88,3 +88,14 @@ export const PROJECT_QUERY = gql`
     }
   }
 `
+
+export const USER_QUERY = gql`
+  query ProjectQuery($id: Int) {
+    user(dbId: $id) {
+      name
+      email
+      latitude
+      longitude
+    }
+  }
+`

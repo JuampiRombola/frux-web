@@ -3,7 +3,7 @@
     <v-layout row justify-center>
       <v-container fill-height>
         <v-layout row justify-center align-center>
-          <v-progress-circular indeterminate :size="70" :width="5" color="primary" class="mt-5"></v-progress-circular>
+          <v-progress-circular indeterminate :size="70" :width="5" color="primary lighten-3" class="mt-5"></v-progress-circular>
         </v-layout>
       </v-container>
     </v-layout>
