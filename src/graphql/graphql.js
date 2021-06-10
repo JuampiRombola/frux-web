@@ -25,13 +25,16 @@ export const ALL_PROJECTS_QUERY = gql`
     allProjects {
       edges {
         node {
-          id
+          dbId
           name
-          description
+          category {
+            name
+          }
+          currentState
           goal
-          userId
+          amountCollected
           owner {
-            id
+            dbId
             name
             email
           }

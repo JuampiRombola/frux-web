@@ -10,30 +10,34 @@
           <v-sheet :color="isBlocked ? 'red darken-1' : 'primary lighten-4'" height="6"></v-sheet>
           <v-container fill-height fluid>
             <v-row align="center" no-gutters class="my-3">
-              <v-col cols="11" class="my-0">
-                <div class="display-1 pb-0 mb-0 mt-2 text-center px-4">{{ project.title }}</div>
-              </v-col>
-              <v-col cols="1" class="my-0">
-                <v-tooltip bottom>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      :color="isBlocked ? 'red darken-1' : 'grey darken-1'"
-                      dark
-                      v-bind="attrs"
-                      v-on="on"
-                      small
-                      class="float-right"
-                      @click="dialog = true"
-                    >
-                      <v-icon left>mdi-cancel</v-icon>
-                      {{ isBlocked ? 'Desbloquear' : 'Bloquear' }}
-                    </v-btn>
-                  </template>
-                  <span>{{ isBlocked ? 'Desbloquear proyecto' : 'Bloquear proyecto' }}</span>
-                </v-tooltip>
+              <v-col cols="12" class="my-0">
+                <div class="display-1 pb-0 mb-0 mt-2 text-center px-4">
+                  {{ project.name }}
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        :color="isBlocked ? 'red darken-1' : 'grey darken-1'"
+                        dark
+                        v-bind="attrs"
+                        v-on="on"
+                        small
+                        class="float-right mt-2"
+                        @click="dialog = true"
+                      >
+                        <v-icon left>mdi-cancel</v-icon>
+                        {{ isBlocked ? 'Desbloquear' : 'Bloquear' }}
+                      </v-btn>
+                    </template>
+                    <span>{{ isBlocked ? 'Desbloquear proyecto' : 'Bloquear proyecto' }}</span>
+                  </v-tooltip>
+                </div>
               </v-col>
               <v-col cols="12">
-                <v-card-text class="text-center px-16">{{ project.description }}</v-card-text>
+                <v-row>
+                  <v-col cols="9" offset="1">
+                    <v-card-text class="text-center">{{ project.description }}</v-card-text>
+                  </v-col>
+                </v-row>
               </v-col>
             </v-row>
             <v-row align="top" justify="center" class="mt-0 pt-0">
@@ -50,12 +54,34 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.user.username"
+                      :value="project.owner.name"
                       label="EMPRENDEDOR"
                       prepend-icon="mdi-account"
                       readonly
                       dense
                     ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2">
+                    <v-text-field
+                      :value="project.category.name"
+                      label="CATEGORÍA"
+                      prepend-icon="mdi-tag"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2 py-2">
+                    <v-select
+                      v-model="project.currentState"
+                      :items="project.currentState"
+                      chips
+                      label="ESTADO"
+                      small-chips
+                      prepend-icon="mdi-state-machine"
+                      readonly
+                      append-icon=""
+                      class="my-0 py-0"
+                    ></v-select>
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
@@ -77,7 +103,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.collected"
+                      :value="project.amountCollected"
                       label="RECAUDADO"
                       prepend-icon="mdi-account-cash"
                       readonly
@@ -86,7 +112,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.objective"
+                      :value="project.goal"
                       label="OBJETIVO"
                       prepend-icon="mdi-cash"
                       readonly
@@ -107,15 +133,6 @@
                       :value="project.favs"
                       label="FAVORITOS"
                       prepend-icon="mdi-star"
-                      readonly
-                      dense
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" class="px-2">
-                    <v-text-field
-                      :value="project.category"
-                      label="CATEGORÍA"
-                      prepend-icon="mdi-tag"
                       readonly
                       dense
                     ></v-text-field>
@@ -206,7 +223,7 @@
                               <v-col>
                                 <strong>Etapa {{ i+1 }}</strong>
                                 <div class="text-caption">
-                                  Objetivo: {{ stage.objective }}
+                                  Objetivo: {{ stage.goal }}
                                 </div>
                               </v-col>
                             </v-row>
@@ -289,21 +306,24 @@ export default {
     dialog: false,
     tab: null,
     project: {
-      title: 'Nuevo Sistema de Gestión Universitaria (SIU Guaraní)',
-      objective: 1000000,
+      name: 'Nuevo Sistema de Gestión Universitaria (SIU Guaraní)',
+      currentState: 'CREADO',
+      goal: 1000000,
       investors: 54,
-      collected: 3400,
+      amountCollected: 3400,
       favs: 122,
-      user: {
+      owner: {
         id: 1,
-        username: 'mgarcia'
+        name: 'mgarcia'
       },
       description: 'SIU GUARANÍ es un sistema de gestión académica que registra y administra todas las actividades académicas de la Universidad y sus Facultades, desde que los alumnos ingresan como aspirantes hasta que obtienen el diploma. Fue concebido para administrar la gestión de alumnos en forma segura.',
       creationDatetime: '06-05-2021 10:41',
       endDateTime: '07-01-2021 12:00',
       address: 'Av. Paseo Colón 850, Buenos Aires, Argentina',
       hashtags: ['guarani', 'university', 'admin', 'system', 'engineer', 'fiuba', 'uba', 'new', 'students', 'siu'],
-      category: 'Tecnología',
+      category: {
+        name: 'Tecnología'
+      },
       isBlocked: false,
       photos: [
         {
@@ -325,15 +345,15 @@ export default {
           stages: [
             {
               dateTime: '07-05-2021 05:01',
-              objective: '300000'
+              goal: '300000'
             },
             {
               dateTime: '12-05-2021 15:49',
-              objective: '200000'
+              goal: '200000'
             },
             {
               dateTime: '28-05-2021 22:33',
-              objective: '500000'
+              goal: '500000'
             }
           ]
         },

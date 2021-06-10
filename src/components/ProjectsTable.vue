@@ -7,7 +7,33 @@
     :loading="loading"
     :footer-props="footerProps"
     :items-per-page="itemsPerPage"
-  ></v-data-table>
+  >
+    <template v-slot:item.owner="{ item }">
+      <a href="#" @click.prevent="goToUserDetails(item.owner.dbId)">{{ item.owner.email }}</a>
+    </template>
+    <template v-slot:item.actions="{ item }">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary lighten-2"
+            dark
+            v-bind="attrs"
+            v-on="on"
+            icon
+            small
+            @click="goToProjectDetails(item.dbId)"
+            left
+            class="mr-2"
+          >
+            <v-icon dark>
+              mdi-eye
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Ver detalles del proyecto</span>
+      </v-tooltip>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -27,11 +53,14 @@ export default {
     return {
       options: {},
       headers: [
-        { text: 'ID', align: 'start', sortable: false, value: 'id' },
+        { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
         { text: 'Nombre', sortable: false, value: 'name' },
+        { text: 'Categoría', sortable: false, value: 'category.name' },
+        { text: 'Estado', sortable: false, value: 'currentState' },
+        { text: 'Recaudado', sortable: false, value: 'amountCollected' },
         { text: 'Objetivo', sortable: false, value: 'goal' },
-        { text: 'Descripción', sortable: false, value: 'description' },
-        { text: 'ID Usuario', sortable: false, value: 'userId' }
+        { text: 'Emprendedor', sortable: false, value: 'owner' },
+        { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
       ],
       footerProps: { 'items-per-page-options': [3, 5, 10, 15, -1] }
     }
@@ -48,6 +77,15 @@ export default {
 
     loading () {
       return this.allProjects?.loading || false
+    }
+  },
+
+  methods: {
+    goToUserDetails (id) {
+      this.$router.push({ name: 'UserDetail', params: { id: id } })
+    },
+    goToProjectDetails (id) {
+      this.$router.push({ name: 'ProjectDetail', params: { id: id } })
     }
   },
 
