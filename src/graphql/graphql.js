@@ -5,7 +5,7 @@ export const ALL_USERS_QUERY = gql`
     allUsers {
       edges {
         node {
-          id
+          dbId
           name
           email
         }
@@ -21,17 +21,20 @@ export const ALL_USERS_QUERY = gql`
 `
 
 export const ALL_PROJECTS_QUERY = gql`
-  query AllProjectsQuery {
-    allProjects {
+  query AllProjectsQuery($limit: Int) {
+    allProjects(first: $limit) {
       edges {
         node {
-          id
+          dbId
           name
-          description
+          category {
+            name
+          }
+          currentState
           goal
-          userId
+          amountCollected
           owner {
-            id
+            dbId
             name
             email
           }

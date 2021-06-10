@@ -1,9 +1,11 @@
 <template>
   <v-container>
-    <v-breadcrumbs
-      :items="items"
-      class="mx-0 px-0 mt-1 pt-1"
-    ></v-breadcrumbs>
+    <v-card-actions class="mx-0 px-0 mt-0 pt-0">
+      <v-btn icon class="pa-0 ma-0" @click="$router.back()"><v-icon color="primary lighten-3">mdi-keyboard-backspace</v-icon></v-btn>
+      <v-breadcrumbs
+        :items="items"
+      ></v-breadcrumbs>
+    </v-card-actions>
     <v-row>
       <v-col>
         <v-card>
@@ -40,11 +42,11 @@
                           v-bind="attrs"
                           v-on="on"
                           small
-                          icon
                           class="float-right"
                           @click="dialog = true"
                         >
-                          <v-icon dark>mdi-cancel</v-icon>
+                          <v-icon left>mdi-cancel</v-icon>
+                          {{ isBlocked ? 'Desbloquear' : 'Bloquear' }}
                         </v-btn>
                       </template>
                       <span>{{ isBlocked ? 'Desbloquear usuario' : 'Bloquear usuario' }}</span>
@@ -54,7 +56,7 @@
                     <v-text-field
                       :value="id"
                       label="USER ID"
-                      prepend-icon="mdi-tag"
+                      prepend-icon="mdi-identifier"
                       readonly
                       dense
                     ></v-text-field>
@@ -93,7 +95,7 @@
                   <v-col cols="8" class="px-2 py-2">
                     <v-text-field
                       :value="user.address"
-                      label="UBICACIÓN"
+                      label="DIRECCIÓN"
                       prepend-icon="mdi-map-marker"
                       readonly
                       dense
