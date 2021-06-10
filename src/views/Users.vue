@@ -23,7 +23,7 @@
                       v-on="on"
                       icon
                       small
-                      @click="goToUserDetails(item.id)"
+                      @click="goToUserDetails(item.dbId)"
                       left
                       class="mr-2"
                     >
@@ -53,7 +53,7 @@ export default {
     return {
       options: {},
       headers: [
-        { text: 'ID', align: 'start', sortable: false, value: 'id' },
+        { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
         { text: 'Nombre', sortable: false, value: 'name' },
         { text: 'Email', sortable: false, value: 'email' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }

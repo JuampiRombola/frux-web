@@ -5,7 +5,7 @@ export const ALL_USERS_QUERY = gql`
     allUsers {
       edges {
         node {
-          id
+          dbId
           name
           email
         }

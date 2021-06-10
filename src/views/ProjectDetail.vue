@@ -1,9 +1,11 @@
 <template>
   <v-container>
-    <v-breadcrumbs
-      :items="items"
-      class="mx-0 px-0 mt-1 pt-1"
-    ></v-breadcrumbs>
+    <v-card-actions class="mx-0 px-0 mt-0 pt-0">
+      <v-btn icon class="pa-0 ma-0" @click="$router.back()"><v-icon color="primary lighten-3">mdi-keyboard-backspace</v-icon></v-btn>
+      <v-breadcrumbs
+        :items="items"
+      ></v-breadcrumbs>
+    </v-card-actions>
     <v-row>
       <v-col>
         <v-card>
@@ -73,7 +75,7 @@
                   <v-col cols="6" class="px-2 py-2">
                     <v-select
                       v-model="project.currentState"
-                      :items="project.currentState"
+                      :items="[project.currentState]"
                       chips
                       label="ESTADO"
                       small-chips
