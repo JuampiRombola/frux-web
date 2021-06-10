@@ -39,7 +39,7 @@
 <script>
 import { ALL_PROJECTS_QUERY } from '../graphql/graphql'
 
-const DEFAULT_ROWS_PER_PAGE = 10
+const DEFAULT_ROWS_PER_PAGE = 30
 
 export default {
   props: {
@@ -94,8 +94,10 @@ export default {
   apollo: {
     allProjects: {
       query: ALL_PROJECTS_QUERY,
-      variables: {
-        limit: this?.itemsPerPage || DEFAULT_ROWS_PER_PAGE
+      variables () {
+        return {
+          limit: this.itemsPerPage
+        }
       }
     }
   }
