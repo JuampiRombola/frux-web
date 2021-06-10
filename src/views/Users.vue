@@ -71,7 +71,7 @@ export default {
     },
 
     loading () {
-      return this.allUsers?.loading || false
+      return this.allUsers === undefined
     }
   },
 

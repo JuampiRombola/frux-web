@@ -76,7 +76,7 @@ export default {
     },
 
     loading () {
-      return this.allProjects?.loading || false
+      return this.allProjects === undefined
     }
   },
 
