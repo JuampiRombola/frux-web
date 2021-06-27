@@ -6,8 +6,14 @@ export const ALL_USERS_QUERY = gql`
       edges {
         node {
           dbId
-          name
+          username
           email
+          creationDateTime
+          lastLogin
+          isBlocked
+          isSeeder
+          isSponsor
+          isSeer
         }
       }
       pageInfo {
@@ -16,6 +22,7 @@ export const ALL_USERS_QUERY = gql`
         startCursor
         endCursor
       }
+      totalCount
     }
   }
 `
