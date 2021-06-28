@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const ALL_USERS_QUERY = gql`
-  query AllUsersQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String) {
-    allUsers(first: $first, last: $last, after: $endCursor, before: $startCursor) {
+  query AllUsersQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String, $sort: [UserSortEnum]) {
+    allUsers(first: $first, last: $last, after: $endCursor, before: $startCursor, sort: $sort) {
       edges {
         node {
           dbId
@@ -42,7 +42,6 @@ export const ALL_PROJECTS_QUERY = gql`
           amountCollected
           owner {
             dbId
-            name
             email
           }
         }
@@ -90,7 +89,7 @@ export const PROJECT_QUERY = gql`
       }
       owner {
         dbId
-        name
+        username
       }
     }
   }
@@ -99,7 +98,7 @@ export const PROJECT_QUERY = gql`
 export const USER_QUERY = gql`
   query ProjectQuery($id: Int) {
     user(dbId: $id) {
-      name
+      username
       email
       latitude
       longitude

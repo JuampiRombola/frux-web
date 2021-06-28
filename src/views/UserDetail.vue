@@ -81,7 +81,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="user.name"
+                      :value="user.username"
                       label="NOMBRE"
                       prepend-icon="mdi-account"
                       readonly

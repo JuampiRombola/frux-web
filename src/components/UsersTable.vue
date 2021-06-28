@@ -64,7 +64,15 @@
 <script>
 import { ALL_USERS_QUERY } from '@/graphql/graphql'
 
-const DEFAULT_ROWS_PER_PAGE = 5
+const DEFAULT_ROWS_PER_PAGE = 10
+const USER_SORT_ENUM = {
+  dbId: 'ID',
+  blocked: 'IS_BLOCKED',
+  username: 'USERNAME',
+  email: 'EMAIL',
+  creationDateTime: 'CREATION_DATE_TIME',
+  lastLogin: 'LAST_LOGIN'
+}
 
 export default {
   props: {
@@ -81,12 +89,12 @@ export default {
       skipQuery: true,
       options: {},
       headers: [
-        { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
-        { text: 'Status', sortable: false, value: 'blocked' },
-        { text: 'Nombre de usuario', sortable: false, value: 'username' },
-        { text: 'Email', sortable: false, value: 'email' },
-        { text: 'Fecha de creación', sortable: false, value: 'creationDateTime' },
-        { text: 'Último ingreso', sortable: false, value: 'lastLogin' },
+        { text: 'ID', align: 'start', sortable: true, value: 'dbId' },
+        { text: 'Status', sortable: true, value: 'blocked' },
+        { text: 'Nombre de usuario', sortable: true, value: 'username' },
+        { text: 'Email', sortable: true, value: 'email' },
+        { text: 'Fecha de creación', sortable: true, value: 'creationDateTime' },
+        { text: 'Último ingreso', sortable: true, value: 'lastLogin' },
         { text: 'Rol', sortable: false, value: 'rol' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
       ]
@@ -112,6 +120,11 @@ export default {
 
     startCursor () {
       return this.allUsers?.pageInfo?.startCursor
+    },
+    sorting () {
+      return this.options.sortBy.length
+        ? USER_SORT_ENUM[this.options.sortBy[0]] + '_' + (this.options.sortDesc[0] ? 'DESC' : 'ASC')
+        : undefined
     }
   },
 
@@ -139,7 +152,7 @@ export default {
         if (isPreviousPage) {
           first = undefined
           last = this.options.itemsPerPage
-          startCursor = this.startCursor
+          startCursor = [this.startCursor]
         }
 
         this.$apollo.queries.allUsers.skip = false
@@ -147,7 +160,8 @@ export default {
           first: first,
           last: last,
           endCursor: endCursor,
-          startCursor: startCursor
+          startCursor: startCursor,
+          sort: this.sorting
         })
       },
       deep: true
