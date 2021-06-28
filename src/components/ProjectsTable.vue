@@ -7,6 +7,7 @@
     :loading="loading"
     :items-per-page="itemsPerPage"
     :footer-props="footerProps"
+    :hide-default-footer="loading"
   >
     <template v-slot:item.owner="{ item }">
       <a href="#" @click.prevent="goToUserDetails(item.owner.dbId)">{{ item.owner.email }}</a>

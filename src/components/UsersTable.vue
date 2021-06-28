@@ -7,6 +7,7 @@
     :loading="loading"
     :items-per-page="itemsPerPage"
     :footer-props="footerProps"
+    :hide-default-footer="loading"
   >
     <template v-slot:item.blocked="{ item }">
       <div>
