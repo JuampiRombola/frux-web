@@ -34,7 +34,7 @@
                   <v-col cols="12" class="mt-2 mb-4">
                     <div class="overline my-0">{{ mockUser.username }}</div>
                     <div v-if="isSeeder"><v-chip small outlined class="my-1" color="green darken-2">Emprendedor</v-chip></div>
-                    <div v-if="isSponsor"><v-chip small outlined class="my-1" color="pink darken-2">Patrocinador</v-chip></div>
+                    <div v-if="isSponsor"><v-chip small outlined class="my-1" color="pink darken-1">Patrocinador</v-chip></div>
                     <div v-if="isSeer"><v-chip small outlined class="my-1" color="amber darken-4">Veedor</v-chip></div>
                   </v-col>
                 </v-row>
@@ -81,7 +81,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="user.name"
+                      :value="user.username"
                       label="NOMBRE"
                       prepend-icon="mdi-account"
                       readonly

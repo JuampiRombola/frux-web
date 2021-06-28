@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="projects"
+    :items="users"
     :options.sync="options"
     :server-items-length="totalCount"
     :loading="loading"
@@ -9,9 +9,31 @@
     :footer-props="footerProps"
     :hide-default-footer="loading"
   >
-    <template v-slot:item.owner="{ item }">
-      <a href="#" @click.prevent="goToUserDetails(item.owner.dbId)">{{ item.owner.email }}</a>
+    <template v-slot:item.blocked="{ item }">
+      <div>
+        <v-tooltip bottom v-if="item.isBlocked">
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon color="red" dark v-bind="attrs" v-on="on">mdi-account-cancel</v-icon>
+          </template>
+          <span>Usuario bloqueado</span>
+        </v-tooltip>
+        <v-tooltip bottom v-else>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon color="green" dark v-bind="attrs" v-on="on">mdi-account</v-icon>
+          </template>
+          <span>Activo</span>
+        </v-tooltip>
+      </div>
     </template>
+
+    <template v-slot:item.rol="{ item }">
+      <div>
+        <v-chip v-if="item.isSeeder" small outlined class="my-1" color="green darken-2 mr-1">Emprendedor</v-chip>
+        <v-chip v-if="item.isSponsor" small outlined class="my-1" color="pink darken-1 mr-1">Patrocinador</v-chip>
+        <v-chip v-if="item.isSeer" small outlined class="my-1" color="amber darken-4">Veedor</v-chip>
+      </div>
+    </template>
+
     <template v-slot:item.actions="{ item }">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
@@ -22,7 +44,7 @@
             v-on="on"
             icon
             small
-            @click="goToProjectDetails(item.dbId)"
+            @click="goToUserDetails(item.dbId)"
             left
             class="mr-2"
           >
@@ -31,23 +53,23 @@
             </v-icon>
           </v-btn>
         </template>
-        <span>Ver detalles del proyecto</span>
+        <span>Ver detalles del usuario</span>
       </v-tooltip>
     </template>
   </v-data-table>
 </template>
 
 <script>
-import { ALL_PROJECTS_QUERY } from '@/graphql/graphql'
+import { ALL_USERS_QUERY } from '@/graphql/graphql'
 
 const DEFAULT_ROWS_PER_PAGE = 10
-const PROJECT_SORT_ENUM = {
+const USER_SORT_ENUM = {
   dbId: 'ID',
-  name: 'NAME',
-  currentState: 'CURRENT_STATE',
-  'category.name': 'CATEGORY_NAME',
-  goal: 'GOAL',
-  owner: 'USER_ID'
+  blocked: 'IS_BLOCKED',
+  username: 'USERNAME',
+  email: 'EMAIL',
+  creationDateTime: 'CREATION_DATE_TIME',
+  lastLogin: 'LAST_LOGIN'
 }
 
 export default {
@@ -58,19 +80,20 @@ export default {
     }
   },
 
-  name: 'ProjectsTable',
+  name: 'UsersTable',
 
   data () {
     return {
+      skipQuery: true,
       options: {},
       headers: [
         { text: 'ID', align: 'start', sortable: true, value: 'dbId' },
-        { text: 'Nombre', sortable: true, value: 'name' },
-        { text: 'Categoría', sortable: true, value: 'category.name' },
-        { text: 'Estado', sortable: true, value: 'currentState' },
-        { text: 'Recaudado', sortable: false, value: 'amountCollected' },
-        { text: 'Objetivo', sortable: true, value: 'goal' },
-        { text: 'Emprendedor', sortable: true, value: 'owner' },
+        { text: 'Status', sortable: true, value: 'blocked' },
+        { text: 'Nombre de usuario', sortable: true, value: 'username' },
+        { text: 'Email', sortable: true, value: 'email' },
+        { text: 'Fecha de creación', sortable: true, value: 'creationDateTime' },
+        { text: 'Último ingreso', sortable: true, value: 'lastLogin' },
+        { text: 'Rol', sortable: false, value: 'rol' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
       ],
       footerProps: { 'items-per-page-options': [5, 10, 15, 20, 30, 40, 50] }
@@ -78,12 +101,12 @@ export default {
   },
 
   computed: {
-    projects () {
-      return this.allProjects?.edges?.map((e) => e.node) || []
+    users () {
+      return this.allUsers?.edges?.map((e) => e.node) || []
     },
 
     totalCount () {
-      return this.allProjects?.totalCount || this.projects?.length || 0
+      return this.allUsers?.totalCount || this.users?.length || 0
     },
 
     loading () {
@@ -91,16 +114,16 @@ export default {
     },
 
     endCursor () {
-      return this.allProjects?.pageInfo?.endCursor
+      return this.allUsers?.pageInfo?.endCursor
     },
 
     startCursor () {
-      return this.allProjects?.pageInfo?.startCursor
+      return this.allUsers?.pageInfo?.startCursor
     },
 
     sorting () {
       return this.options.sortBy.length
-        ? PROJECT_SORT_ENUM[this.options.sortBy[0]] + '_' + (this.options.sortDesc[0] ? 'DESC' : 'ASC')
+        ? USER_SORT_ENUM[this.options.sortBy[0]] + '_' + (this.options.sortDesc[0] ? 'DESC' : 'ASC')
         : undefined
     }
   },
@@ -108,10 +131,6 @@ export default {
   methods: {
     goToUserDetails (id) {
       this.$router.push({ name: 'UserDetail', params: { id: id } })
-    },
-
-    goToProjectDetails (id) {
-      this.$router.push({ name: 'ProjectDetail', params: { id: id } })
     }
   },
 
@@ -136,7 +155,7 @@ export default {
           startCursor = [this.startCursor]
         }
 
-        this.$apollo.queries.allProjects.refetch({
+        this.$apollo.queries.allUsers.refetch({
           first: first,
           last: last,
           endCursor: endCursor,
@@ -149,8 +168,8 @@ export default {
   },
 
   apollo: {
-    allProjects: {
-      query: ALL_PROJECTS_QUERY,
+    allUsers: {
+      query: ALL_USERS_QUERY,
       variables () {
         return {
           first: this.itemsPerPage
@@ -160,3 +179,7 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+</style>

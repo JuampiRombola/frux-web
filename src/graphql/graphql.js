@@ -1,28 +1,33 @@
 import gql from 'graphql-tag'
 
 export const ALL_USERS_QUERY = gql`
-  query AllUsersQuery {
-    allUsers {
+  query AllUsersQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String, $sort: [UserSortEnum]) {
+    allUsers(first: $first, last: $last, after: $endCursor, before: $startCursor, sort: $sort) {
       edges {
         node {
           dbId
-          name
+          username
           email
+          creationDateTime
+          lastLogin
+          isBlocked
+          isSeeder
+          isSponsor
+          isSeer
         }
       }
       pageInfo {
-        hasNextPage
-        hasPreviousPage
         startCursor
         endCursor
       }
+      totalCount
     }
   }
 `
 
 export const ALL_PROJECTS_QUERY = gql`
-  query AllProjectsQuery($limit: Int) {
-    allProjects(first: $limit) {
+  query AllProjectsQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String, $sort: [ProjectSortEnum]) {
+    allProjects(first: $first, last: $last, after: $endCursor, before: $startCursor, sort: $sort) {
       edges {
         node {
           dbId
@@ -35,17 +40,15 @@ export const ALL_PROJECTS_QUERY = gql`
           amountCollected
           owner {
             dbId
-            name
             email
           }
         }
       }
       pageInfo {
-        hasNextPage
-        hasPreviousPage
         startCursor
         endCursor
-      }
+      },
+      totalCount
     }
   }
 `
@@ -83,7 +86,7 @@ export const PROJECT_QUERY = gql`
       }
       owner {
         dbId
-        name
+        username
       }
     }
   }
@@ -92,7 +95,7 @@ export const PROJECT_QUERY = gql`
 export const USER_QUERY = gql`
   query ProjectQuery($id: Int) {
     user(dbId: $id) {
-      name
+      username
       email
       latitude
       longitude

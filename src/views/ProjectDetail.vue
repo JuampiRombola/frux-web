@@ -65,7 +65,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.owner.name"
+                      :value="project.owner.username"
                       label="EMPRENDEDOR"
                       prepend-icon="mdi-account"
                       readonly
