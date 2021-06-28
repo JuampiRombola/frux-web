@@ -5,7 +5,7 @@
         <v-card flat>
           <v-card-title>Usuarios</v-card-title>
           <v-card-text>
-            <UsersTable></UsersTable>
+            <UsersTable class="elevation-1"></UsersTable>
           </v-card-text>
         </v-card>
       </v-col>

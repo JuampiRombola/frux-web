@@ -17,8 +17,6 @@ export const ALL_USERS_QUERY = gql`
         }
       }
       pageInfo {
-        hasNextPage
-        hasPreviousPage
         startCursor
         endCursor
       }
@@ -28,8 +26,8 @@ export const ALL_USERS_QUERY = gql`
 `
 
 export const ALL_PROJECTS_QUERY = gql`
-  query AllProjectsQuery($limit: Int) {
-    allProjects(first: $limit) {
+  query AllProjectsQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String, $sort: [ProjectSortEnum]) {
+    allProjects(first: $first, last: $last, after: $endCursor, before: $startCursor, sort: $sort) {
       edges {
         node {
           dbId
@@ -47,11 +45,10 @@ export const ALL_PROJECTS_QUERY = gql`
         }
       }
       pageInfo {
-        hasNextPage
-        hasPreviousPage
         startCursor
         endCursor
-      }
+      },
+      totalCount
     }
   }
 `

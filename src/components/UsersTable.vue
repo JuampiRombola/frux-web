@@ -5,11 +5,8 @@
     :options.sync="options"
     :server-items-length="totalCount"
     :loading="loading"
-    class="elevation-1"
     :items-per-page="itemsPerPage"
-    :footer-props="{
-      'items-per-page-options': [5, 10, 15, 20, 30, 40, 50]
-    }"
+    :footer-props="footerProps"
   >
     <template v-slot:item.blocked="{ item }">
       <div>
@@ -97,7 +94,8 @@ export default {
         { text: 'Último ingreso', sortable: true, value: 'lastLogin' },
         { text: 'Rol', sortable: false, value: 'rol' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
-      ]
+      ],
+      footerProps: { 'items-per-page-options': [5, 10, 15, 20, 30, 40, 50] }
     }
   },
 
@@ -121,6 +119,7 @@ export default {
     startCursor () {
       return this.allUsers?.pageInfo?.startCursor
     },
+
     sorting () {
       return this.options.sortBy.length
         ? USER_SORT_ENUM[this.options.sortBy[0]] + '_' + (this.options.sortDesc[0] ? 'DESC' : 'ASC')
@@ -155,7 +154,6 @@ export default {
           startCursor = [this.startCursor]
         }
 
-        this.$apollo.queries.allUsers.skip = false
         this.$apollo.queries.allUsers.refetch({
           first: first,
           last: last,
@@ -171,8 +169,10 @@ export default {
   apollo: {
     allUsers: {
       query: ALL_USERS_QUERY,
-      skip () {
-        return this.skipQuery
+      variables () {
+        return {
+          first: this.itemsPerPage
+        }
       }
     }
   }

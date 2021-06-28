@@ -5,8 +5,8 @@
     :options.sync="options"
     :server-items-length="totalCount"
     :loading="loading"
-    :footer-props="footerProps"
     :items-per-page="itemsPerPage"
+    :footer-props="footerProps"
   >
     <template v-slot:item.owner="{ item }">
       <a href="#" @click.prevent="goToUserDetails(item.owner.dbId)">{{ item.owner.email }}</a>
@@ -37,9 +37,17 @@
 </template>
 
 <script>
-import { ALL_PROJECTS_QUERY } from '../graphql/graphql'
+import { ALL_PROJECTS_QUERY } from '@/graphql/graphql'
 
-const DEFAULT_ROWS_PER_PAGE = 30
+const DEFAULT_ROWS_PER_PAGE = 10
+const PROJECT_SORT_ENUM = {
+  dbId: 'ID',
+  name: 'NAME',
+  currentState: 'CURRENT_STATE',
+  'category.name': 'CATEGORY_NAME',
+  goal: 'GOAL',
+  owner: 'USER_ID'
+}
 
 export default {
   props: {
@@ -55,16 +63,16 @@ export default {
     return {
       options: {},
       headers: [
-        { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
-        { text: 'Nombre', sortable: false, value: 'name' },
-        { text: 'Categoría', sortable: false, value: 'category.name' },
-        { text: 'Estado', sortable: false, value: 'currentState' },
+        { text: 'ID', align: 'start', sortable: true, value: 'dbId' },
+        { text: 'Nombre', sortable: true, value: 'name' },
+        { text: 'Categoría', sortable: true, value: 'category.name' },
+        { text: 'Estado', sortable: true, value: 'currentState' },
         { text: 'Recaudado', sortable: false, value: 'amountCollected' },
-        { text: 'Objetivo', sortable: false, value: 'goal' },
-        { text: 'Emprendedor', sortable: false, value: 'owner' },
+        { text: 'Objetivo', sortable: true, value: 'goal' },
+        { text: 'Emprendedor', sortable: true, value: 'owner' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
       ],
-      footerProps: { 'items-per-page-options': [3, 5, 10, 15, -1] }
+      footerProps: { 'items-per-page-options': [5, 10, 15, 20, 30, 40, 50] }
     }
   },
 
@@ -78,7 +86,21 @@ export default {
     },
 
     loading () {
-      return this.allProjects === undefined
+      return this.$apollo.loading
+    },
+
+    endCursor () {
+      return this.allProjects?.pageInfo?.endCursor
+    },
+
+    startCursor () {
+      return this.allProjects?.pageInfo?.startCursor
+    },
+
+    sorting () {
+      return this.options.sortBy.length
+        ? PROJECT_SORT_ENUM[this.options.sortBy[0]] + '_' + (this.options.sortDesc[0] ? 'DESC' : 'ASC')
+        : undefined
     }
   },
 
@@ -86,8 +108,42 @@ export default {
     goToUserDetails (id) {
       this.$router.push({ name: 'UserDetail', params: { id: id } })
     },
+
     goToProjectDetails (id) {
       this.$router.push({ name: 'ProjectDetail', params: { id: id } })
+    }
+  },
+
+  watch: {
+    options: {
+      handler (val, oldVal) {
+        const isPreviousPage = val?.page < oldVal?.page
+        const isNextPage = val?.page > oldVal?.page
+
+        let first = this.options.itemsPerPage
+        let last
+        let endCursor
+        let startCursor
+
+        if (isNextPage) {
+          endCursor = this.endCursor
+        }
+
+        if (isPreviousPage) {
+          first = undefined
+          last = this.options.itemsPerPage
+          startCursor = [this.startCursor]
+        }
+
+        this.$apollo.queries.allProjects.refetch({
+          first: first,
+          last: last,
+          endCursor: endCursor,
+          startCursor: startCursor,
+          sort: this.sorting
+        })
+      },
+      deep: true
     }
   },
 
@@ -96,7 +152,7 @@ export default {
       query: ALL_PROJECTS_QUERY,
       variables () {
         return {
-          limit: this.itemsPerPage
+          first: this.itemsPerPage
         }
       }
     }
