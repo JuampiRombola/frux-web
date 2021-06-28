@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const ALL_USERS_QUERY = gql`
-  query AllUsersQuery {
-    allUsers {
+  query AllUsersQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String) {
+    allUsers(first: $first, last: $last, after: $endCursor, before: $startCursor) {
       edges {
         node {
           dbId

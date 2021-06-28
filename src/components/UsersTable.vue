@@ -6,7 +6,28 @@
     :server-items-length="totalCount"
     :loading="loading"
     class="elevation-1"
+    :items-per-page="itemsPerPage"
+    :footer-props="{
+      'items-per-page-options': [5, 10, 15, 20, 30, 40, 50]
+    }"
   >
+    <template v-slot:item.blocked="{ item }">
+      <div>
+        <v-tooltip bottom v-if="item.isBlocked">
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon color="red" dark v-bind="attrs" v-on="on">mdi-account-cancel</v-icon>
+          </template>
+          <span>Usuario bloqueado</span>
+        </v-tooltip>
+        <v-tooltip bottom v-else>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon color="green" dark v-bind="attrs" v-on="on">mdi-account</v-icon>
+          </template>
+          <span>Activo</span>
+        </v-tooltip>
+      </div>
+    </template>
+
     <template v-slot:item.rol="{ item }">
       <div>
         <v-chip v-if="item.isSeeder" small outlined class="my-1" color="green darken-2 mr-1">Emprendedor</v-chip>
@@ -41,9 +62,9 @@
 </template>
 
 <script>
-import { ALL_USERS_QUERY } from '../graphql/graphql'
+import { ALL_USERS_QUERY } from '@/graphql/graphql'
 
-const DEFAULT_ROWS_PER_PAGE = 30
+const DEFAULT_ROWS_PER_PAGE = 5
 
 export default {
   props: {
@@ -57,9 +78,11 @@ export default {
 
   data () {
     return {
+      skipQuery: true,
       options: {},
       headers: [
         { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
+        { text: 'Status', sortable: false, value: 'blocked' },
         { text: 'Nombre de usuario', sortable: false, value: 'username' },
         { text: 'Email', sortable: false, value: 'email' },
         { text: 'Fecha de creación', sortable: false, value: 'creationDateTime' },
@@ -80,7 +103,15 @@ export default {
     },
 
     loading () {
-      return this.allUsers === undefined
+      return this.$apollo.loading
+    },
+
+    endCursor () {
+      return this.allUsers?.pageInfo?.endCursor
+    },
+
+    startCursor () {
+      return this.allUsers?.pageInfo?.startCursor
     }
   },
 
@@ -90,8 +121,46 @@ export default {
     }
   },
 
+  watch: {
+    options: {
+      handler (val, oldVal) {
+        const isPreviousPage = val?.page < oldVal?.page
+        const isNextPage = val?.page > oldVal?.page
+
+        let first = this.options.itemsPerPage
+        let last
+        let endCursor
+        let startCursor
+
+        if (isNextPage) {
+          endCursor = this.endCursor
+        }
+
+        if (isPreviousPage) {
+          first = undefined
+          last = this.options.itemsPerPage
+          startCursor = this.startCursor
+        }
+
+        this.$apollo.queries.allUsers.skip = false
+        this.$apollo.queries.allUsers.refetch({
+          first: first,
+          last: last,
+          endCursor: endCursor,
+          startCursor: startCursor
+        })
+      },
+      deep: true
+    }
+  },
+
   apollo: {
-    allUsers: ALL_USERS_QUERY
+    allUsers: {
+      query: ALL_USERS_QUERY,
+      skip () {
+        return this.skipQuery
+      }
+    }
   }
 }
 </script>
