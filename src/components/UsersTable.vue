@@ -7,7 +7,6 @@
     :loading="loading"
     :items-per-page="itemsPerPage"
     :footer-props="footerProps"
-    :hide-default-footer="loading"
   >
     <template v-slot:item.blocked="{ item }">
       <div>
@@ -95,8 +94,7 @@ export default {
         { text: 'Último ingreso', sortable: true, value: 'lastLogin' },
         { text: 'Rol', sortable: false, value: 'rol' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
-      ],
-      footerProps: { 'items-per-page-options': [5, 10, 15, 20, 30, 40, 50] }
+      ]
     }
   },
 
@@ -125,6 +123,14 @@ export default {
       return this.options.sortBy.length
         ? USER_SORT_ENUM[this.options.sortBy[0]] + '_' + (this.options.sortDesc[0] ? 'DESC' : 'ASC')
         : undefined
+    },
+
+    footerProps () {
+      return {
+        'items-per-page-options': [5, 10, 15, 20, 30, 40, 50],
+        'disable-items-per-page': this.loading,
+        'disable-pagination': this.loading
+      }
     }
   },
 

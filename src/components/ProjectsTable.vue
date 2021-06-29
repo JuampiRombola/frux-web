@@ -7,7 +7,6 @@
     :loading="loading"
     :items-per-page="itemsPerPage"
     :footer-props="footerProps"
-    :hide-default-footer="loading"
   >
     <template v-slot:item.owner="{ item }">
       <a href="#" @click.prevent="goToUserDetails(item.owner.dbId)">{{ item.owner.email }}</a>
@@ -72,8 +71,7 @@ export default {
         { text: 'Objetivo', sortable: true, value: 'goal' },
         { text: 'Emprendedor', sortable: true, value: 'owner' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
-      ],
-      footerProps: { 'items-per-page-options': [5, 10, 15, 20, 30, 40, 50] }
+      ]
     }
   },
 
@@ -102,6 +100,14 @@ export default {
       return this.options.sortBy.length
         ? PROJECT_SORT_ENUM[this.options.sortBy[0]] + '_' + (this.options.sortDesc[0] ? 'DESC' : 'ASC')
         : undefined
+    },
+
+    footerProps () {
+      return {
+        'items-per-page-options': [5, 10, 15, 20, 30, 40, 50],
+        'disable-items-per-page': this.loading,
+        'disable-pagination': this.loading
+      }
     }
   },
 
