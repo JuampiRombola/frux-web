@@ -8,6 +8,39 @@
     :items-per-page="itemsPerPage"
     :footer-props="footerProps"
   >
+    <template v-slot:top>
+      <div class="pa-3">
+        <v-icon>mdi-filter-variant</v-icon>
+        <span class="mx-4">
+          <v-chip small class="mr-2" :color="blockedFilter ? 'primary lighten-2' : ''" @click="blockedFilter = !blockedFilter">
+            <v-icon small left v-if="blockedFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Bloqueado
+          </v-chip>
+          <v-chip small class="mr-2" :color="unblockedFilter ? 'primary lighten-2' : ''" @click="unblockedFilter = !unblockedFilter">
+            <v-icon small left v-if="unblockedFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Desbloqueado
+          </v-chip>
+          <v-chip small class="mr-2" :color="isSeederFilter ? 'primary lighten-2' : ''" @click="isSeederFilter = !isSeederFilter">
+            <v-icon small left v-if="isSeederFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Emprendedor
+          </v-chip>
+          <v-chip small class="mr-2" :color="isSeerFilter ? 'primary lighten-2' : ''" @click="isSeerFilter = !isSeerFilter">
+            <v-icon small left v-if="isSeerFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Veedor
+          </v-chip>
+          <v-chip small class="mr-2" :color="isSponsorFilter ? 'primary lighten-2' : ''" @click="isSponsorFilter = !isSponsorFilter">
+            <v-icon small left v-if="isSponsorFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Patrocinador
+          </v-chip>
+        </span>
+      </div>
+      <v-divider></v-divider>
+    </template>
     <template v-slot:item.blocked="{ item }">
       <div>
         <v-tooltip bottom v-if="item.isBlocked">
@@ -94,7 +127,12 @@ export default {
         { text: 'Último ingreso', sortable: true, value: 'lastLogin' },
         { text: 'Rol', sortable: false, value: 'rol' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
-      ]
+      ],
+      blockedFilter: false,
+      unblockedFilter: false,
+      isSeederFilter: false,
+      isSeerFilter: false,
+      isSponsorFilter: false
     }
   },
 
@@ -131,46 +169,64 @@ export default {
         'disable-items-per-page': this.loading,
         'disable-pagination': this.loading
       }
+    },
+
+    filters () {
+      return {
+        isBlockedIsNull: this.unblockedFilter ? true : undefined,
+        isSeer: this.isSeerFilter ? true : undefined
+      }
     }
   },
 
   methods: {
     goToUserDetails (id) {
       this.$router.push({ name: 'UserDetail', params: { id: id } })
+    },
+
+    paginate (val, oldVal) {
+      const isPreviousPage = val?.page < oldVal?.page
+      const isNextPage = val?.page > oldVal?.page
+
+      let first = this.options.itemsPerPage
+      let last
+      let endCursor
+      let startCursor
+
+      if (isNextPage) {
+        endCursor = this.endCursor
+      }
+
+      if (isPreviousPage) {
+        first = undefined
+        last = this.options.itemsPerPage
+        startCursor = [this.startCursor]
+      }
+
+      this.$apollo.queries.allUsers.refetch({
+        first: first,
+        last: last,
+        endCursor: endCursor,
+        startCursor: startCursor,
+        sort: this.sorting,
+        filters: this.filters
+      })
     }
   },
 
   watch: {
     options: {
       handler (val, oldVal) {
-        const isPreviousPage = val?.page < oldVal?.page
-        const isNextPage = val?.page > oldVal?.page
-
-        let first = this.options.itemsPerPage
-        let last
-        let endCursor
-        let startCursor
-
-        if (isNextPage) {
-          endCursor = this.endCursor
-        }
-
-        if (isPreviousPage) {
-          first = undefined
-          last = this.options.itemsPerPage
-          startCursor = [this.startCursor]
-        }
-
-        this.$apollo.queries.allUsers.refetch({
-          first: first,
-          last: last,
-          endCursor: endCursor,
-          startCursor: startCursor,
-          sort: this.sorting
-        })
+        this.paginate(val, oldVal)
       },
       deep: true
-    }
+    },
+    filters: {
+      handler (val, oldVal) {
+        this.paginate(val, oldVal)
+      }
+    },
+    deep: true
   },
 
   apollo: {
