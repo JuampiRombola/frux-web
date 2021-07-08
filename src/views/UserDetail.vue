@@ -274,7 +274,7 @@
 <script>
 import Map from '@/components/Map'
 import ProjectsTable from '@/components/ProjectsTable'
-import { BLOCK_USER_MUTATION, UNBLOCK_USER_MUTATION, USER_QUERY } from '../graphql/graphql'
+import { BLOCK_USER_MUTATION, UNBLOCK_USER_MUTATION, USER_QUERY } from '@/graphql/graphql'
 
 export default {
   components: {

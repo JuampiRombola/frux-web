@@ -44,6 +44,7 @@ export const ALL_PROJECTS_QUERY = gql`
             dbId
             email
           }
+          isBlocked
         }
       }
       pageInfo {
@@ -90,6 +91,7 @@ export const PROJECT_QUERY = gql`
         dbId
         username
       }
+      isBlocked
     }
   }
 `
