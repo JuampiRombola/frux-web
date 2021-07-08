@@ -121,6 +121,18 @@ export const USER_QUERY = gql`
         }
       }
       isSeeder
+      favoritedProjects {
+        edges {
+          node {
+              project {
+                dbId
+                name
+                categoryName
+                favoriteCount
+              }
+          }
+        }
+      }
       isSponsor
       favoriteCount
     }

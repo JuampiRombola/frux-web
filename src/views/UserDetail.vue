@@ -147,10 +147,9 @@
           <v-tabs v-model="tab" centered color="primary lighten-3">
             <v-tabs-slider></v-tabs-slider>
             <v-tab href="#tab-1">Perfil</v-tab>
-            <v-tab href="#tab-2">Transacciones</v-tab>
-            <v-tab href="#tab-3" v-if="isSeeder">Emprendedor</v-tab>
-            <v-tab href="#tab-4" v-if="isSponsor">Patrocinador</v-tab>
-            <v-tab href="#tab-5" v-if="isSeer">Veedor</v-tab>
+            <v-tab href="#tab-2" v-if="isSeeder">Emprendedor</v-tab>
+            <v-tab href="#tab-3" v-if="isSponsor">Patrocinador</v-tab>
+            <v-tab href="#tab-4" v-if="isSeer">Veedor</v-tab>
           </v-tabs>
 
           <v-divider class="mx-7"></v-divider>
@@ -166,6 +165,15 @@
                           <v-card-title>Descripción</v-card-title>
                           <v-card-text>{{ user.description }}</v-card-text>
                         </v-col>
+                        <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
+                          <v-card-title>Ubicación</v-card-title>
+                          <Map :latitude="parseFloat(user.latitude)" :longitude="parseFloat(user.longitude)" class="px-4"></Map>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                    <v-divider vertical class="my-2 vertical-divider"></v-divider>
+                    <v-col cols="12" xl="6">
+                      <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Intereses</v-card-title>
                           <v-card-text>
@@ -179,25 +187,14 @@
                             </v-chip>
                           </v-card-text>
                         </v-col>
-                        <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
-                          <v-card-title>Ubicación</v-card-title>
-                          <Map :latitude="parseFloat(user.latitude)" :longitude="parseFloat(user.longitude)" class="px-4"></Map>
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                    <v-divider vertical class="my-2 vertical-divider"></v-divider>
-                    <v-col cols="12" xl="6">
-                      <v-row>
                         <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Proyectos Favoritos</v-card-title>
+                          <v-card-title>Proyectos Favoritos ({{ user.favoriteCount }})</v-card-title>
                           <v-card-text>
-                            <ProjectsTable :itemsPerPage="3"></ProjectsTable>
-                          </v-card-text>
-                        </v-col>
-                        <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Proyectos Consultados</v-card-title>
-                          <v-card-text>
-                            <ProjectsTable :itemsPerPage="3"></ProjectsTable>
+                            <v-data-table
+                              :headers="favoriteHeaders"
+                              :items="favorites"
+                              :items-per-page="5"
+                            ></v-data-table>
                           </v-card-text>
                         </v-col>
                       </v-row>
@@ -207,25 +204,19 @@
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-2">
-              <v-card flat>
-                <v-card-text>Transacciones</v-card-text>
-              </v-card>
-            </v-tab-item>
-
-            <v-tab-item value="tab-3" v-if="isSeeder">
+            <v-tab-item value="tab-2" v-if="isSeeder">
               <v-card flat>
                 <v-card-text>Emprendedor</v-card-text>
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-4" v-if="isSponsor">
+            <v-tab-item value="tab-3" v-if="isSponsor">
               <v-card flat>
                 <v-card-text>Patrocinador</v-card-text>
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-5" v-if="isSeer">
+            <v-tab-item value="tab-4" v-if="isSeer">
               <v-card flat>
                 <v-card-text>Veedor</v-card-text>
               </v-card>
@@ -273,13 +264,11 @@
 
 <script>
 import Map from '@/components/Map'
-import ProjectsTable from '@/components/ProjectsTable'
 import { BLOCK_USER_MUTATION, UNBLOCK_USER_MUTATION, USER_QUERY } from '@/graphql/graphql'
 
 export default {
   components: {
-    Map,
-    ProjectsTable
+    Map
   },
 
   name: 'UserDetail',
@@ -289,7 +278,13 @@ export default {
     tab: null,
     mockUser: {
       ethereum: 0.0096
-    }
+    },
+    favoriteHeaders: [
+      { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
+      { text: 'Nombre', sortable: false, value: 'name' },
+      { text: 'Categoría', sortable: false, value: 'categoryName' },
+      { text: 'Favoritos', align: 'end', sortable: false, value: 'favoriteCount' }
+    ]
   }),
 
   computed: {
@@ -310,6 +305,9 @@ export default {
     },
     interests () {
       return this.user?.interests?.edges?.map(i => i?.node?.name) || []
+    },
+    favorites () {
+      return this.user?.favoritedProjects?.edges?.map(i => i?.node) || []
     },
     items () {
       return [{
