@@ -9,7 +9,7 @@
     :footer-props="footerProps"
   >
     <template v-slot:top>
-      <v-card-actions class="px-3 py-3">
+      <v-card-actions class="px-2 py-2">
         <v-menu
           :close-on-content-click="false"
           min-width="500"
@@ -23,7 +23,7 @@
               v-on="on"
               class="pa-0 ma-0"
             >
-              <v-icon>mdi-filter-variant</v-icon>
+              <v-icon>mdi-filter-variant-plus</v-icon>
             </v-btn>
           </template>
 
