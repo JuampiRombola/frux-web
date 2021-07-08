@@ -46,6 +46,7 @@
       </v-card-actions>
       <v-divider></v-divider>
     </template>
+
     <template v-slot:item.blocked="{ item }">
       <div>
         <v-tooltip bottom v-if="item.isBlocked">
@@ -125,7 +126,7 @@ export default {
       options: {},
       headers: [
         { text: 'ID', align: 'start', sortable: true, value: 'dbId' },
-        { text: 'Status', sortable: true, value: 'blocked' },
+        { text: 'Activo', sortable: true, value: 'blocked' },
         { text: 'Nombre de usuario', sortable: true, value: 'username' },
         { text: 'Email', sortable: true, value: 'email' },
         { text: 'Fecha de creación', sortable: true, value: 'creationDateTime' },
