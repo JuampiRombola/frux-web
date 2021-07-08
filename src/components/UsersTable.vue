@@ -8,6 +8,45 @@
     :items-per-page="itemsPerPage"
     :footer-props="footerProps"
   >
+    <template v-slot:top>
+      <v-card-actions class="px-3 py-3">
+        <v-icon>mdi-filter-variant</v-icon>
+        <span class="mx-4">
+          <v-chip small class="mr-2" :color="activeFilter ? 'primary lighten-3' : ''" @click="clickActiveFilter">
+            <v-icon small left v-if="activeFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Activos
+          </v-chip>
+          <v-chip small class="mr-2" :color="blockedFilter ? 'primary lighten-3' : ''" @click="clickBlockedFilter">
+            <v-icon small left v-if="blockedFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Bloqueados
+          </v-chip>
+          <v-chip small class="mr-2" :color="isSeederFilter ? 'primary lighten-3' : ''" @click="isSeederFilter = !isSeederFilter">
+            <v-icon small left v-if="isSeederFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Emprendedores
+          </v-chip>
+          <v-chip small class="mr-2" :color="isSeerFilter ? 'primary lighten-3' : ''" @click="isSeerFilter = !isSeerFilter">
+            <v-icon small left v-if="isSeerFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Veedores
+          </v-chip>
+          <v-chip small class="mr-2" :color="isSponsorFilter ? 'primary lighten-3' : ''" @click="isSponsorFilter = !isSponsorFilter">
+            <v-icon small left v-if="isSponsorFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Patrocinadores
+          </v-chip>
+        </span>
+        <v-spacer></v-spacer>
+        <v-radio-group v-model="operator" row dense hide-details class="pa-0 ma-0">
+          <v-radio label="OR" value="or" class="pa-0 my-0 mx-2"></v-radio>
+          <v-radio label="AND" value="and" class="pa-0 ma-0 mx-2"></v-radio>
+        </v-radio-group>
+      </v-card-actions>
+      <v-divider></v-divider>
+    </template>
+
     <template v-slot:item.blocked="{ item }">
       <div>
         <v-tooltip bottom v-if="item.isBlocked">
@@ -87,14 +126,20 @@ export default {
       options: {},
       headers: [
         { text: 'ID', align: 'start', sortable: true, value: 'dbId' },
-        { text: 'Status', sortable: true, value: 'blocked' },
+        { text: 'Activo', sortable: true, value: 'blocked' },
         { text: 'Nombre de usuario', sortable: true, value: 'username' },
         { text: 'Email', sortable: true, value: 'email' },
         { text: 'Fecha de creación', sortable: true, value: 'creationDateTime' },
         { text: 'Último ingreso', sortable: true, value: 'lastLogin' },
         { text: 'Rol', sortable: false, value: 'rol' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
-      ]
+      ],
+      blockedFilter: false,
+      activeFilter: false,
+      isSeederFilter: false,
+      isSeerFilter: false,
+      isSponsorFilter: false,
+      operator: 'or'
     }
   },
 
@@ -131,45 +176,76 @@ export default {
         'disable-items-per-page': this.loading,
         'disable-pagination': this.loading
       }
+    },
+
+    filters () {
+      return {
+        [this.operator]: [
+          { [this.operator]: [{ isBlocked: (this.blockedFilter === this.activeFilter) ? undefined : this.blockedFilter || !this.activeFilter }] },
+          { [this.operator]: [{ isSeeder: this.isSeederFilter ? true : undefined }] },
+          { [this.operator]: [{ isSeer: this.isSeerFilter ? true : undefined }] },
+          { [this.operator]: [{ isSponsor: this.isSponsorFilter ? true : undefined }] }
+        ]
+      }
     }
   },
 
   methods: {
     goToUserDetails (id) {
       this.$router.push({ name: 'UserDetail', params: { id: id } })
+    },
+
+    clickActiveFilter () {
+      this.blockedFilter = false
+      this.activeFilter = !this.activeFilter
+    },
+
+    clickBlockedFilter () {
+      this.activeFilter = false
+      this.blockedFilter = !this.blockedFilter
+    },
+
+    paginate (val, oldVal) {
+      const isPreviousPage = val?.page < oldVal?.page
+      const isNextPage = val?.page > oldVal?.page
+
+      let first = this.options.itemsPerPage
+      let last
+      let endCursor
+      let startCursor
+
+      if (isNextPage) {
+        endCursor = this.endCursor
+      }
+
+      if (isPreviousPage) {
+        first = undefined
+        last = this.options.itemsPerPage
+        startCursor = [this.startCursor]
+      }
+
+      this.$apollo.queries.allUsers.refetch({
+        first: first,
+        last: last,
+        endCursor: endCursor,
+        startCursor: startCursor,
+        sort: this.sorting,
+        filters: this.filters
+      })
     }
   },
 
   watch: {
     options: {
       handler (val, oldVal) {
-        const isPreviousPage = val?.page < oldVal?.page
-        const isNextPage = val?.page > oldVal?.page
-
-        let first = this.options.itemsPerPage
-        let last
-        let endCursor
-        let startCursor
-
-        if (isNextPage) {
-          endCursor = this.endCursor
-        }
-
-        if (isPreviousPage) {
-          first = undefined
-          last = this.options.itemsPerPage
-          startCursor = [this.startCursor]
-        }
-
-        this.$apollo.queries.allUsers.refetch({
-          first: first,
-          last: last,
-          endCursor: endCursor,
-          startCursor: startCursor,
-          sort: this.sorting
-        })
+        this.paginate(val, oldVal)
       },
       deep: true
+    },
+    filters: {
+      handler (val, oldVal) {
+        this.paginate(val, oldVal)
+      }
     }
   },
 
@@ -186,6 +262,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.v-radio > .v-label {
+  font-size: small !important;
+}
 </style>

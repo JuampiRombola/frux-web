@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app clipped-left color="white" class="elevation-1" height="56">
-      <v-app-bar-nav-icon @click="mini = !mini"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click="toggleMenu"></v-app-bar-nav-icon>
 
       <v-img
         max-width="33"
@@ -62,6 +62,7 @@ export default {
   data () {
     return {
       drawer: true,
+      mini: true,
       items: [
         { title: 'Dashboard', icon: 'mdi-view-dashboard', route: 'Dashboard', associatedRoutes: ['Dashboard'] },
         { title: 'Usuarios', icon: 'mdi-account-group', route: 'Users', associatedRoutes: ['Users', 'UserDetail'] },
@@ -69,8 +70,7 @@ export default {
         { title: 'Transacciones', icon: 'mdi-cash-multiple', route: 'Transactions', associatedRoutes: ['Transactions'] },
         { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Metrics', associatedRoutes: ['Metrics'] },
         { title: 'Servidores', icon: 'mdi-server', route: 'Servers', associatedRoutes: ['Servers'] }
-      ],
-      mini: true
+      ]
     }
   },
 
@@ -80,6 +80,13 @@ export default {
     },
     isSelected (associatedRoutes) {
       return associatedRoutes.includes(this.$router.currentRoute.name)
+    },
+    toggleMenu () {
+      if (this.$vuetify.breakpoint.mdAndDown) {
+        this.drawer = !this.drawer
+      } else {
+        this.mini = !this.mini
+      }
     }
   }
 }

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 
 export const ALL_USERS_QUERY = gql`
-  query AllUsersQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String, $sort: [UserSortEnum]) {
-    allUsers(first: $first, last: $last, after: $endCursor, before: $startCursor, sort: $sort) {
+  query AllUsersQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String, $sort: [UserSortEnum], $filters: UserFilter) {
+    allUsers(first: $first, last: $last, after: $endCursor, before: $startCursor, sort: $sort, filters: $filters) {
       edges {
         node {
           dbId
@@ -14,6 +14,8 @@ export const ALL_USERS_QUERY = gql`
           isSeeder
           isSponsor
           isSeer
+          isSeeder
+          isSponsor
         }
       }
       pageInfo {
@@ -26,8 +28,8 @@ export const ALL_USERS_QUERY = gql`
 `
 
 export const ALL_PROJECTS_QUERY = gql`
-  query AllProjectsQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String, $sort: [ProjectSortEnum]) {
-    allProjects(first: $first, last: $last, after: $endCursor, before: $startCursor, sort: $sort) {
+  query AllProjectsQuery($first: Int, $last: Int, $endCursor: String, $startCursor: String, $sort: [ProjectSortEnum], $filters: ProjectFilter) {
+    allProjects(first: $first, last: $last, after: $endCursor, before: $startCursor, sort: $sort, filters: $filters) {
       edges {
         node {
           dbId
@@ -99,6 +101,18 @@ export const USER_QUERY = gql`
       email
       latitude
       longitude
+    }
+  }
+`
+
+export const CATEGORIES_QUERY = gql`
+  query{
+    allCategories{
+      edges {
+        node {
+          name
+        }
+      }
     }
   }
 `
