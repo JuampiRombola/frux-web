@@ -309,7 +309,7 @@
 
 <script>
 import InvestorsTable from '@/components/InvestorsTable'
-import { PROJECT_QUERY } from '../graphql/graphql'
+import { PROJECT_QUERY, BLOCK_PROJECT_MUTATION, UNBLOCK_PROJECT_MUTATION } from '@/graphql/graphql'
 
 export default {
   components: {
@@ -387,7 +387,7 @@ export default {
       return this.$route.params.id
     },
     isBlocked () {
-      return this.mockProject.isBlocked
+      return this.project.isBlocked
     },
     items () {
       return [{
@@ -407,12 +407,30 @@ export default {
 
   methods: {
     blockProject () {
-      this.mockProject.isBlocked = true
       this.dialog = false
+      this.$apollo.mutate({
+        mutation: BLOCK_PROJECT_MUTATION,
+        variables: {
+          idProject: this.id
+        }
+      }).then(() => {
+        this.project.isBlocked = true
+      }).catch((error) => {
+        console.error(error)
+      })
     },
     unblockProject () {
-      this.mockProject.isBlocked = false
       this.dialog = false
+      this.$apollo.mutate({
+        mutation: UNBLOCK_PROJECT_MUTATION,
+        variables: {
+          idProject: this.id
+        }
+      }).then(() => {
+        this.project.isBlocked = false
+      }).catch((error) => {
+        console.error(error)
+      })
     }
   },
 

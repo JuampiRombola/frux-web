@@ -44,6 +44,7 @@ export const ALL_PROJECTS_QUERY = gql`
             dbId
             email
           }
+          isBlocked
         }
       }
       pageInfo {
@@ -90,6 +91,7 @@ export const PROJECT_QUERY = gql`
         dbId
         username
       }
+      isBlocked
     }
   }
 `
@@ -101,6 +103,7 @@ export const USER_QUERY = gql`
       email
       latitude
       longitude
+      isBlocked
     }
   }
 `
@@ -113,6 +116,36 @@ export const CATEGORIES_QUERY = gql`
           name
         }
       }
+    }
+  }
+`
+
+export const BLOCK_USER_MUTATION = gql`
+  mutation BlockUser($userId: Int!) {
+    mutateBlockUser(userId: $userId) {
+      isBlocked
+    }
+  }
+`
+
+export const UNBLOCK_USER_MUTATION = gql`
+  mutation UnblockUser($userId: Int!) {
+    mutateUnblockUser(userId: $userId){
+      isBlocked
+    }
+  }
+`
+export const BLOCK_PROJECT_MUTATION = gql`
+  mutation BlockProject($idProject: Int!) {
+    mutateBlockProject(idProject: $idProject){
+      isBlocked
+    }
+  }
+`
+export const UNBLOCK_PROJECT_MUTATION = gql`
+  mutation UnblockProject($idProject: Int!) {
+    mutateUnblockProject(idProject: $idProject){
+      isBlocked
     }
   }
 `

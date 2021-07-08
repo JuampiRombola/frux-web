@@ -274,7 +274,7 @@
 <script>
 import Map from '@/components/Map'
 import ProjectsTable from '@/components/ProjectsTable'
-import { USER_QUERY } from '../graphql/graphql'
+import { BLOCK_USER_MUTATION, UNBLOCK_USER_MUTATION, USER_QUERY } from '@/graphql/graphql'
 
 export default {
   components: {
@@ -313,7 +313,7 @@ export default {
       return this.$route.params.id
     },
     isBlocked () {
-      return this.mockUser.isBlocked
+      return this.user.isBlocked
     },
     isSeeder () {
       return this.mockUser.isSeeder
@@ -342,12 +342,30 @@ export default {
 
   methods: {
     blockUser () {
-      this.mockUser.isBlocked = true
       this.dialog = false
+      this.$apollo.mutate({
+        mutation: BLOCK_USER_MUTATION,
+        variables: {
+          userId: this.id
+        }
+      }).then(() => {
+        this.user.isBlocked = true
+      }).catch((error) => {
+        console.error(error)
+      })
     },
     unblockUser () {
-      this.mockUser.isBlocked = false
       this.dialog = false
+      this.$apollo.mutate({
+        mutation: UNBLOCK_USER_MUTATION,
+        variables: {
+          userId: this.id
+        }
+      }).then(() => {
+        this.user.isBlocked = false
+      }).catch((error) => {
+        console.error(error)
+      })
     }
   },
 
