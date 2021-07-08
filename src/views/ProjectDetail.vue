@@ -195,7 +195,6 @@
             <v-tab href="#tab-1">Etapas</v-tab>
             <v-tab href="#tab-2">Patrocinadores</v-tab>
             <v-tab href="#tab-3">Veedores</v-tab>
-            <v-tab href="#tab-4">Transacciones</v-tab>
           </v-tabs>
 
           <v-divider class="mx-7"></v-divider>
@@ -258,12 +257,6 @@
             <v-tab-item value="tab-3">
               <v-card flat>
                 <v-card-text>Veedores</v-card-text>
-              </v-card>
-            </v-tab-item>
-
-            <v-tab-item value="tab-4">
-              <v-card flat>
-                <v-card-text>Transacciones</v-card-text>
               </v-card>
             </v-tab-item>
           </v-tabs-items>
