@@ -97,13 +97,32 @@ export const PROJECT_QUERY = gql`
 `
 
 export const USER_QUERY = gql`
-  query ProjectQuery($id: Int) {
+  query UserQuery($id: Int) {
     user(dbId: $id) {
+      id
       username
       email
+      imagePath
+      firstName
+      lastName
+      description
+      creationDateTime
+      lastLogin
+      isSeer
       latitude
       longitude
       isBlocked
+      walletAddress
+      interests {
+        edges {
+          node {
+            name
+          }
+        }
+      }
+      isSeeder
+      isSponsor
+      favoriteCount
     }
   }
 `

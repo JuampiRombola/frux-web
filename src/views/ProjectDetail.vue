@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="loading">
+  <v-container v-if="$apollo.queries.project.loading">
     <v-layout row justify-center>
       <v-container fill-height>
         <v-layout row justify-center align-center>
@@ -399,9 +399,6 @@ export default {
         text: this.id,
         disabled: true
       }]
-    },
-    loading () {
-      return this.project === undefined
     }
   },
 
