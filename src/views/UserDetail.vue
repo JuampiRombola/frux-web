@@ -1,5 +1,5 @@
 <template>
-  <v-container v-if="loading">
+  <v-container v-if="$apollo.queries.user.loading">
     <v-layout row justify-center>
       <v-container fill-height>
         <v-layout row justify-center align-center>
@@ -32,7 +32,7 @@
                     </v-avatar>
                   </v-col>
                   <v-col cols="12" class="mt-2 mb-4">
-                    <div class="overline my-0">{{ mockUser.username }}</div>
+                    <div class="overline my-0">{{ user.username }}</div>
                     <div v-if="isSeeder"><v-chip small outlined class="my-1" color="green darken-2">Emprendedor</v-chip></div>
                     <div v-if="isSponsor"><v-chip small outlined class="my-1" color="pink darken-1">Patrocinador</v-chip></div>
                     <div v-if="isSeer"><v-chip small outlined class="my-1" color="amber darken-4">Veedor</v-chip></div>
@@ -90,8 +90,26 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="mockUser.lastName"
+                      :value="user.lastName"
                       label="APELLIDO"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2 py-2">
+                    <v-text-field
+                      :value="user.creationDateTime"
+                      label="FECHA DE CREACIÓN"
+                      prepend-icon="mdi-calendar-plus"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2 py-2">
+                    <v-text-field
+                      :value="user.lastLogin"
+                      label="ÚLTIMA CONEXIÓN"
+                      prepend-icon="mdi-update"
                       readonly
                       dense
                     ></v-text-field>
@@ -103,36 +121,18 @@
                 <v-row no-gutters class="mt-7">
                   <v-col cols="8" class="px-2 py-2">
                     <v-text-field
-                      :value="mockUser.address"
-                      label="DIRECCIÓN"
-                      prepend-icon="mdi-map-marker"
+                      :value="user.walletAddress"
+                      label="Wallet"
+                      prepend-icon="mdi-wallet"
                       readonly
                       dense
                     ></v-text-field>
                   </v-col>
                   <v-col cols="4" class="px-2 py-2">
                     <v-text-field
-                      :value="mockUser.phone"
-                      label="TELÉFONO"
-                      prepend-icon="mdi-phone"
-                      readonly
-                      dense
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" class="px-2 py-2">
-                    <v-text-field
-                      :value="mockUser.creationDatetime"
-                      label="FECHA DE CREACIÓN"
-                      prepend-icon="mdi-calendar-plus"
-                      readonly
-                      dense
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" class="px-2 py-2">
-                    <v-text-field
-                      :value="mockUser.lastLogin"
-                      label="ÚLTIMA CONEXIÓN"
-                      prepend-icon="mdi-update"
+                      :value="mockUser.ethereum"
+                      label="ETH"
+                      prepend-icon="mdi-ethereum"
                       readonly
                       dense
                     ></v-text-field>
@@ -147,10 +147,9 @@
           <v-tabs v-model="tab" centered color="primary lighten-3">
             <v-tabs-slider></v-tabs-slider>
             <v-tab href="#tab-1">Perfil</v-tab>
-            <v-tab href="#tab-2">Transacciones</v-tab>
-            <v-tab href="#tab-3" v-if="isSeeder">Emprendedor</v-tab>
-            <v-tab href="#tab-4" v-if="isSponsor">Patrocinador</v-tab>
-            <v-tab href="#tab-5" v-if="isSeer">Veedor</v-tab>
+            <v-tab href="#tab-2" v-if="isSeeder">Emprendedor</v-tab>
+            <v-tab href="#tab-3" v-if="isSponsor">Patrocinador</v-tab>
+            <v-tab href="#tab-4" v-if="isSeer">Veedor</v-tab>
           </v-tabs>
 
           <v-divider class="mx-7"></v-divider>
@@ -164,20 +163,7 @@
                       <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Descripción</v-card-title>
-                          <v-card-text>{{ mockUser.description }}</v-card-text>
-                        </v-col>
-                        <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Intereses</v-card-title>
-                          <v-card-text>
-                            <v-chip
-                              v-for="item in mockUser.interests"
-                              :key="item"
-                              outlined
-                              class="mb-2 mr-2"
-                            >
-                              {{ item }}
-                            </v-chip>
-                          </v-card-text>
+                          <v-card-text>{{ user.description }}</v-card-text>
                         </v-col>
                         <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
                           <v-card-title>Ubicación</v-card-title>
@@ -189,15 +175,26 @@
                     <v-col cols="12" xl="6">
                       <v-row>
                         <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Proyectos Favoritos</v-card-title>
+                          <v-card-title>Intereses</v-card-title>
                           <v-card-text>
-                            <ProjectsTable :itemsPerPage="3"></ProjectsTable>
+                            <v-chip
+                              v-for="item in interests"
+                              :key="item"
+                              outlined
+                              class="mb-2 mr-2"
+                            >
+                              {{ item }}
+                            </v-chip>
                           </v-card-text>
                         </v-col>
                         <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Proyectos Consultados</v-card-title>
+                          <v-card-title>Proyectos Favoritos ({{ user.favoriteCount }})</v-card-title>
                           <v-card-text>
-                            <ProjectsTable :itemsPerPage="3"></ProjectsTable>
+                            <v-data-table
+                              :headers="favoriteHeaders"
+                              :items="favorites"
+                              :items-per-page="5"
+                            ></v-data-table>
                           </v-card-text>
                         </v-col>
                       </v-row>
@@ -207,25 +204,19 @@
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-2">
-              <v-card flat>
-                <v-card-text>Transacciones</v-card-text>
-              </v-card>
-            </v-tab-item>
-
-            <v-tab-item value="tab-3" v-if="isSeeder">
+            <v-tab-item value="tab-2" v-if="isSeeder">
               <v-card flat>
                 <v-card-text>Emprendedor</v-card-text>
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-4" v-if="isSponsor">
+            <v-tab-item value="tab-3" v-if="isSponsor">
               <v-card flat>
                 <v-card-text>Patrocinador</v-card-text>
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-5" v-if="isSeer">
+            <v-tab-item value="tab-4" v-if="isSeer">
               <v-card flat>
                 <v-card-text>Veedor</v-card-text>
               </v-card>
@@ -273,13 +264,11 @@
 
 <script>
 import Map from '@/components/Map'
-import ProjectsTable from '@/components/ProjectsTable'
 import { BLOCK_USER_MUTATION, UNBLOCK_USER_MUTATION, USER_QUERY } from '@/graphql/graphql'
 
 export default {
   components: {
-    Map,
-    ProjectsTable
+    Map
   },
 
   name: 'UserDetail',
@@ -288,24 +277,14 @@ export default {
     dialog: false,
     tab: null,
     mockUser: {
-      username: 'mgarcia',
-      email: 'mgarcia@gmail.com',
-      avatar: 0,
-      firstName: 'Manuel',
-      lastName: 'García',
-      description: 'Divulgador científico, blogger y amante de la fotografía.',
-      creationDatetime: '12-04-2021 18:41',
-      lastLogin: '25-05-2021 10:12',
-      isSeeder: true,
-      isSponsor: true,
-      isSeer: true,
-      address: 'Av. Corrientes 5530, Buenos Aires, Argentina',
-      latitude: -34.5971806,
-      longitude: -58.4432835,
-      phone: '+54 9 11 3271 8283',
-      interests: ['Arte', 'Ciencia', 'Cine', 'Comida', 'Fotografía', 'Moda', 'Música', 'Tecnología', 'Teatro'],
-      isBlocked: false
-    }
+      ethereum: 0.0096
+    },
+    favoriteHeaders: [
+      { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
+      { text: 'Nombre', sortable: false, value: 'name' },
+      { text: 'Categoría', sortable: false, value: 'categoryName' },
+      { text: 'Favoritos', align: 'end', sortable: false, value: 'favoriteCount' }
+    ]
   }),
 
   computed: {
@@ -316,13 +295,19 @@ export default {
       return this.user.isBlocked
     },
     isSeeder () {
-      return this.mockUser.isSeeder
+      return this.user.isSeeder
     },
     isSponsor () {
-      return this.mockUser.isSponsor
+      return this.user.isSponsor
     },
     isSeer () {
-      return this.mockUser.isSeer
+      return this.user.isSeer
+    },
+    interests () {
+      return this.user?.interests?.edges?.map(i => i?.node?.name) || []
+    },
+    favorites () {
+      return this.user?.favoritedProjects?.edges?.map(i => i?.node) || []
     },
     items () {
       return [{
@@ -331,12 +316,9 @@ export default {
         href: '../users'
       },
       {
-        text: this.mockUser.username,
+        text: this.user.username,
         disabled: true
       }]
-    },
-    loading () {
-      return this.user === undefined
     }
   },
 
