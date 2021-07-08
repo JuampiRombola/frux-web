@@ -28,7 +28,7 @@ export default {
 
   data () {
     return {
-      zoom: 4,
+      zoom: 15,
       rotation: 0
     }
   }

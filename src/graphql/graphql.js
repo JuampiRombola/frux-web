@@ -14,6 +14,8 @@ export const ALL_USERS_QUERY = gql`
           isSeeder
           isSponsor
           isSeer
+          isSeeder
+          isSponsor
         }
       }
       pageInfo {

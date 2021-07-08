@@ -9,36 +9,41 @@
     :footer-props="footerProps"
   >
     <template v-slot:top>
-      <div class="pa-3">
+      <v-card-actions class="px-3 py-3">
         <v-icon>mdi-filter-variant</v-icon>
         <span class="mx-4">
-          <v-chip small class="mr-2" :color="blockedFilter ? 'primary lighten-2' : ''" @click="blockedFilter = !blockedFilter">
+          <v-chip small class="mr-2" :color="activeFilter ? 'primary lighten-3' : ''" @click="clickActiveFilter">
+            <v-icon small left v-if="activeFilter">mdi-check</v-icon>
+            <v-icon small left v-else>mdi-minus</v-icon>
+            Activos
+          </v-chip>
+          <v-chip small class="mr-2" :color="blockedFilter ? 'primary lighten-3' : ''" @click="clickBlockedFilter">
             <v-icon small left v-if="blockedFilter">mdi-check</v-icon>
             <v-icon small left v-else>mdi-minus</v-icon>
-            Bloqueado
+            Bloqueados
           </v-chip>
-          <v-chip small class="mr-2" :color="unblockedFilter ? 'primary lighten-2' : ''" @click="unblockedFilter = !unblockedFilter">
-            <v-icon small left v-if="unblockedFilter">mdi-check</v-icon>
-            <v-icon small left v-else>mdi-minus</v-icon>
-            Desbloqueado
-          </v-chip>
-          <v-chip small class="mr-2" :color="isSeederFilter ? 'primary lighten-2' : ''" @click="isSeederFilter = !isSeederFilter">
+          <v-chip small class="mr-2" :color="isSeederFilter ? 'primary lighten-3' : ''" @click="isSeederFilter = !isSeederFilter">
             <v-icon small left v-if="isSeederFilter">mdi-check</v-icon>
             <v-icon small left v-else>mdi-minus</v-icon>
-            Emprendedor
+            Emprendedores
           </v-chip>
-          <v-chip small class="mr-2" :color="isSeerFilter ? 'primary lighten-2' : ''" @click="isSeerFilter = !isSeerFilter">
+          <v-chip small class="mr-2" :color="isSeerFilter ? 'primary lighten-3' : ''" @click="isSeerFilter = !isSeerFilter">
             <v-icon small left v-if="isSeerFilter">mdi-check</v-icon>
             <v-icon small left v-else>mdi-minus</v-icon>
-            Veedor
+            Veedores
           </v-chip>
-          <v-chip small class="mr-2" :color="isSponsorFilter ? 'primary lighten-2' : ''" @click="isSponsorFilter = !isSponsorFilter">
+          <v-chip small class="mr-2" :color="isSponsorFilter ? 'primary lighten-3' : ''" @click="isSponsorFilter = !isSponsorFilter">
             <v-icon small left v-if="isSponsorFilter">mdi-check</v-icon>
             <v-icon small left v-else>mdi-minus</v-icon>
-            Patrocinador
+            Patrocinadores
           </v-chip>
         </span>
-      </div>
+        <v-spacer></v-spacer>
+        <v-radio-group v-model="operator" row dense hide-details class="pa-0 ma-0">
+          <v-radio label="OR" value="or" class="pa-0 my-0 mx-2"></v-radio>
+          <v-radio label="AND" value="and" class="pa-0 ma-0 mx-2"></v-radio>
+        </v-radio-group>
+      </v-card-actions>
       <v-divider></v-divider>
     </template>
     <template v-slot:item.blocked="{ item }">
@@ -129,10 +134,11 @@ export default {
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
       ],
       blockedFilter: false,
-      unblockedFilter: false,
+      activeFilter: false,
       isSeederFilter: false,
       isSeerFilter: false,
-      isSponsorFilter: false
+      isSponsorFilter: false,
+      operator: 'or'
     }
   },
 
@@ -173,8 +179,12 @@ export default {
 
     filters () {
       return {
-        isBlockedIsNull: this.unblockedFilter ? true : undefined,
-        isSeer: this.isSeerFilter ? true : undefined
+        [this.operator]: [
+          { [this.operator]: [{ isBlocked: (this.blockedFilter === this.activeFilter) ? undefined : this.blockedFilter || !this.activeFilter }] },
+          { [this.operator]: [{ isSeeder: this.isSeederFilter ? true : undefined }] },
+          { [this.operator]: [{ isSeer: this.isSeerFilter ? true : undefined }] },
+          { [this.operator]: [{ isSponsor: this.isSponsorFilter ? true : undefined }] }
+        ]
       }
     }
   },
@@ -182,6 +192,16 @@ export default {
   methods: {
     goToUserDetails (id) {
       this.$router.push({ name: 'UserDetail', params: { id: id } })
+    },
+
+    clickActiveFilter () {
+      this.blockedFilter = false
+      this.activeFilter = !this.activeFilter
+    },
+
+    clickBlockedFilter () {
+      this.activeFilter = false
+      this.blockedFilter = !this.blockedFilter
     },
 
     paginate (val, oldVal) {
@@ -225,8 +245,7 @@ export default {
       handler (val, oldVal) {
         this.paginate(val, oldVal)
       }
-    },
-    deep: true
+    }
   },
 
   apollo: {
@@ -242,6 +261,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.v-radio > .v-label {
+  font-size: small !important;
+}
 </style>
