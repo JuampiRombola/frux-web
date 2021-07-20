@@ -208,6 +208,7 @@ export default {
     paginate (val, oldVal) {
       const isPreviousPage = val?.page < oldVal?.page
       const isNextPage = val?.page > oldVal?.page
+      const isFirstPage = val?.page === oldVal?.page
 
       let first = this.options.itemsPerPage
       let last
@@ -216,6 +217,10 @@ export default {
 
       if (isNextPage) {
         endCursor = this.endCursor
+      }
+
+      if (isFirstPage) {
+        this.options.page = 1
       }
 
       if (isPreviousPage) {
