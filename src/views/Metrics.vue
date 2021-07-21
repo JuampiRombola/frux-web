@@ -18,7 +18,7 @@ iframe {
   display: block;
   border: none;         /* Reset default border */
   height: 100vh;        /* Viewport-relative units */
-  width: calc(100% + 10px);
+  width: calc(100% + 17px);
 }
 .iframe-content {
   width: 100%;
