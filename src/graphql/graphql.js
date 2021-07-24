@@ -64,8 +64,10 @@ export const INVESTORS_QUERY = gql`
           node {
             user {
               dbId
-              name
+              username
               email
+              firstName
+              lastName
             }
             investedAmount
             dateOfInvestment
@@ -75,26 +77,6 @@ export const INVESTORS_QUERY = gql`
     }
   }
 `
-
-// export const PROJECT_QUERY = gql`
-//   query ProjectQuery($id: Int) {
-//     project(dbId: $id) {
-//       name
-//       description
-//       currentState
-//       goal
-//       amountCollected
-//       category {
-//         name
-//       }
-//       owner {
-//         dbId
-//         username
-//       }
-//       isBlocked
-//     }
-//   }
-// `
 
 export const PROJECT_QUERY = gql`
   query ProjectQuery($id: Int) {
@@ -135,19 +117,6 @@ export const PROJECT_QUERY = gql`
             goal
             creationDate
             fundsReleased
-          }
-        }
-      }
-      investors {
-        edges {
-          node {
-            dateOfInvestment
-            investedAmount
-            user {
-              dbId
-              username
-              walletAddress
-            }
           }
         }
       }

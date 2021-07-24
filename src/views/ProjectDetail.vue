@@ -129,6 +129,15 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" class="px-2 py-2">
+                    <v-text-field
+                      :value="project.smartContractHash"
+                      label="SMART CONTRACT HASH"
+                      prepend-icon="mdi-wallet"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" class="px-2 py-2">
                     <v-select
                       v-model="hashtags"
                       :items="hashtags"
@@ -213,7 +222,6 @@
             <v-tabs-slider></v-tabs-slider>
             <v-tab href="#tab-1">Etapas</v-tab>
             <v-tab href="#tab-2">Patrocinadores</v-tab>
-            <v-tab href="#tab-3">Veedores</v-tab>
           </v-tabs>
 
           <v-divider class="mx-7"></v-divider>
@@ -263,11 +271,6 @@
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-3">
-              <v-card flat>
-                <v-card-text>Veedores</v-card-text>
-              </v-card>
-            </v-tab-item>
           </v-tabs-items>
         </v-card>
       </v-col>
