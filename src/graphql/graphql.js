@@ -166,6 +166,7 @@ export const PROJECT_QUERY = gql`
               username
               firstName
               lastName
+              email
             }
           }
         }
@@ -175,6 +176,7 @@ export const PROJECT_QUERY = gql`
         username
         firstName
         lastName
+        email
       }
       reviews {
         edges {
@@ -187,6 +189,7 @@ export const PROJECT_QUERY = gql`
               username
               firstName
               lastName
+              email
             }
           }
         }

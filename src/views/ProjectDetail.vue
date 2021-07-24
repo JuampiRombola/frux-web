@@ -25,6 +25,7 @@
               <v-col cols="12" class="my-0">
                 <div class="display-1 pb-0 mb-0 mt-2 text-center px-4">
                   {{ project.name }}
+                  <v-chip small class="ml-2">{{ project.currentState }}</v-chip>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
@@ -66,6 +67,15 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
+                      :value="project.category.name"
+                      label="CATEGORÍA"
+                      prepend-icon="mdi-tag"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2">
+                    <v-text-field
                       :value="seeder"
                       label="EMPRENDEDOR"
                       prepend-icon="mdi-account"
@@ -75,25 +85,12 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.category.name"
-                      label="CATEGORÍA"
-                      prepend-icon="mdi-tag"
+                      :value="seer"
+                      label="VEEDOR"
+                      prepend-icon="mdi-account"
                       readonly
                       dense
                     ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" class="px-2 py-2">
-                    <v-select
-                      v-model="project.currentState"
-                      :items="[project.currentState]"
-                      chips
-                      label="ESTADO"
-                      small-chips
-                      prepend-icon="mdi-state-machine"
-                      readonly
-                      append-icon=""
-                      class="my-0 py-0"
-                    ></v-select>
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
@@ -131,24 +128,6 @@
                       dense
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="px-2">
-                    <v-text-field
-                      :value="project.investorCount"
-                      label="PATROCINADORES"
-                      prepend-icon="mdi-charity"
-                      readonly
-                      dense
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" class="px-2">
-                    <v-text-field
-                      :value="project.favoriteCount"
-                      label="FAVORITOS"
-                      prepend-icon="mdi-star"
-                      readonly
-                      dense
-                    ></v-text-field>
-                  </v-col>
                   <v-col cols="12" class="px-2 py-2">
                     <v-select
                       v-model="hashtags"
@@ -160,6 +139,45 @@
                       readonly
                       append-icon=""
                     ></v-select>
+                  </v-col>
+                  <v-col cols="4" class="px-2">
+                    <v-text-field
+                      :value="project.investorCount"
+                      label="PATROCINADORES"
+                      prepend-icon="mdi-charity"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="4" class="px-2">
+                    <v-text-field
+                      :value="project.favoriteCount"
+                      label="FAVORITOS"
+                      prepend-icon="mdi-heart"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="4" class="px-2">
+                    <v-text-field
+                      :value="rating"
+                      label="PUNTAJE"
+                      prepend-icon="mdi-star"
+                      readonly
+                      dense
+                    >
+                      <template v-slot:append>
+                        <v-rating
+                          :value="project.generalScore"
+                          color="amber"
+                          dense
+                          half-increments
+                          readonly
+                          size="14"
+                          class="mr-2"
+                        ></v-rating>
+                      </template>
+                    </v-text-field>
                   </v-col>
                 </v-row>
               </v-col>
@@ -307,61 +325,12 @@ export default {
     tab: null,
     ethToUsd: undefined,
     mockProject: {
-      name: 'Nuevo Sistema de Gestión Universitaria (SIU Guaraní)',
-      currentState: 'CREADO',
-      goal: 1000000,
-      investorsCount: 54,
-      amountCollected: 3400,
-      favs: 122,
-      owner: {
-        dbId: 1,
-        name: 'mgarcia'
-      },
-      description: 'SIU GUARANÍ es un sistema de gestión académica que registra y administra todas las actividades académicas de la Universidad y sus Facultades, desde que los alumnos ingresan como aspirantes hasta que obtienen el diploma. Fue concebido para administrar la gestión de alumnos en forma segura.',
-      creationDatetime: '06-05-2021 10:41',
-      endDateTime: '07-01-2021 12:00',
-      address: 'Av. Paseo Colón 850, Buenos Aires, Argentina',
-      hashtags: ['guarani', 'university', 'admin', 'system', 'engineer', 'fiuba', 'uba', 'new', 'students', 'siu'],
-      category: {
-        name: 'Tecnología'
-      },
-      isBlocked: false,
       photos: [
         {
           src: 'https://mediacdn.cincopa.com/v2/1078304/12!xnaFAYJFrDwqiA/4/Asc3adeslaFIUBA_8_.jpg'
         },
         {
           src: 'https://mediacdn.cincopa.com/v2/1078304/6!xnaFAYJFrDAhEB/0/Asc3adeslaFIUBA_2_.JPG'
-        }
-      ],
-      states: [
-        {
-          name: 'Iniciado',
-          dateTime: '06-05-2021 10:41',
-          stages: []
-        },
-        {
-          name: 'En Progreso',
-          dateTime: '07-05-2021 05:01',
-          stages: [
-            {
-              dateTime: '07-05-2021 05:01',
-              goal: '300000'
-            },
-            {
-              dateTime: '12-05-2021 15:49',
-              goal: '200000'
-            },
-            {
-              dateTime: '28-05-2021 22:33',
-              goal: '500000'
-            }
-          ]
-        },
-        {
-          name: 'Finalizado',
-          dateTime: '06-06-2021 10:10',
-          stages: []
         }
       ]
     }
@@ -386,11 +355,10 @@ export default {
       }]
     },
     seeder () {
-      const owner = this.project.owner
-      const fullNameOrEmail = (owner.firstName && owner.lastName)
-        ? `${owner.firstName} ${owner.lastName}`
-        : owner.email
-      return owner.username || fullNameOrEmail
+      return this.getUserName(this.project.owner)
+    },
+    seer () {
+      return this.project.hasSeer ? this.getUserName(this.project.seer) : 'Sin asignar'
     },
     creationDate () {
       return this.getFormattedDate(this.project.creationDate)
@@ -409,6 +377,9 @@ export default {
     },
     stages () {
       return this.project.stages.edges.map(e => e.node)
+    },
+    rating () {
+      return `${this.project.generalScore}  (${this.project.reviewCount} ${this.project.reviewCount === 1 ? 'opinión' : 'opiniones'})`
     }
   },
 
@@ -438,6 +409,12 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
+    },
+    getUserName (user) {
+      const fullNameOrEmail = (user.firstName && user.lastName)
+        ? `${user.firstName} ${user.lastName}`
+        : user.email
+      return user.username || fullNameOrEmail
     },
     getFormattedDate (rawDate) {
       const date = new Date(rawDate)
