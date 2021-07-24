@@ -12,6 +12,7 @@
     <v-card-actions class="mx-0 px-0 mt-0 pt-0">
       <v-btn icon class="pa-0 ma-0" @click="$router.back()"><v-icon color="primary lighten-3">mdi-keyboard-backspace</v-icon></v-btn>
       <v-breadcrumbs
+        class="my-0 py-0"
         :items="items"
       ></v-breadcrumbs>
     </v-card-actions>
@@ -150,8 +151,8 @@
                   </v-col>
                   <v-col cols="12" class="px-2 py-2">
                     <v-select
-                      v-model="mockProject.hashtags"
-                      :items="mockProject.hashtags"
+                      v-model="hashtags"
+                      :items="hashtags"
                       chips
                       label="HASHTAGS"
                       multiple
@@ -206,34 +207,24 @@
                   <v-row>
                     <v-col cols="6">
                       <v-timeline align-top dense>
-                        <template v-for="state in mockProject.states">
+                        <template v-for="stage in stages">
                           <v-timeline-item
-                            :key="state.name"
-                            color="pink"
+                            :key="stage.dbId"
+                            :color="stages.fundsReleased ? 'green' : 'grey'"
                           >
                             <v-row class="pt-1">
                               <v-col cols="3">
-                                <strong>{{ state.dateTime }}</strong>
+                                {{ (stages.fundsReleased)
+                                  ? getFormattedDate(stage.fundsReleasedDate)
+                                  : 'Pendiente' }}
                               </v-col>
                               <v-col>
-                                <strong>{{ state.name }}</strong>
-                              </v-col>
-                            </v-row>
-                          </v-timeline-item>
-                          <v-timeline-item
-                            v-for="(stage, i) in state.stages"
-                            :key="stage.name"
-                            color="teal lighten-3"
-                            small
-                          >
-                            <v-row class="pt-1">
-                              <v-col cols="3">
-                                <strong>{{ stage.dateTime }}</strong>
-                              </v-col>
-                              <v-col>
-                                <strong>Etapa {{ i+1 }}</strong>
+                                <strong>{{ stage.title }}</strong>
                                 <div class="text-caption">
-                                  Objetivo: {{ stage.goal }}
+                                  {{ stage.description }}
+                                </div>
+                                <div class="text-caption">
+                                  Objetivo: <strong>{{ ethAndUsdText(stage.goal) }}</strong>
                                 </div>
                               </v-col>
                             </v-row>
@@ -412,6 +403,12 @@ export default {
     },
     goal () {
       return this.ethAndUsdText(this.project.goal)
+    },
+    hashtags () {
+      return this.project.hashtags.edges.map(e => e.node.hashtag)
+    },
+    stages () {
+      return this.project.stages.edges.map(e => e.node)
     }
   },
 
