@@ -65,7 +65,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.owner.username"
+                      :value="seeder"
                       label="EMPRENDEDOR"
                       prepend-icon="mdi-account"
                       readonly
@@ -96,7 +96,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="mockProject.creationDatetime"
+                      :value="creationDate"
                       label="FECHA DE CREACIÓN"
                       prepend-icon="mdi-calendar-plus"
                       readonly
@@ -105,7 +105,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="mockProject.endDateTime"
+                      :value="deadline"
                       label="FECHA DE FINALIZACIÓN"
                       prepend-icon="mdi-calendar-remove"
                       readonly
@@ -114,7 +114,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.amountCollected"
+                      :value="amountCollected"
                       label="RECAUDADO"
                       prepend-icon="mdi-account-cash"
                       readonly
@@ -123,7 +123,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.goal"
+                      :value="goal"
                       label="OBJETIVO"
                       prepend-icon="mdi-cash"
                       readonly
@@ -132,7 +132,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="mockProject.investorsCount"
+                      :value="project.investorCount"
                       label="PATROCINADORES"
                       prepend-icon="mdi-charity"
                       readonly
@@ -141,7 +141,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="mockProject.favs"
+                      :value="project.favoriteCount"
                       label="FAVORITOS"
                       prepend-icon="mdi-star"
                       readonly
@@ -314,6 +314,7 @@ export default {
   data: () => ({
     dialog: false,
     tab: null,
+    ethToUsd: undefined,
     mockProject: {
       name: 'Nuevo Sistema de Gestión Universitaria (SIU Guaraní)',
       currentState: 'CREADO',
@@ -392,6 +393,25 @@ export default {
         text: this.id,
         disabled: true
       }]
+    },
+    seeder () {
+      const owner = this.project.owner
+      const fullNameOrEmail = (owner.firstName && owner.lastName)
+        ? `${owner.firstName} ${owner.lastName}`
+        : owner.email
+      return owner.username || fullNameOrEmail
+    },
+    creationDate () {
+      return this.getFormattedDate(this.project.creationDate)
+    },
+    deadline () {
+      return this.getFormattedDate(this.project.deadline)
+    },
+    amountCollected () {
+      return this.ethAndUsdText(this.project.amountCollected)
+    },
+    goal () {
+      return this.ethAndUsdText(this.project.goal)
     }
   },
 
@@ -421,6 +441,18 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
+    },
+    getFormattedDate (rawDate) {
+      const date = new Date(rawDate)
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+    },
+    ethAndUsdText (amount) {
+      const formattedAmount = parseFloat(amount).toFixed(4)
+      if (!this.ethToUsd) {
+        return `${formattedAmount} ETH`
+      }
+      const usd = Math.round(amount * this.ethToUsd)
+      return `${usd} USD  -  ${formattedAmount} ETH`
     }
   },
 
@@ -433,6 +465,13 @@ export default {
         }
       }
     }
+  },
+
+  mounted () {
+    fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
+      .then(response => response.json()).then(jsonData => {
+        this.ethToUsd = jsonData.USD
+      })
   }
 }
 </script>

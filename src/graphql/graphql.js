@@ -76,22 +76,126 @@ export const INVESTORS_QUERY = gql`
   }
 `
 
+// export const PROJECT_QUERY = gql`
+//   query ProjectQuery($id: Int) {
+//     project(dbId: $id) {
+//       name
+//       description
+//       currentState
+//       goal
+//       amountCollected
+//       category {
+//         name
+//       }
+//       owner {
+//         dbId
+//         username
+//       }
+//       isBlocked
+//     }
+//   }
+// `
+
 export const PROJECT_QUERY = gql`
   query ProjectQuery($id: Int) {
     project(dbId: $id) {
+      dbId
       name
       description
       currentState
       goal
-      amountCollected
-      category {
-        name
-      }
+      userId
+      categoryName
+      latitude
+      longitude
+      uriImage
+      hasSeer
+      seerId
+      smartContractHash
+      isBlocked
+      creationDate
+      deadline
       owner {
         dbId
         username
+        firstName
+        lastName
+        email
       }
-      isBlocked
+      category {
+        name
+      }
+      stages {
+        edges {
+          node {
+            dbId
+            stageIndex
+            title
+            description
+            goal
+            creationDate
+            fundsReleased
+          }
+        }
+      }
+      investors {
+        edges {
+          node {
+            dateOfInvestment
+            investedAmount
+            user {
+              dbId
+              username
+              walletAddress
+            }
+          }
+        }
+      }
+      hashtags {
+        edges {
+          node {
+            hashtag
+          }
+        }
+      }
+      favoritesFrom {
+        edges {
+          node {
+            user {
+              dbId
+              username
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+      seer {
+        dbId
+        username
+        firstName
+        lastName
+      }
+      reviews {
+        edges {
+          node {
+            id
+            score
+            description
+            user {
+              dbId
+              username
+              firstName
+              lastName
+            }
+          }
+        }
+      }
+      amountCollected
+      investorCount
+      favoriteCount
+      generalScore
+      reviewCount
     }
   }
 `
