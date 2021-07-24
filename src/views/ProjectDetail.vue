@@ -452,7 +452,7 @@ export default {
         return `${formattedAmount} ETH`
       }
       const usd = Math.round(amount * this.ethToUsd)
-      return `${usd} USD  -  ${formattedAmount} ETH`
+      return `${usd} USD  (${formattedAmount} ETH)`
     }
   },
 
