@@ -17,7 +17,7 @@
             <v-list-item-content>
               <v-rating
                 :value="review.score"
-                color="blue"
+                color="amber"
                 dense
                 half-increments
                 readonly

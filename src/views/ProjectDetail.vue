@@ -192,7 +192,7 @@
                             size="14"
                             class="mr-1"
                           ></v-rating>
-                          <div class="blue--text point-mouse" @click="reviewsDialog = true">{{ reviewsText }}</div>
+                          <div class="blue--text point-mouse small-font" v-if="project.reviewCount" @click="reviewsDialog = true">{{ reviewsText }}</div>
                         </v-card-actions>
                       </template>
                     </v-text-field>
@@ -499,5 +499,8 @@ export default {
 }
 .point-mouse:hover {
   cursor: pointer;
+}
+.small-font {
+  font-size: small;
 }
 </style>
