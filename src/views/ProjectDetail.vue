@@ -175,22 +175,25 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="rating"
+                      :value="project.generalScore"
                       label="PUNTAJE"
                       prepend-icon="mdi-star"
                       readonly
                       dense
                     >
                       <template v-slot:append>
-                        <v-rating
-                          :value="project.generalScore"
-                          color="amber"
-                          dense
-                          half-increments
-                          readonly
-                          size="14"
-                          class="mr-2"
-                        ></v-rating>
+                        <v-card-actions class="ma-0 pa-0 pr-2">
+                          <v-rating
+                            :value="project.generalScore"
+                            color="amber"
+                            dense
+                            half-increments
+                            readonly
+                            size="14"
+                            class="mr-1"
+                          ></v-rating>
+                          <div class="blue--text point-mouse" @click="reviewsDialog = true">{{ reviewsText }}</div>
+                        </v-card-actions>
                       </template>
                     </v-text-field>
                   </v-col>
@@ -316,7 +319,10 @@
       </v-dialog>
     </v-row>
     <v-dialog v-model="favDialog" width="400">
-      <ProjectFavs :cancel-callback="closeFavsDialog" :users="favorites"></ProjectFavs>
+      <ProjectFavs :cancel-callback="closeFavsDialog" :users="favorites" />
+    </v-dialog>
+    <v-dialog v-model="reviewsDialog" width="600">
+      <Reviews :cancel-callback="closeReviewsDialog" :reviews="reviews" />
     </v-dialog>
   </v-container>
 </template>
@@ -325,11 +331,13 @@
 import InvestorsTable from '@/components/InvestorsTable'
 import { PROJECT_QUERY, BLOCK_PROJECT_MUTATION, UNBLOCK_PROJECT_MUTATION } from '@/graphql/graphql'
 import ProjectFavs from '@/components/ProjectFavs'
+import Reviews from '@/components/Reviews'
 
 export default {
   components: {
     InvestorsTable,
-    ProjectFavs
+    ProjectFavs,
+    Reviews
   },
 
   name: 'ProjectDetail',
@@ -337,6 +345,7 @@ export default {
   data: () => ({
     dialog: false,
     favDialog: false,
+    reviewsDialog: false,
     tab: null,
     ethToUsd: undefined,
     mockProject: {
@@ -393,11 +402,17 @@ export default {
     stages () {
       return this.project.stages.edges.map(e => e.node)
     },
-    rating () {
-      return `${this.project.generalScore}  (${this.project.reviewCount} ${this.project.reviewCount === 1 ? 'opinión' : 'opiniones'})`
+    reviewsText () {
+      return `(${this.project.reviewCount} ${this.project.reviewCount === 1 ? 'opinión' : 'opiniones'})`
     },
     favorites () {
       return this.project.favoritesFrom.edges.map(e => ({ dbId: e.node.user.dbId, username: this.getUserName(e.node.user) }))
+    },
+    reviews () {
+      return this.project.reviews.edges.map(e => {
+        e.node.username = this.getUserName(e.node.user)
+        return e.node
+      })
     }
   },
 
@@ -448,6 +463,9 @@ export default {
     },
     closeFavsDialog () {
       this.favDialog = false
+    },
+    closeReviewsDialog () {
+      this.reviewsDialog = false
     }
   },
 
@@ -478,5 +496,8 @@ export default {
 }
 .vertical-divider {
   margin: 0 -1px;
+}
+.point-mouse:hover {
+  cursor: pointer;
 }
 </style>
