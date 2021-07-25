@@ -20,6 +20,10 @@ export default {
     projectId: {
       type: Number,
       default: undefined
+    },
+    ethToUsd: {
+      type: Number,
+      default: undefined
     }
   },
 
@@ -28,7 +32,6 @@ export default {
   data () {
     return {
       options: {},
-      ethToUsd: undefined,
       headers: [
         { text: 'User ID', align: 'start', sortable: false, value: 'user.dbId' },
         { text: 'Email', sortable: false, value: 'user.email' },
@@ -72,13 +75,6 @@ export default {
         }
       }
     }
-  },
-
-  mounted () {
-    fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
-      .then(response => response.json()).then(jsonData => {
-        this.ethToUsd = jsonData.USD
-      })
   }
 }
 </script>

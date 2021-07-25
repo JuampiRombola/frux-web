@@ -271,7 +271,7 @@
             <v-tab-item value="tab-2">
               <v-card flat>
                 <v-card-text>
-                  <InvestorsTable :projectId="parseInt(id)"></InvestorsTable>
+                  <InvestorsTable :projectId="parseInt(id)" :eth-to-usd="ethToUsd"></InvestorsTable>
                 </v-card-text>
               </v-card>
             </v-tab-item>
