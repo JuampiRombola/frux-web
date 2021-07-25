@@ -167,7 +167,7 @@
                       dense
                     >
                       <template v-slot:append v-if="project.favoriteCount >= 1">
-                        <v-btn icon @click="favDialog = true">
+                        <v-btn small icon @click="favDialog = true" class="ma-0 pa-0">
                           <v-icon color="primary lighten-3">mdi-eye</v-icon>
                         </v-btn>
                       </template>
