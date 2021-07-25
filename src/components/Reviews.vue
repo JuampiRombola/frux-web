@@ -25,7 +25,7 @@
                 class="mx-0 px-0 move-to-left"
               ></v-rating>
               <v-list-item-subtitle class="text--primary my-1" v-text="review.username" />
-              <v-list-item-subtitle v-text="review.description" />
+              <div class="grey--text" v-text="review.description" />
             </v-list-item-content>
         </v-list-item>
 
