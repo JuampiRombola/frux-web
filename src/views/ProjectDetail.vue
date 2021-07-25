@@ -235,35 +235,7 @@
             <v-tab-item value="tab-1">
               <v-card flat>
                 <v-card-text>
-                  <v-row>
-                    <v-col cols="6">
-                      <v-timeline align-top dense>
-                        <template v-for="stage in stages">
-                          <v-timeline-item
-                            :key="stage.dbId"
-                            :color="stage.fundsReleased ? 'green' : 'grey'"
-                          >
-                            <v-row class="pt-1">
-                              <v-col cols="3">
-                                {{ (stage.fundsReleased)
-                                  ? getFormattedDate(stage.fundsReleasedDate)
-                                  : 'Pendiente' }}
-                              </v-col>
-                              <v-col>
-                                <strong>{{ stage.title }}</strong>
-                                <div class="text-caption">
-                                  {{ stage.description }}
-                                </div>
-                                <div class="text-caption">
-                                  Objetivo: <strong>{{ ethAndUsdText(stage.goal) }}</strong>
-                                </div>
-                              </v-col>
-                            </v-row>
-                          </v-timeline-item>
-                        </template>
-                      </v-timeline>
-                    </v-col>
-                  </v-row>
+                  <ProjectStages :stages="stages" :eth-and-usd-text="ethAndUsdText"></ProjectStages>
                 </v-card-text>
               </v-card>
             </v-tab-item>
@@ -328,12 +300,14 @@ import InvestorsTable from '@/components/InvestorsTable'
 import { PROJECT_QUERY, BLOCK_PROJECT_MUTATION, UNBLOCK_PROJECT_MUTATION } from '@/graphql/graphql'
 import ProjectFavs from '@/components/ProjectFavs'
 import Reviews from '@/components/Reviews'
+import ProjectStages from '@/components/ProjectStages'
 
 export default {
   components: {
     InvestorsTable,
     ProjectFavs,
-    Reviews
+    Reviews,
+    ProjectStages
   },
 
   name: 'ProjectDetail',
