@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-stepper alt-labels flat>
+    <v-stepper alt-labels flat v-model="selected">
       <v-stepper-header>
         <v-stepper-step step="1" editable complete :edit-icon="getEditIcon('CREATED')" :color="getCompleteColor('CREATED')"><v-chip>CREATED</v-chip></v-stepper-step>
         <v-divider></v-divider>
@@ -13,16 +13,16 @@
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" />
+          <ProjectTimelineCreated :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
         <v-stepper-content step="2">
-          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" />
+          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
         <v-stepper-content step="3">
-          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" />
+          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
         <v-stepper-content step="4">
-          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" />
+          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -31,6 +31,7 @@
 
 <script>
 import ProjectTimeline from '@/components/ProjectTimeline'
+import ProjectTimelineCreated from '@/components/ProjectTimelineCreated'
 
 export default {
   props: {
@@ -44,22 +45,36 @@ export default {
     currentState: {
       type: String,
       default: 'CREATED'
+    },
+    getFormattedDate: {
+      type: Function
     }
   },
 
   components: {
-    ProjectTimeline
+    ProjectTimeline,
+    ProjectTimelineCreated
   },
 
+  name: 'ProjectStages',
+
+  data: () => ({
+    selected: 1,
+    states: ['CREATED', 'FUNDING', 'IN PROGRESS', 'COMPLETE']
+  }),
+
   computed: {
+    currentStateIndex () {
+      return this.states.indexOf(this.currentState)
+    },
     canViewFunding () {
-      return true
+      return this.currentStateIndex >= this.states.indexOf('FUNDING')
     },
     canViewInProgress () {
-      return false
+      return this.currentStateIndex >= this.states.indexOf('IN PROGRESS')
     },
     canViewComplete () {
-      return false
+      return this.currentStateIndex >= this.states.indexOf('COMPLETE')
     }
   },
 
@@ -72,7 +87,9 @@ export default {
     }
   },
 
-  name: 'ProjectStages'
+  mounted () {
+    this.selected = this.currentStateIndex + 1
+  }
 }
 </script>
 

@@ -3,18 +3,21 @@
     <template v-for="stage in stages">
       <v-timeline-item
         :key="stage.dbId"
-        :color="stage.fundsReleased ? 'green' : 'grey'"
+        color="green"
+        icon="mdi-plus"
+        icon-color="white"
+        fill-dot
+        class="my-2"
       >
         <v-row class="pt-1">
           <v-col cols="3">
-            {{ (stage.fundsReleased)
-            ? getFormattedDate(stage.fundsReleasedDate)
-            : 'Pendiente' }}
+            {{ getFormattedDate(stage.creationDate) }}
           </v-col>
           <v-col>
             <strong>{{ stage.title }}</strong>
             <div class="text-caption">
-              Objetivo: <strong>{{ ethAndUsdText(stage.goal) }}</strong>
+              <v-icon left class="py-1">mdi-cash</v-icon>
+              <strong>{{ ethAndUsdText(stage.goal) }}</strong>
             </div>
             <div class="text-caption">
               {{ stage.description }}
@@ -41,7 +44,7 @@ export default {
     }
   },
 
-  name: 'ProjectTimeline'
+  name: 'ProjectTimelineCreated'
 }
 </script>
 
