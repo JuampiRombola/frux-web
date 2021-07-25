@@ -90,7 +90,7 @@ export const PROJECT_QUERY = gql`
       categoryName
       latitude
       longitude
-      uriImage
+      signedUrl
       hasSeer
       seerId
       smartContractHash
@@ -117,6 +117,15 @@ export const PROJECT_QUERY = gql`
             goal
             creationDate
             fundsReleased
+            fundsReleasedAt
+          }
+        }
+      }
+      investors {
+        edges {
+          node {
+            dateOfInvestment
+            investedAmount
           }
         }
       }
