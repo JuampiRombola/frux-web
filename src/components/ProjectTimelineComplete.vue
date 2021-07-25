@@ -10,10 +10,10 @@
         class="my-2"
       >
         <v-row class="pt-1">
-          <v-col cols="3">
-            <div><strong>Created:</strong> {{ getFormattedDate(stage.creationDate) }}</div>
-            <div><strong>Funded:</strong> {{ getFormattedDate(stage.completedFundingDate) }}</div>
-            <div><strong>Released:</strong> {{ getFormattedDate(stage.fundsReleasedAt) }}</div>
+          <v-col cols="4" xl="3">
+            <div><strong>Creado:</strong> {{ getFormattedDate(stage.creationDate) }}</div>
+            <div><strong>Financiado:</strong> {{ getFormattedDate(stage.completedFundingDate) }}</div>
+            <div><strong>Liberado:</strong> {{ getFormattedDate(stage.fundsReleasedAt) }}</div>
           </v-col>
           <v-col>
             <strong>{{ stage.title }}</strong>

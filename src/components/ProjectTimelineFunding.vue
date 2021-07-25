@@ -22,7 +22,7 @@
         </template>
 
         <v-row class="pt-1">
-          <v-col cols="3">
+          <v-col cols="4" xl="3">
             {{
               (stage.percentageCollected === 100)
                 ? getFormattedDate(stage.completedFundingDate)
