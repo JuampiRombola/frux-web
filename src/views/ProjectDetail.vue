@@ -149,7 +149,7 @@
                       append-icon=""
                     ></v-select>
                   </v-col>
-                  <v-col cols="4" class="px-2">
+                  <v-col cols="3" class="px-2">
                     <v-text-field
                       :value="project.investorCount"
                       label="PATROCINADORES"
@@ -158,16 +158,22 @@
                       dense
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="4" class="px-2">
+                  <v-col cols="3" class="px-2">
                     <v-text-field
                       :value="project.favoriteCount"
                       label="FAVORITOS"
                       prepend-icon="mdi-heart"
                       readonly
                       dense
-                    ></v-text-field>
+                    >
+                      <template v-slot:append>
+                        <v-btn icon @click="favDialog = true">
+                          <v-icon color="primary lighten-2">mdi-eye</v-icon>
+                        </v-btn>
+                      </template>
+                    </v-text-field>
                   </v-col>
-                  <v-col cols="4" class="px-2">
+                  <v-col cols="6" class="px-2">
                     <v-text-field
                       :value="rating"
                       label="PUNTAJE"
@@ -309,22 +315,28 @@
         </v-card>
       </v-dialog>
     </v-row>
+    <v-dialog v-model="favDialog" width="400">
+      <ProjectFavs :cancel-callback="closeFavsDialog" :users="favorites"></ProjectFavs>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
 import InvestorsTable from '@/components/InvestorsTable'
 import { PROJECT_QUERY, BLOCK_PROJECT_MUTATION, UNBLOCK_PROJECT_MUTATION } from '@/graphql/graphql'
+import ProjectFavs from '@/components/ProjectFavs'
 
 export default {
   components: {
-    InvestorsTable
+    InvestorsTable,
+    ProjectFavs
   },
 
   name: 'ProjectDetail',
 
   data: () => ({
     dialog: false,
+    favDialog: false,
     tab: null,
     ethToUsd: undefined,
     mockProject: {
@@ -383,6 +395,9 @@ export default {
     },
     rating () {
       return `${this.project.generalScore}  (${this.project.reviewCount} ${this.project.reviewCount === 1 ? 'opinión' : 'opiniones'})`
+    },
+    favorites () {
+      return this.project.favoritesFrom.edges.map(e => ({ dbId: e.node.user.dbId, username: this.getUserName(e.node.user) }))
     }
   },
 
@@ -430,6 +445,9 @@ export default {
       }
       const usd = Math.round(amount * this.ethToUsd)
       return `${usd} USD  (${formattedAmount} ETH)`
+    },
+    closeFavsDialog () {
+      this.favDialog = false
     }
   },
 
