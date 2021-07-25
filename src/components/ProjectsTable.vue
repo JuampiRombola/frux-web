@@ -103,6 +103,15 @@
     <template v-slot:item.owner="{ item }">
       <a href="#" @click.prevent="goToUserDetails(item.owner.dbId)">{{ item.owner.email }}</a>
     </template>
+
+    <template v-slot:item.goal="{ item }">
+      {{ ethAndUsdText(item.goal) }}
+    </template>
+
+    <template v-slot:item.amountCollected="{ item }">
+      {{ ethAndUsdText(item.amountCollected) }}
+    </template>
+
     <template v-slot:item.actions="{ item }">
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
@@ -154,6 +163,7 @@ export default {
   data () {
     return {
       options: {},
+      ethToUsd: undefined,
       headers: [
         { text: 'ID', align: 'start', sortable: true, value: 'dbId' },
         { text: 'Activo', sortable: true, value: 'blocked' },
@@ -290,6 +300,14 @@ export default {
         sort: this.sorting,
         filters: this.filters
       })
+    },
+    ethAndUsdText (amount) {
+      const formattedAmount = parseFloat(amount).toFixed(4)
+      if (!this.ethToUsd) {
+        return `${formattedAmount} ETH`
+      }
+      const usd = Math.round(amount * this.ethToUsd)
+      return `${usd} USD  (${formattedAmount} ETH)`
     }
   },
 
@@ -319,6 +337,13 @@ export default {
     allCategories: {
       query: CATEGORIES_QUERY
     }
+  },
+
+  mounted () {
+    fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
+      .then(response => response.json()).then(jsonData => {
+        this.ethToUsd = jsonData.USD
+      })
   }
 }
 </script>

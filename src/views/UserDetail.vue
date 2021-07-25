@@ -12,6 +12,7 @@
     <v-card-actions class="mx-0 px-0 mt-0 pt-0">
       <v-btn icon class="pa-0 ma-0" @click="$router.back()"><v-icon color="primary lighten-3">mdi-keyboard-backspace</v-icon></v-btn>
       <v-breadcrumbs
+        class="my-0 py-0"
         :items="items"
       ></v-breadcrumbs>
     </v-card-actions>

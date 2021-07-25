@@ -64,8 +64,10 @@ export const INVESTORS_QUERY = gql`
           node {
             user {
               dbId
-              name
+              username
               email
+              firstName
+              lastName
             }
             investedAmount
             dateOfInvestment
@@ -79,19 +81,93 @@ export const INVESTORS_QUERY = gql`
 export const PROJECT_QUERY = gql`
   query ProjectQuery($id: Int) {
     project(dbId: $id) {
+      dbId
       name
       description
       currentState
       goal
-      amountCollected
-      category {
-        name
-      }
+      userId
+      categoryName
+      latitude
+      longitude
+      uriImage
+      hasSeer
+      seerId
+      smartContractHash
+      isBlocked
+      creationDate
+      deadline
       owner {
         dbId
         username
+        firstName
+        lastName
+        email
       }
-      isBlocked
+      category {
+        name
+      }
+      stages {
+        edges {
+          node {
+            dbId
+            stageIndex
+            title
+            description
+            goal
+            creationDate
+            fundsReleased
+          }
+        }
+      }
+      hashtags {
+        edges {
+          node {
+            hashtag
+          }
+        }
+      }
+      favoritesFrom {
+        edges {
+          node {
+            user {
+              dbId
+              username
+              firstName
+              lastName
+              email
+            }
+          }
+        }
+      }
+      seer {
+        dbId
+        username
+        firstName
+        lastName
+        email
+      }
+      reviews {
+        edges {
+          node {
+            id
+            score
+            description
+            user {
+              dbId
+              username
+              firstName
+              lastName
+              email
+            }
+          }
+        }
+      }
+      amountCollected
+      investorCount
+      favoriteCount
+      generalScore
+      reviewCount
     }
   }
 `

@@ -5,11 +5,15 @@
     :options.sync="options"
     :server-items-length="totalCount"
     :loading="loading"
-  ></v-data-table>
+  >
+    <template v-slot:item.investedAmount="{ item }">
+      {{ ethAndUsdText(item.investedAmount) }}
+    </template>
+  </v-data-table>
 </template>
 
 <script>
-import { INVESTORS_QUERY } from '../graphql/graphql'
+import { INVESTORS_QUERY } from '@/graphql/graphql'
 
 export default {
   props: {
@@ -24,12 +28,12 @@ export default {
   data () {
     return {
       options: {},
+      ethToUsd: undefined,
       headers: [
         { text: 'User ID', align: 'start', sortable: false, value: 'user.dbId' },
-        { text: 'Nombre', sortable: false, value: 'user.name' },
         { text: 'Email', sortable: false, value: 'user.email' },
         { text: 'Fecha', sortable: false, value: 'dateOfInvestment' },
-        { text: 'Aporte', align: 'end', sortable: false, value: 'investedAmount' }
+        { text: 'Aporte', sortable: false, value: 'investedAmount' }
       ]
     }
   },
@@ -48,6 +52,17 @@ export default {
     }
   },
 
+  methods: {
+    ethAndUsdText (amount) {
+      const formattedAmount = parseFloat(amount).toFixed(4)
+      if (!this.ethToUsd) {
+        return `${formattedAmount} ETH`
+      }
+      const usd = Math.round(amount * this.ethToUsd)
+      return `${usd} USD  (${formattedAmount} ETH)`
+    }
+  },
+
   apollo: {
     project: {
       query: INVESTORS_QUERY,
@@ -57,6 +72,13 @@ export default {
         }
       }
     }
+  },
+
+  mounted () {
+    fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
+      .then(response => response.json()).then(jsonData => {
+        this.ethToUsd = jsonData.USD
+      })
   }
 }
 </script>

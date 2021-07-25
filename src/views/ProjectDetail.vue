@@ -12,6 +12,7 @@
     <v-card-actions class="mx-0 px-0 mt-0 pt-0">
       <v-btn icon class="pa-0 ma-0" @click="$router.back()"><v-icon color="primary lighten-3">mdi-keyboard-backspace</v-icon></v-btn>
       <v-breadcrumbs
+        class="my-0 py-0"
         :items="items"
       ></v-breadcrumbs>
     </v-card-actions>
@@ -24,6 +25,7 @@
               <v-col cols="12" class="my-0">
                 <div class="display-1 pb-0 mb-0 mt-2 text-center px-4">
                   {{ project.name }}
+                  <v-chip small class="ml-2">{{ project.currentState }}</v-chip>
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
@@ -65,7 +67,16 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.owner.username"
+                      :value="project.category.name"
+                      label="CATEGORÍA"
+                      prepend-icon="mdi-tag"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2">
+                    <v-text-field
+                      :value="seeder"
                       label="EMPRENDEDOR"
                       prepend-icon="mdi-account"
                       readonly
@@ -74,29 +85,16 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.category.name"
-                      label="CATEGORÍA"
-                      prepend-icon="mdi-tag"
+                      :value="seer"
+                      label="VEEDOR"
+                      prepend-icon="mdi-account"
                       readonly
                       dense
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="px-2 py-2">
-                    <v-select
-                      v-model="project.currentState"
-                      :items="[project.currentState]"
-                      chips
-                      label="ESTADO"
-                      small-chips
-                      prepend-icon="mdi-state-machine"
-                      readonly
-                      append-icon=""
-                      class="my-0 py-0"
-                    ></v-select>
-                  </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="mockProject.creationDatetime"
+                      :value="creationDate"
                       label="FECHA DE CREACIÓN"
                       prepend-icon="mdi-calendar-plus"
                       readonly
@@ -105,7 +103,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2 py-2">
                     <v-text-field
-                      :value="mockProject.endDateTime"
+                      :value="deadline"
                       label="FECHA DE FINALIZACIÓN"
                       prepend-icon="mdi-calendar-remove"
                       readonly
@@ -114,7 +112,7 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.amountCollected"
+                      :value="amountCollected"
                       label="RECAUDADO"
                       prepend-icon="mdi-account-cash"
                       readonly
@@ -123,35 +121,26 @@
                   </v-col>
                   <v-col cols="6" class="px-2">
                     <v-text-field
-                      :value="project.goal"
+                      :value="goal"
                       label="OBJETIVO"
                       prepend-icon="mdi-cash"
                       readonly
                       dense
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="px-2">
+                  <v-col cols="12" class="px-2 py-2">
                     <v-text-field
-                      :value="mockProject.investorsCount"
-                      label="PATROCINADORES"
-                      prepend-icon="mdi-charity"
-                      readonly
-                      dense
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" class="px-2">
-                    <v-text-field
-                      :value="mockProject.favs"
-                      label="FAVORITOS"
-                      prepend-icon="mdi-star"
+                      :value="project.smartContractHash"
+                      label="SMART CONTRACT HASH"
+                      prepend-icon="mdi-wallet"
                       readonly
                       dense
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" class="px-2 py-2">
                     <v-select
-                      v-model="mockProject.hashtags"
-                      :items="mockProject.hashtags"
+                      v-model="hashtags"
+                      :items="hashtags"
                       chips
                       label="HASHTAGS"
                       multiple
@@ -159,6 +148,54 @@
                       readonly
                       append-icon=""
                     ></v-select>
+                  </v-col>
+                  <v-col cols="3" class="px-2">
+                    <v-text-field
+                      :value="project.investorCount"
+                      label="PATROCINADORES"
+                      prepend-icon="mdi-charity"
+                      readonly
+                      dense
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="3" class="px-2">
+                    <v-text-field
+                      :value="project.favoriteCount"
+                      label="FAVORITOS"
+                      prepend-icon="mdi-heart"
+                      readonly
+                      dense
+                    >
+                      <template v-slot:append v-if="project.favoriteCount >= 1">
+                        <v-btn small icon @click="favDialog = true" class="ma-0 pa-0">
+                          <v-icon color="primary lighten-3">mdi-eye</v-icon>
+                        </v-btn>
+                      </template>
+                    </v-text-field>
+                  </v-col>
+                  <v-col cols="6" class="px-2">
+                    <v-text-field
+                      :value="project.generalScore"
+                      label="PUNTAJE"
+                      prepend-icon="mdi-star"
+                      readonly
+                      dense
+                    >
+                      <template v-slot:append>
+                        <v-card-actions class="ma-0 pa-0 pr-2">
+                          <v-rating
+                            :value="project.generalScore"
+                            color="amber"
+                            dense
+                            half-increments
+                            readonly
+                            size="14"
+                            class="mr-1"
+                          ></v-rating>
+                          <div class="blue--text point-mouse small-font" v-if="project.reviewCount" @click="reviewsDialog = true">{{ reviewsText }}</div>
+                        </v-card-actions>
+                      </template>
+                    </v-text-field>
                   </v-col>
                 </v-row>
               </v-col>
@@ -194,7 +231,6 @@
             <v-tabs-slider></v-tabs-slider>
             <v-tab href="#tab-1">Etapas</v-tab>
             <v-tab href="#tab-2">Patrocinadores</v-tab>
-            <v-tab href="#tab-3">Veedores</v-tab>
           </v-tabs>
 
           <v-divider class="mx-7"></v-divider>
@@ -206,34 +242,24 @@
                   <v-row>
                     <v-col cols="6">
                       <v-timeline align-top dense>
-                        <template v-for="state in mockProject.states">
+                        <template v-for="stage in stages">
                           <v-timeline-item
-                            :key="state.name"
-                            color="pink"
+                            :key="stage.dbId"
+                            :color="stage.fundsReleased ? 'green' : 'grey'"
                           >
                             <v-row class="pt-1">
                               <v-col cols="3">
-                                <strong>{{ state.dateTime }}</strong>
+                                {{ (stage.fundsReleased)
+                                  ? getFormattedDate(stage.fundsReleasedDate)
+                                  : 'Pendiente' }}
                               </v-col>
                               <v-col>
-                                <strong>{{ state.name }}</strong>
-                              </v-col>
-                            </v-row>
-                          </v-timeline-item>
-                          <v-timeline-item
-                            v-for="(stage, i) in state.stages"
-                            :key="stage.name"
-                            color="teal lighten-3"
-                            small
-                          >
-                            <v-row class="pt-1">
-                              <v-col cols="3">
-                                <strong>{{ stage.dateTime }}</strong>
-                              </v-col>
-                              <v-col>
-                                <strong>Etapa {{ i+1 }}</strong>
+                                <strong>{{ stage.title }}</strong>
                                 <div class="text-caption">
-                                  Objetivo: {{ stage.goal }}
+                                  {{ stage.description }}
+                                </div>
+                                <div class="text-caption">
+                                  Objetivo: <strong>{{ ethAndUsdText(stage.goal) }}</strong>
                                 </div>
                               </v-col>
                             </v-row>
@@ -254,11 +280,6 @@
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-3">
-              <v-card flat>
-                <v-card-text>Veedores</v-card-text>
-              </v-card>
-            </v-tab-item>
           </v-tabs-items>
         </v-card>
       </v-col>
@@ -297,79 +318,43 @@
         </v-card>
       </v-dialog>
     </v-row>
+    <v-dialog v-model="favDialog" width="400">
+      <ProjectFavs :cancel-callback="closeFavsDialog" :users="favorites" />
+    </v-dialog>
+    <v-dialog v-model="reviewsDialog" width="600">
+      <Reviews :cancel-callback="closeReviewsDialog" :reviews="reviews" />
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
 import InvestorsTable from '@/components/InvestorsTable'
 import { PROJECT_QUERY, BLOCK_PROJECT_MUTATION, UNBLOCK_PROJECT_MUTATION } from '@/graphql/graphql'
+import ProjectFavs from '@/components/ProjectFavs'
+import Reviews from '@/components/Reviews'
 
 export default {
   components: {
-    InvestorsTable
+    InvestorsTable,
+    ProjectFavs,
+    Reviews
   },
 
   name: 'ProjectDetail',
 
   data: () => ({
     dialog: false,
+    favDialog: false,
+    reviewsDialog: false,
     tab: null,
+    ethToUsd: undefined,
     mockProject: {
-      name: 'Nuevo Sistema de Gestión Universitaria (SIU Guaraní)',
-      currentState: 'CREADO',
-      goal: 1000000,
-      investorsCount: 54,
-      amountCollected: 3400,
-      favs: 122,
-      owner: {
-        dbId: 1,
-        name: 'mgarcia'
-      },
-      description: 'SIU GUARANÍ es un sistema de gestión académica que registra y administra todas las actividades académicas de la Universidad y sus Facultades, desde que los alumnos ingresan como aspirantes hasta que obtienen el diploma. Fue concebido para administrar la gestión de alumnos en forma segura.',
-      creationDatetime: '06-05-2021 10:41',
-      endDateTime: '07-01-2021 12:00',
-      address: 'Av. Paseo Colón 850, Buenos Aires, Argentina',
-      hashtags: ['guarani', 'university', 'admin', 'system', 'engineer', 'fiuba', 'uba', 'new', 'students', 'siu'],
-      category: {
-        name: 'Tecnología'
-      },
-      isBlocked: false,
       photos: [
         {
           src: 'https://mediacdn.cincopa.com/v2/1078304/12!xnaFAYJFrDwqiA/4/Asc3adeslaFIUBA_8_.jpg'
         },
         {
           src: 'https://mediacdn.cincopa.com/v2/1078304/6!xnaFAYJFrDAhEB/0/Asc3adeslaFIUBA_2_.JPG'
-        }
-      ],
-      states: [
-        {
-          name: 'Iniciado',
-          dateTime: '06-05-2021 10:41',
-          stages: []
-        },
-        {
-          name: 'En Progreso',
-          dateTime: '07-05-2021 05:01',
-          stages: [
-            {
-              dateTime: '07-05-2021 05:01',
-              goal: '300000'
-            },
-            {
-              dateTime: '12-05-2021 15:49',
-              goal: '200000'
-            },
-            {
-              dateTime: '28-05-2021 22:33',
-              goal: '500000'
-            }
-          ]
-        },
-        {
-          name: 'Finalizado',
-          dateTime: '06-06-2021 10:10',
-          stages: []
         }
       ]
     }
@@ -392,6 +377,42 @@ export default {
         text: this.id,
         disabled: true
       }]
+    },
+    seeder () {
+      return this.getUserName(this.project.owner)
+    },
+    seer () {
+      return this.project.hasSeer ? this.getUserName(this.project.seer) : 'Sin asignar'
+    },
+    creationDate () {
+      return this.getFormattedDate(this.project.creationDate)
+    },
+    deadline () {
+      return this.getFormattedDate(this.project.deadline)
+    },
+    amountCollected () {
+      return this.ethAndUsdText(this.project.amountCollected)
+    },
+    goal () {
+      return this.ethAndUsdText(this.project.goal)
+    },
+    hashtags () {
+      return this.project.hashtags.edges.map(e => e.node.hashtag)
+    },
+    stages () {
+      return this.project.stages.edges.map(e => e.node)
+    },
+    reviewsText () {
+      return `(${this.project.reviewCount} ${this.project.reviewCount === 1 ? 'opinión' : 'opiniones'})`
+    },
+    favorites () {
+      return this.project.favoritesFrom.edges.map(e => ({ dbId: e.node.user.dbId, username: this.getUserName(e.node.user) }))
+    },
+    reviews () {
+      return this.project.reviews.edges.map(e => {
+        e.node.username = this.getUserName(e.node.user)
+        return e.node
+      })
     }
   },
 
@@ -421,6 +442,30 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
+    },
+    getUserName (user) {
+      const fullNameOrEmail = (user.firstName && user.lastName)
+        ? `${user.firstName} ${user.lastName}`
+        : user.email
+      return user.username || fullNameOrEmail
+    },
+    getFormattedDate (rawDate) {
+      const date = new Date(rawDate)
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
+    },
+    ethAndUsdText (amount) {
+      const formattedAmount = parseFloat(amount).toFixed(4)
+      if (!this.ethToUsd) {
+        return `${formattedAmount} ETH`
+      }
+      const usd = Math.round(amount * this.ethToUsd)
+      return `${usd} USD  (${formattedAmount} ETH)`
+    },
+    closeFavsDialog () {
+      this.favDialog = false
+    },
+    closeReviewsDialog () {
+      this.reviewsDialog = false
     }
   },
 
@@ -433,6 +478,13 @@ export default {
         }
       }
     }
+  },
+
+  mounted () {
+    fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
+      .then(response => response.json()).then(jsonData => {
+        this.ethToUsd = jsonData.USD
+      })
   }
 }
 </script>
@@ -444,5 +496,11 @@ export default {
 }
 .vertical-divider {
   margin: 0 -1px;
+}
+.point-mouse:hover {
+  cursor: pointer;
+}
+.small-font {
+  font-size: small;
 }
 </style>
