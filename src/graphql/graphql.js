@@ -90,7 +90,7 @@ export const PROJECT_QUERY = gql`
       categoryName
       latitude
       longitude
-      uriImage
+      signedUrl
       hasSeer
       seerId
       smartContractHash

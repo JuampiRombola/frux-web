@@ -149,7 +149,7 @@
                       append-icon=""
                     ></v-select>
                   </v-col>
-                  <v-col cols="3" class="px-2">
+                  <v-col cols="6" xl="3" class="px-2">
                     <v-text-field
                       :value="project.investorCount"
                       label="PATROCINADORES"
@@ -158,7 +158,7 @@
                       dense
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="3" class="px-2">
+                  <v-col cols="6" xl="3" class="px-2">
                     <v-text-field
                       :value="project.favoriteCount"
                       label="FAVORITOS"
@@ -173,7 +173,7 @@
                       </template>
                     </v-text-field>
                   </v-col>
-                  <v-col cols="6" class="px-2">
+                  <v-col cols="12" xl="6" class="px-2">
                     <v-text-field
                       :value="project.generalScore"
                       label="PUNTAJE"
@@ -203,12 +203,8 @@
               <v-col cols="6" class="mt-0 pt-0">
                 <v-row no-gutters class="text-center">
                   <v-col cols="12" class="mt-2 mb-4">
-                    <v-carousel hide-delimiters v-if="mockProject.photos.length !== 0">
-                      <v-carousel-item
-                        v-for="(item, i) in mockProject.photos"
-                        :key="i"
-                        :src="item.src"
-                      ></v-carousel-item>
+                    <v-carousel hide-delimiters v-if="project.signedUrl" :show-arrows="false">
+                      <v-carousel-item :src="project.signedUrl"></v-carousel-item>
                     </v-carousel>
                     <v-carousel v-else hide-delimiter-background hide-delimiters :show-arrows="false">
                       <v-carousel-item>
@@ -347,17 +343,7 @@ export default {
     favDialog: false,
     reviewsDialog: false,
     tab: null,
-    ethToUsd: undefined,
-    mockProject: {
-      photos: [
-        {
-          src: 'https://mediacdn.cincopa.com/v2/1078304/12!xnaFAYJFrDwqiA/4/Asc3adeslaFIUBA_8_.jpg'
-        },
-        {
-          src: 'https://mediacdn.cincopa.com/v2/1078304/6!xnaFAYJFrDAhEB/0/Asc3adeslaFIUBA_2_.JPG'
-        }
-      ]
-    }
+    ethToUsd: undefined
   }),
 
   computed: {
@@ -502,5 +488,6 @@ export default {
 }
 .small-font {
   font-size: small;
+  white-space: nowrap;
 }
 </style>
