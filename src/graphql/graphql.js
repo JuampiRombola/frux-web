@@ -117,6 +117,15 @@ export const PROJECT_QUERY = gql`
             goal
             creationDate
             fundsReleased
+            fundsReleasedAt
+          }
+        }
+      }
+      investors {
+        edges {
+          node {
+            dateOfInvestment
+            investedAmount
           }
         }
       }

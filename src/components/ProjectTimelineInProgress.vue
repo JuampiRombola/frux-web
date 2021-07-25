@@ -3,15 +3,17 @@
     <template v-for="stage in stages">
       <v-timeline-item
         :key="stage.dbId"
-        color="green lighten-2"
-        icon="mdi-calendar-plus"
+        :color="stage.fundsReleased ? 'green lighten-2' : 'grey'"
+        :icon="stage.fundsReleased ? 'mdi-check' : 'mdi-minus'"
         icon-color="white"
         fill-dot
         class="my-2"
       >
         <v-row class="pt-1">
           <v-col cols="3">
-            {{ getFormattedDate(stage.creationDate) }}
+            {{ (stage.fundsReleased)
+            ? getFormattedDate(stage.fundsReleasedAt)
+            : 'Pendiente' }}
           </v-col>
           <v-col>
             <strong>{{ stage.title }}</strong>
@@ -44,7 +46,7 @@ export default {
     }
   },
 
-  name: 'ProjectTimelineCreated'
+  name: 'ProjectTimelineInProgress'
 }
 </script>
 

@@ -6,7 +6,7 @@
         <v-divider></v-divider>
         <v-stepper-step step="2" :editable="canViewFunding" :complete="canViewFunding" :edit-icon="getEditIcon('FUNDING')" :color="getCompleteColor('FUNDING')"><v-chip>FUNDING</v-chip></v-stepper-step>
         <v-divider></v-divider>
-        <v-stepper-step step="3" :editable="canViewInProgress" :complete="canViewInProgress" :edit-icon="getEditIcon('IN PROGRESS')" :color="getCompleteColor('IN PROGRESS')"><v-chip>IN PROGRESS</v-chip></v-stepper-step>
+        <v-stepper-step step="3" :editable="canViewInProgress" :complete="canViewInProgress" :edit-icon="getEditIcon('IN_PROGRESS')" :color="getCompleteColor('IN_PROGRESS')"><v-chip>IN PROGRESS</v-chip></v-stepper-step>
         <v-divider></v-divider>
         <v-stepper-step step="4" :editable="canViewComplete" :complete="canViewComplete" :edit-icon="getEditIcon('COMPLETE')" :color="getCompleteColor('COMPLETE')"><v-chip>COMPLETE</v-chip></v-stepper-step>
       </v-stepper-header>
@@ -16,13 +16,13 @@
           <ProjectTimelineCreated :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
         <v-stepper-content step="2">
-          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
+          <ProjectTimelineFunding :stages="fundingStages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
         <v-stepper-content step="3">
-          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
+          <ProjectTimelineInProgress :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
         <v-stepper-content step="4">
-          <ProjectTimeline :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
+          <ProjectTimelineComplete :stages="fundingStages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -30,8 +30,10 @@
 </template>
 
 <script>
-import ProjectTimeline from '@/components/ProjectTimeline'
 import ProjectTimelineCreated from '@/components/ProjectTimelineCreated'
+import ProjectTimelineFunding from '@/components/ProjectTimelineFunding'
+import ProjectTimelineInProgress from '@/components/ProjectTimelineInProgress'
+import ProjectTimelineComplete from '@/components/ProjectTimelineComplete'
 
 export default {
   props: {
@@ -48,19 +50,29 @@ export default {
     },
     getFormattedDate: {
       type: Function
+    },
+    amountCollected: {
+      type: Number,
+      default: 0
+    },
+    investors: {
+      type: Array,
+      default: () => []
     }
   },
 
   components: {
-    ProjectTimeline,
-    ProjectTimelineCreated
+    ProjectTimelineCreated,
+    ProjectTimelineFunding,
+    ProjectTimelineInProgress,
+    ProjectTimelineComplete
   },
 
   name: 'ProjectStages',
 
   data: () => ({
     selected: 1,
-    states: ['CREATED', 'FUNDING', 'IN PROGRESS', 'COMPLETE']
+    states: ['CREATED', 'FUNDING', 'IN_PROGRESS', 'COMPLETE']
   }),
 
   computed: {
@@ -71,10 +83,17 @@ export default {
       return this.currentStateIndex >= this.states.indexOf('FUNDING')
     },
     canViewInProgress () {
-      return this.currentStateIndex >= this.states.indexOf('IN PROGRESS')
+      return this.currentStateIndex >= this.states.indexOf('IN_PROGRESS')
     },
     canViewComplete () {
       return this.currentStateIndex >= this.states.indexOf('COMPLETE')
+    },
+    fundingStages () {
+      return this.stages.map(stage => {
+        stage.percentageCollected = this.getPercentageCollectedForStage(stage)
+        stage.completedFundingDate = this.getCompletedFundingDate(stage)
+        return stage
+      })
     }
   },
 
@@ -84,6 +103,35 @@ export default {
     },
     getCompleteColor (state) {
       return (this.currentState === state && this.currentState !== 'COMPLETE') ? 'amber' : 'primary lighten-3'
+    },
+    _getTotalGoalUntilCurrentStage (stage) {
+      let totalGoalUntilCurrentStage = 0
+      for (let i = 1; i < stage.stageIndex; i++) {
+        totalGoalUntilCurrentStage += this.stages.filter(s => s.stageIndex === i)[0].goal
+      }
+      return totalGoalUntilCurrentStage
+    },
+    getPercentageCollectedForStage (stage) {
+      const collectedFromCurrentStage = this.amountCollected - this._getTotalGoalUntilCurrentStage(stage)
+      if (collectedFromCurrentStage <= 0) {
+        return 0
+      }
+      if (collectedFromCurrentStage >= stage.goal || stage.goal === 0) {
+        return 100
+      }
+      return Math.round((collectedFromCurrentStage * 100) / stage.goal)
+    },
+    getCompletedFundingDate (stage) {
+      const goalToComplete = this._getTotalGoalUntilCurrentStage(stage) + stage.goal
+      let goalCount = 0
+      let completedFundingDate
+      this.investors.forEach(investor => {
+        goalCount += investor.investedAmount
+        if (goalCount >= goalToComplete) {
+          completedFundingDate = investor.dateOfInvestment
+        }
+      })
+      return completedFundingDate
     }
   },
 

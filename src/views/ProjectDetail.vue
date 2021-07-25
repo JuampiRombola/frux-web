@@ -235,7 +235,14 @@
             <v-tab-item value="tab-1">
               <v-card flat>
                 <v-card-text>
-                  <ProjectStages :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" :current-state="project.currentState"></ProjectStages>
+                  <ProjectStages
+                    :stages="stages"
+                    :eth-and-usd-text="ethAndUsdText"
+                    :get-formatted-date="getFormattedDate"
+                    :current-state="project.currentState"
+                    :amountCollected="project.amountCollected"
+                    :investors="investors"
+                  ></ProjectStages>
                 </v-card-text>
               </v-card>
             </v-tab-item>
@@ -373,6 +380,9 @@ export default {
         e.node.username = this.getUserName(e.node.user)
         return e.node
       })
+    },
+    investors () {
+      return this.project.investors.edges.map(e => e.node)
     }
   },
 
