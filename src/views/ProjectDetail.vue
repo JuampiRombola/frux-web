@@ -166,9 +166,9 @@
                       readonly
                       dense
                     >
-                      <template v-slot:append>
+                      <template v-slot:append v-if="project.favoriteCount >= 1">
                         <v-btn icon @click="favDialog = true">
-                          <v-icon color="primary lighten-2">mdi-eye</v-icon>
+                          <v-icon color="primary lighten-3">mdi-eye</v-icon>
                         </v-btn>
                       </template>
                     </v-text-field>
@@ -242,11 +242,11 @@
                         <template v-for="stage in stages">
                           <v-timeline-item
                             :key="stage.dbId"
-                            :color="stages.fundsReleased ? 'green' : 'grey'"
+                            :color="stage.fundsReleased ? 'green' : 'grey'"
                           >
                             <v-row class="pt-1">
                               <v-col cols="3">
-                                {{ (stages.fundsReleased)
+                                {{ (stage.fundsReleased)
                                   ? getFormattedDate(stage.fundsReleasedDate)
                                   : 'Pendiente' }}
                               </v-col>
