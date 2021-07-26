@@ -1,12 +1,10 @@
 <template>
   <v-container v-if="$apollo.queries.project.loading">
-    <v-layout row justify-center>
-      <v-container fill-height>
-        <v-layout row justify-center align-center>
-          <v-progress-circular indeterminate :size="70" :width="5" color="primary lighten-3" class="mt-5"></v-progress-circular>
-        </v-layout>
-      </v-container>
-    </v-layout>
+    <v-row style="height: 400px">
+      <v-col class="text-center" align-self="center">
+        <v-progress-circular indeterminate :size="100" :width="8" color="primary lighten-3" class="mt-5"></v-progress-circular>
+      </v-col>
+    </v-row>
   </v-container>
   <v-container v-else>
     <v-card-actions class="mx-0 px-0 mt-0 pt-0">
