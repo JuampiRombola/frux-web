@@ -17,7 +17,7 @@
 
     <v-divider class="mx-4"></v-divider>
     <v-card-actions>
-      <v-btn color="primary" block text>
+      <v-btn color="primary" block text @click="pingServer(server.healthUrl)">
         Ping
       </v-btn>
     </v-card-actions>
@@ -30,6 +30,36 @@ export default {
 
   props: {
     server: Object
+  },
+
+  data: () => ({
+    responseTimeMS: {},
+    ok: {},
+    loading: {},
+    error: {}
+  }),
+
+  methods: {
+    pingServer (url) {
+      const startTime = new Date()
+      this.loading[url] = true
+      this.axios
+        .get(url)
+        .then(data => {
+          const endTime = new Date()
+          this.responseTimeMS[url] = endTime - startTime
+          this.ok[url] = true
+          this.error[url] = false
+          this.loading[url] = false
+          console.log(endTime - startTime)
+          console.log(data)
+        })
+        .catch(() => {
+          this.ok[url] = false
+          this.error[url] = true
+          this.loading[url] = false
+        })
+    }
   }
 }
 </script>

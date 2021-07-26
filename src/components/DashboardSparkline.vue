@@ -6,15 +6,14 @@
       class="v-sheet--offset mx-auto"
       :color="color"
       elevation="12"
+      rounded
       max-width="calc(100% - 32px)"
     >
-      <v-sparkline
-        :labels="labels"
-        :value="values"
-        color="white"
-        line-width="2"
-        padding="16"
-      ></v-sparkline>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-card-title class="white--text overline my-2" style="font-size: 14px !important;">{{ server.name }}</v-card-title>
+        <v-spacer></v-spacer>
+      </v-card-actions>
     </v-sheet>
 
     <v-card-text class="pt-0">
@@ -41,6 +40,7 @@ export default {
   name: 'DashboardSparkline',
 
   props: {
+    server: Object,
     title: {
       type: String
     },
@@ -68,7 +68,7 @@ export default {
 
 <style scoped>
 .v-sheet--offset {
-  top: -24px;
+  top: -10px;
   position: relative;
 }
 </style>

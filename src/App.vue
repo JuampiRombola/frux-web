@@ -45,6 +45,12 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append v-if="!mini">
+        <v-divider class="mx-2"></v-divider>
+        <div class="text-center grey--text overline py-2">
+          2021 - frux
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <v-main>

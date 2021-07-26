@@ -26,15 +26,18 @@ export default {
     servers: [{
       name: 'App Server',
       creationDate: '10-04-21',
-      description: 'Servidor principal donde residen las entidades de usuario y proyecto.'
+      description: 'Servidor principal donde residen las entidades de usuario y proyecto.',
+      healthUrl: 'https://frux-app-server.herokuapp.com/health'
     }, {
       name: 'Smart Contract Server',
       creationDate: '07-06-21',
-      description: 'Servidor encargado de procesar las transferencias y registrarlas en un Smart Contract.'
+      description: 'Servidor encargado de procesar las transferencias y registrarlas en un Smart Contract.',
+      healthUrl: 'https://frux-smart-contract.herokuapp.com/health'
     }, {
       name: 'Chat Server',
       creationDate: '12-07-21',
-      description: 'Servidor dedicado a manejar los mensajes entre usuarios y las notificaciones.'
+      description: 'Servidor dedicado a manejar los mensajes entre usuarios y las notificaciones.',
+      healthUrl: 'https://frux-chat.herokuapp.com/health'
     }]
   })
 }
