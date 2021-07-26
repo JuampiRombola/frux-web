@@ -226,7 +226,7 @@
           <v-tabs v-model="tab" centered color="primary lighten-3">
             <v-tabs-slider></v-tabs-slider>
             <v-tab href="#tab-1">Etapas</v-tab>
-            <v-tab href="#tab-2">Patrocinadores</v-tab>
+            <v-tab href="#tab-2" v-if="!currentStateIsCreated">Patrocinadores</v-tab>
           </v-tabs>
 
           <v-divider class="mx-7"></v-divider>
@@ -247,7 +247,7 @@
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-2">
+            <v-tab-item value="tab-2" v-if="!currentStateIsCreated">
               <v-card flat>
                 <v-card-text>
                   <InvestorsTable :projectId="parseInt(id)" :eth-to-usd="ethToUsd"></InvestorsTable>
@@ -383,6 +383,9 @@ export default {
     },
     investors () {
       return this.project.investors.edges.map(e => e.node)
+    },
+    currentStateIsCreated () {
+      return this.project.currentState === 'CREATED'
     }
   },
 
