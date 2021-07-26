@@ -13,16 +13,16 @@
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <ProjectTimelineCreated :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
+          <ProjectTimelineCreated :stages="sortByCreatedDate(stages)" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
         <v-stepper-content step="2">
-          <ProjectTimelineFunding :stages="fundingStages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
+          <ProjectTimelineFunding :stages="sortByCreatedDate(fundingStages)" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
         <v-stepper-content step="3">
-          <ProjectTimelineInProgress :stages="stages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
+          <ProjectTimelineInProgress :stages="sortByCreatedDate(stages)" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
         <v-stepper-content step="4">
-          <ProjectTimelineComplete :stages="fundingStages" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
+          <ProjectTimelineComplete :stages="sortByCreatedDate(fundingStages)" :eth-and-usd-text="ethAndUsdText" :get-formatted-date="getFormattedDate" />
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -132,6 +132,18 @@ export default {
         }
       })
       return completedFundingDate
+    },
+    sortByCreatedDate (array) {
+      const compare = (a, b) => {
+        if (a.creationDate < b.creationDate) {
+          return -1
+        }
+        if (a.creationDate > b.creationDate) {
+          return 1
+        }
+        return 0
+      }
+      return array.sort(compare)
     }
   },
 
