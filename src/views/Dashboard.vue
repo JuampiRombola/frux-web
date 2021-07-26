@@ -13,7 +13,7 @@
         <DashboardCardNumber title="Usuarios" :quantity="stats.totalUsers" icon="mdi-account-multiple" caption="Histórico" color="amber"></DashboardCardNumber>
       </v-col>
       <v-col cols="4">
-        <DashboardCardNumber title="Proyectos" :quantity="stats.totalProjects" icon="mdi-tray-full" caption="Histórico" color="grey darken-1"></DashboardCardNumber>
+        <DashboardCardNumber title="Proyectos" :quantity="stats.totalProjects" icon="mdi-tray-full" caption="Histórico" color="secondary"></DashboardCardNumber>
       </v-col>
       <v-col cols="4">
         <DashboardCardNumber title="Patrocinios" :quantity="stats.totalInvestments" icon="mdi-charity" caption="Histórico" color="green"></DashboardCardNumber>
