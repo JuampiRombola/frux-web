@@ -13,9 +13,9 @@
           <v-progress-circular
             :rotate="270"
             :size="100"
-            :width="10"
+            :width="12"
             :value="stage.percentageCollected"
-            color="green lighten-2"
+            :color="stage.percentageCollected === 0 ? 'grey' : 'amber'"
           >
             {{ stage.percentageCollected }}
           </v-progress-circular>
