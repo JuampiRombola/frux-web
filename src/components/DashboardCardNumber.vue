@@ -65,7 +65,7 @@ export default {
       type: String
     },
     quantity: {
-      type: String
+      type: Number
     },
     icon: {
       type: String

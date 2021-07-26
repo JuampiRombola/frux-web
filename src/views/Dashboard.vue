@@ -1,27 +1,34 @@
 <template>
-  <v-container>
-    <v-subheader class="subheader-font">Métricas generales <v-divider class="ml-5"></v-divider></v-subheader>
-    <v-row class="my-3">
-      <v-col cols="4">
-        <DashboardCardNumber title="Online" quantity="1344" icon="mdi-account-multiple" caption="En tiempo real" color="amber"></DashboardCardNumber>
-      </v-col>
-      <v-col cols="4">
-        <DashboardCardNumber title="Veedores" quantity="25" icon="mdi-shield-account" caption="Últimas 24 horas" color="blue"></DashboardCardNumber>
-      </v-col>
-      <v-col cols="4">
-        <DashboardCardNumber title="Patrocinios" quantity="87" icon="mdi-charity" caption="Últimas 24 horas" color="green"></DashboardCardNumber>
-      </v-col>
-      <v-col cols="4" class="mt-6">
-        <DashboardCardNumber title="Me gusta" quantity="106" icon="mdi-heart" caption="Últimas 24 horas" color="pink"></DashboardCardNumber>
-      </v-col>
-      <v-col cols="4" class="mt-6">
-        <DashboardCardNumber title="Me gusta" quantity="106" icon="mdi-heart" caption="Últimas 24 horas" color="pink"></DashboardCardNumber>
-      </v-col>
-      <v-col cols="4" class="mt-6">
-        <DashboardCardNumber title="Me gusta" quantity="106" icon="mdi-heart" caption="Últimas 24 horas" color="pink"></DashboardCardNumber>
+  <v-container v-if="$apollo.queries.stats.loading">
+    <v-row style="height: 400px">
+      <v-col class="text-center" align-self="center">
+        <v-progress-circular indeterminate :size="100" :width="8" color="primary lighten-3" class="mt-5"></v-progress-circular>
       </v-col>
     </v-row>
-    <v-subheader class="subheader-font mt-2">Servidores <v-divider class="ml-5"></v-divider></v-subheader>
+  </v-container>
+  <v-container v-else>
+    <v-subheader class="subheader-font pl-2">Métricas generales <v-divider class="ml-4"></v-divider></v-subheader>
+    <v-row class="my-3">
+      <v-col cols="4">
+        <DashboardCardNumber title="Usuarios" :quantity="stats.totalUsers" icon="mdi-account-multiple" caption="Histórico" color="amber"></DashboardCardNumber>
+      </v-col>
+      <v-col cols="4">
+        <DashboardCardNumber title="Proyectos" :quantity="stats.totalProjects" icon="mdi-tray-full" caption="Histórico" color="grey darken-1"></DashboardCardNumber>
+      </v-col>
+      <v-col cols="4">
+        <DashboardCardNumber title="Patrocinios" :quantity="stats.totalInvestments" icon="mdi-charity" caption="Histórico" color="green"></DashboardCardNumber>
+      </v-col>
+      <v-col cols="4" class="mt-6">
+        <DashboardCardNumber title="Veedores" :quantity="stats.totalSeers" icon="mdi-shield-account" caption="Histórico" color="blue"></DashboardCardNumber>
+      </v-col>
+      <v-col cols="4" class="mt-6">
+        <DashboardCardNumber title="Favoritos" :quantity="stats.totalFavorites" icon="mdi-heart" caption="Histórico" color="pink"></DashboardCardNumber>
+      </v-col>
+      <v-col cols="4" class="mt-6">
+        <DashboardCardNumber title="Hashtags" :quantity="stats.totalHashtags" icon="mdi-pound" caption="Histórico" color="purple lighten-1"></DashboardCardNumber>
+      </v-col>
+    </v-row>
+    <v-subheader class="subheader-font pl-2 mt-2">Servidores <v-divider class="ml-4"></v-divider></v-subheader>
     <v-row class="my-2">
       <v-col cols="4" v-for="server in servers" :key="server.name">
         <DashboardSparkline :server="server" color="grey darken-1" title="Usuarios Registrados" caption="último registro hace 7 minutos"
@@ -35,6 +42,7 @@
 <script>
 import DashboardSparkline from '@/components/DashboardSparkline.vue'
 import DashboardCardNumber from '@/components/DashboardCardNumber.vue'
+import { DASHBOARD_STATS } from '@/graphql/graphql'
 
 export default {
   name: 'Dashboard',
@@ -61,7 +69,13 @@ export default {
       description: 'Servidor dedicado a manejar los mensajes entre usuarios y las notificaciones.',
       healthUrl: 'https://frux-chat.herokuapp.com/health'
     }]
-  })
+  }),
+
+  apollo: {
+    stats: {
+      query: DASHBOARD_STATS
+    }
+  }
 }
 </script>
 
