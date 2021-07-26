@@ -201,9 +201,9 @@
               </v-col>
               <v-divider vertical class="my-2 vertical-divider"></v-divider>
               <v-col cols="6" class="mt-0 pt-0">
-                <v-row no-gutters class="text-center">
-                  <v-col cols="12" class="mt-2 mb-4">
-                    <v-carousel hide-delimiters v-if="project.signedUrl" :show-arrows="false">
+                <v-row no-gutters class="text-center" style="min-height: 510px;">
+                  <v-col cols="12" class="mt-2 mb-4" align-self="center">
+                    <v-carousel height="auto" hide-delimiters v-if="project.signedUrl" :show-arrows="false">
                       <v-carousel-item :src="project.signedUrl"></v-carousel-item>
                     </v-carousel>
                     <v-carousel v-else hide-delimiter-background hide-delimiters :show-arrows="false">
