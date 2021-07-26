@@ -1,12 +1,10 @@
 <template>
   <v-container v-if="$apollo.queries.project.loading">
-    <v-layout row justify-center>
-      <v-container fill-height>
-        <v-layout row justify-center align-center>
-          <v-progress-circular indeterminate :size="70" :width="5" color="primary lighten-3" class="mt-5"></v-progress-circular>
-        </v-layout>
-      </v-container>
-    </v-layout>
+    <v-row style="height: 400px">
+      <v-col class="text-center" align-self="center">
+        <v-progress-circular indeterminate :size="100" :width="8" color="primary lighten-3" class="mt-5"></v-progress-circular>
+      </v-col>
+    </v-row>
   </v-container>
   <v-container v-else>
     <v-card-actions class="mx-0 px-0 mt-0 pt-0">
@@ -201,9 +199,9 @@
               </v-col>
               <v-divider vertical class="my-2 vertical-divider"></v-divider>
               <v-col cols="6" class="mt-0 pt-0">
-                <v-row no-gutters class="text-center">
-                  <v-col cols="12" class="mt-2 mb-4">
-                    <v-carousel hide-delimiters v-if="project.signedUrl" :show-arrows="false">
+                <v-row no-gutters class="text-center" style="min-height: 510px;">
+                  <v-col cols="12" class="mt-2 mb-4" align-self="center">
+                    <v-carousel height="auto" hide-delimiters v-if="project.signedUrl" :show-arrows="false">
                       <v-carousel-item :src="project.signedUrl"></v-carousel-item>
                     </v-carousel>
                     <v-carousel v-else hide-delimiter-background hide-delimiters :show-arrows="false">
@@ -226,7 +224,7 @@
           <v-tabs v-model="tab" centered color="primary lighten-3">
             <v-tabs-slider></v-tabs-slider>
             <v-tab href="#tab-1">Etapas</v-tab>
-            <v-tab href="#tab-2">Patrocinadores</v-tab>
+            <v-tab href="#tab-2" v-if="!currentStateIsCreated">Patrocinadores</v-tab>
           </v-tabs>
 
           <v-divider class="mx-7"></v-divider>
@@ -247,7 +245,7 @@
               </v-card>
             </v-tab-item>
 
-            <v-tab-item value="tab-2">
+            <v-tab-item value="tab-2" v-if="!currentStateIsCreated">
               <v-card flat>
                 <v-card-text>
                   <InvestorsTable :projectId="parseInt(id)" :eth-to-usd="ethToUsd"></InvestorsTable>
@@ -383,6 +381,9 @@ export default {
     },
     investors () {
       return this.project.investors.edges.map(e => e.node)
+    },
+    currentStateIsCreated () {
+      return this.project.currentState === 'CREATED'
     }
   },
 

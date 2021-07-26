@@ -13,7 +13,7 @@
           <v-col cols="4" xl="3">
             {{ (stage.fundsReleased)
             ? getFormattedDate(stage.fundsReleasedAt)
-            : 'Pendiente' }}
+            : 'Sin liberar' }}
           </v-col>
           <v-col>
             <strong>{{ stage.title }}</strong>

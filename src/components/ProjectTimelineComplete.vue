@@ -1,14 +1,18 @@
 <template>
   <v-timeline align-top dense>
-    <template v-for="stage in stages">
+    <template v-for="(stage, index) in stages">
       <v-timeline-item
         :key="stage.dbId"
-        color="green lighten-2"
+        color="primary lighten-3"
         icon="mdi-check-outline"
         icon-color="white"
         fill-dot
         class="my-2"
       >
+        <template v-slot:icon>
+          <div class="white--text"># {{ index }} </div>
+        </template>
+
         <v-row class="pt-1">
           <v-col cols="4" xl="3">
             <div><strong>Creado:</strong> {{ getFormattedDate(stage.creationDate) }}</div>
