@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row class="mt-2">
       <v-col cols="12" lg="4" v-for="server in servers" :key="server.name">
         <ServerCard :server="server"></ServerCard>
       </v-col>

@@ -31,25 +31,23 @@
     <v-subheader class="subheader-font pl-2 mt-2">Servidores <v-divider class="ml-4"></v-divider></v-subheader>
     <v-row class="my-2">
       <v-col cols="4" v-for="server in servers" :key="server.name">
-        <DashboardSparkline :server="server" color="grey darken-1" title="Usuarios Registrados" caption="último registro hace 7 minutos"
-                            :labels="['6h', '7h', '8h', '9h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h']"
-                            :values="[100, 200, 300, 700, 400, 600, 1000, 1300, 1200, 900, 900, 900, 100]"></DashboardSparkline>
+        <ServerCard :server="server" color="grey darken-1"></ServerCard>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import DashboardSparkline from '@/components/DashboardSparkline.vue'
 import DashboardCardNumber from '@/components/DashboardCardNumber.vue'
+import ServerCard from '@/components/ServerCard.vue'
 import { DASHBOARD_STATS } from '@/graphql/graphql'
 
 export default {
   name: 'Dashboard',
 
   components: {
-    DashboardSparkline,
-    DashboardCardNumber
+    DashboardCardNumber,
+    ServerCard
   },
 
   data: () => ({

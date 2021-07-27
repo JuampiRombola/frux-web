@@ -1,26 +1,39 @@
 <template>
-  <v-card>
-    <v-img
-      height="150"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-    ></v-img>
+  <v-card
+    class="mx-auto"
+  >
+    <v-sheet
+      class="v-sheet--offset mx-auto"
+      :color="color"
+      elevation="12"
+      rounded
+      max-width="calc(100% - 32px)"
+    >
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-card-title class="white--text overline my-0" style="font-size: 14px !important;">{{ server.name }}</v-card-title>
+        <v-spacer></v-spacer>
+      </v-card-actions>
+    </v-sheet>
 
-    <v-card-title>{{ server.name }}</v-card-title>
-
-    <v-card-text>
-      <div class="text-subtitle-2 mb-2">
-        Fecha de creación: {{ server.creationDate }}
+    <v-card-text class="pt-0">
+      <div class="title font-weight-light my-2 px-2">
+        Creado el {{ server.creationDate }}
       </div>
-
-      <div>{{ server.description }}</div>
+      <div class="subheading font-weight-light grey--text px-2" style="min-height: 75px">
+        {{ server.description }}
+      </div>
+      <v-divider class="my-2"></v-divider>
+      <v-card-actions>
+        <v-icon class="mr-2" small :color="statusColor">
+          mdi-checkbox-blank-circle
+        </v-icon>
+        <v-progress-circular :size="13" width="1" indeterminate color="grey" class="mr-1" v-if="loading"></v-progress-circular>
+        <span class="grey--text font-weight-light" v-if="!loading">{{ responseTimeMS }} ms</span>
+        <v-spacer></v-spacer>
+        <v-btn small color="primary lighten-2" dark @click="pingServer()">Ping</v-btn>
+      </v-card-actions>
     </v-card-text>
-
-    <v-divider class="mx-4"></v-divider>
-    <v-card-actions>
-      <v-btn color="primary" block text @click="pingServer(server.healthUrl)">
-        Ping
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -29,41 +42,63 @@ export default {
   name: 'ServerCard',
 
   props: {
-    server: Object
+    server: Object,
+    color: {
+      type: String,
+      default: 'grey darken-1'
+    }
   },
 
   data: () => ({
-    responseTimeMS: {},
-    ok: {},
-    loading: {},
-    error: {}
+    ok: false,
+    loading: true,
+    error: false,
+    responseTimeMS: 0
   }),
 
+  computed: {
+    statusColor () {
+      if (!this.ok && !this.error) {
+        return 'amber'
+      }
+      return this.ok ? 'green' : 'red'
+    }
+  },
+
   methods: {
-    pingServer (url) {
+    pingServer () {
       const startTime = new Date()
-      this.loading[url] = true
+      this.loading = true
       this.axios
-        .get(url)
+        .get(this.server.healthUrl)
         .then(data => {
           const endTime = new Date()
-          this.responseTimeMS[url] = endTime - startTime
-          this.ok[url] = true
-          this.error[url] = false
-          this.loading[url] = false
-          console.log(endTime - startTime)
-          console.log(data)
+          this.responseTimeMS = endTime - startTime
+          this.ok = this.responseIsOk(data)
+          this.error = !this.ok
+          this.loading = false
         })
         .catch(() => {
-          this.ok[url] = false
-          this.error[url] = true
-          this.loading[url] = false
+          this.ok = false
+          this.error = true
+          this.loading = false
         })
+    },
+
+    responseIsOk (data) {
+      return data.statusText === 'OK'
     }
+  },
+
+  mounted () {
+    this.pingServer()
   }
 }
 </script>
 
 <style scoped>
-
+.v-sheet--offset {
+  top: -10px;
+  position: relative;
+}
 </style>
