@@ -95,20 +95,11 @@
                       dense
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="px-2 py-2">
+                  <v-col cols="12" class="px-2 py-2">
                     <v-text-field
                       :value="user.creationDateTime"
                       label="FECHA DE CREACIÓN"
                       prepend-icon="mdi-calendar-plus"
-                      readonly
-                      dense
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" class="px-2 py-2">
-                    <v-text-field
-                      :value="user.lastLogin"
-                      label="ÚLTIMA CONEXIÓN"
-                      prepend-icon="mdi-update"
                       readonly
                       dense
                     ></v-text-field>
@@ -120,7 +111,7 @@
                 <v-row no-gutters class="mt-7">
                   <v-col cols="8" class="px-2 py-2">
                     <v-text-field
-                      :value="user.walletAddress"
+                      :value="user.wallet.address"
                       label="Wallet"
                       prepend-icon="mdi-wallet"
                       readonly
@@ -129,7 +120,7 @@
                   </v-col>
                   <v-col cols="4" class="px-2 py-2">
                     <v-text-field
-                      :value="mockUser.ethereum"
+                      :value="user.wallet.balance"
                       label="ETH"
                       prepend-icon="mdi-ethereum"
                       readonly
@@ -189,11 +180,7 @@
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Proyectos Favoritos ({{ user.favoriteCount }})</v-card-title>
                           <v-card-text>
-                            <v-data-table
-                              :headers="favoriteHeaders"
-                              :items="favorites"
-                              :items-per-page="5"
-                            ></v-data-table>
+                            <FavoritedProjects :favorites="favorites"></FavoritedProjects>
                           </v-card-text>
                         </v-col>
                       </v-row>
@@ -264,26 +251,19 @@
 <script>
 import Map from '@/components/Map'
 import { BLOCK_USER_MUTATION, UNBLOCK_USER_MUTATION, USER_QUERY } from '@/graphql/graphql'
+import FavoritedProjects from '@/components/FavoritedProjects'
 
 export default {
   components: {
-    Map
+    Map,
+    FavoritedProjects
   },
 
   name: 'UserDetail',
 
   data: () => ({
     dialog: false,
-    tab: null,
-    mockUser: {
-      ethereum: 0.0096
-    },
-    favoriteHeaders: [
-      { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
-      { text: 'Nombre', sortable: false, value: 'name' },
-      { text: 'Categoría', sortable: false, value: 'categoryName' },
-      { text: 'Favoritos', align: 'end', sortable: false, value: 'favoriteCount' }
-    ]
+    tab: null
   }),
 
   computed: {
@@ -302,11 +282,14 @@ export default {
     isSeer () {
       return this.user.isSeer
     },
+    lastLogin () {
+      return this.user.lastLogin || 'Sin datos'
+    },
     interests () {
       return this.user?.interests?.edges?.map(i => i?.node?.name) || []
     },
     favorites () {
-      return this.user?.favoritedProjects?.edges?.map(i => i?.node) || []
+      return this.user?.favoritedProjects?.edges?.map(i => i?.node.project) || []
     },
     items () {
       return [{

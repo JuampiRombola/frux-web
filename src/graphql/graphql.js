@@ -197,7 +197,10 @@ export const USER_QUERY = gql`
       latitude
       longitude
       isBlocked
-      walletAddress
+      wallet {
+        balance
+        address
+      }
       interests {
         edges {
           node {
@@ -220,6 +223,64 @@ export const USER_QUERY = gql`
       }
       isSponsor
       favoriteCount
+      seerProjects {
+        edges {
+          node {
+            dbId
+            name
+            currentState
+            categoryName
+            goal
+            amountCollected
+          }
+        }
+      }
+      projectInvestments {
+        edges {
+          node {
+            id
+            investedAmount
+            dateOfInvestment
+            project {
+              dbId
+              name
+              categoryName
+              currentState
+              amountCollected
+              goal
+            }
+          }
+        }
+      }
+      reviews {
+        edges {
+          node {
+            id
+            score
+            description
+            project {
+              dbId
+              name
+              categoryName
+              generalScore
+            }
+          }
+        }
+      }
+      createdProjects {
+        edges {
+          node {
+            dbId
+            name
+            categoryName
+            goal
+            currentState
+            creationDate
+            amountCollected
+            signedUrl
+          }
+        }
+      }
     }
   }
 `
