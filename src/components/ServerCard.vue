@@ -11,6 +11,7 @@
     >
       <v-card-actions>
         <v-spacer></v-spacer>
+        <v-icon color="white">{{ server.icon }}</v-icon>
         <v-card-title class="white--text overline my-0" style="font-size: 14px !important;">{{ server.name }}</v-card-title>
         <v-spacer></v-spacer>
       </v-card-actions>
