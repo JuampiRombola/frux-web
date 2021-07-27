@@ -1,28 +1,32 @@
 <template>
   <v-card class="mx-auto">
     <v-row>
-      <v-col class="text-center mb-0 pb-0" cols="4">
-        <v-sheet
-          class="v-sheet--offset ml-3"
-          height="80"
-          width="80"
-          rounded
-          :color="color"
-          elevation="12"
-          max-width="auto"
-        >
-          <v-container fill-height fluid>
-            <v-row align="center" justify="center">
-              <v-col class="text-center">
-                <v-icon x-large color="white">{{ icon }}</v-icon>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-sheet>
+      <v-col class="text-center mb-0 pb-0" cols="2">
+        <v-row justify="center">
+          <v-col cols="2">
+            <v-sheet
+              class="v-sheet--offset text-center"
+              height="80"
+              width="80"
+              rounded
+              :color="color"
+              elevation="12"
+              max-width="auto"
+            >
+              <v-container fill-height fluid>
+                <v-row align="center" justify="center">
+                  <v-col class="text-center">
+                    <v-icon x-large color="white">{{ icon }}</v-icon>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-sheet>
+          </v-col>
+        </v-row>
       </v-col>
-      <v-col cols="8" class="mb-0 pb-0 text-center">
+      <v-col cols="10" class="mb-0 pb-0 text-center">
         <v-card-text class="pt-0">
-          <div v-resize-text="{ratio:0.7, minFontSize: '16px', maxFontSize: '26px', delay:0}" class="font-weight-light mx-2 mb-2 text-center text-no-wrap title-color">
+          <div class="overline grey--text" style="font-size: 15px !important;">
             {{ title }}
           </div>
           <div class="headline font-weight-medium grey--text text-center">
@@ -61,7 +65,7 @@ export default {
       type: String
     },
     quantity: {
-      type: String
+      type: Number
     },
     icon: {
       type: String

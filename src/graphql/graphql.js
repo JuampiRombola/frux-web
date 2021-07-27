@@ -251,6 +251,7 @@ export const UNBLOCK_USER_MUTATION = gql`
     }
   }
 `
+
 export const BLOCK_PROJECT_MUTATION = gql`
   mutation BlockProject($idProject: Int!) {
     mutateBlockProject(idProject: $idProject){
@@ -258,10 +259,25 @@ export const BLOCK_PROJECT_MUTATION = gql`
     }
   }
 `
+
 export const UNBLOCK_PROJECT_MUTATION = gql`
   mutation UnblockProject($idProject: Int!) {
     mutateUnblockProject(idProject: $idProject){
       isBlocked
+    }
+  }
+`
+
+export const DASHBOARD_STATS = gql`
+  query DashboardStats{
+    stats {
+      id
+      totalUsers
+      totalSeers
+      totalProjects
+      totalFavorites
+      totalInvestments
+      totalHashtags
     }
   }
 `

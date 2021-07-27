@@ -45,6 +45,12 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <template v-slot:append v-if="!mini">
+        <v-divider class="mx-2"></v-divider>
+        <div class="text-center grey--text overline py-2">
+          2021 - frux
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <v-main>
@@ -68,8 +74,8 @@ export default {
         { title: 'Usuarios', icon: 'mdi-account-group', route: 'Users', associatedRoutes: ['Users', 'UserDetail'] },
         { title: 'Proyectos', icon: 'mdi-inbox-multiple', route: 'Projects', associatedRoutes: ['Projects', 'ProjectDetail'] },
         // { title: 'Transacciones', icon: 'mdi-cash-multiple', route: 'Transactions', associatedRoutes: ['Transactions'] },
-        { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Metrics', associatedRoutes: ['Metrics'] },
-        { title: 'Servidores', icon: 'mdi-server', route: 'Servers', associatedRoutes: ['Servers'] }
+        { title: 'Métricas', icon: 'mdi-chart-pie', route: 'Metrics', associatedRoutes: ['Metrics'] }
+        // { title: 'Servidores', icon: 'mdi-server', route: 'Servers', associatedRoutes: ['Servers'] }
       ]
     }
   },
