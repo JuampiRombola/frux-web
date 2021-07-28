@@ -97,7 +97,7 @@
                   </v-col>
                   <v-col cols="12" class="px-2 py-2">
                     <v-text-field
-                      :value="user.creationDateTime"
+                      :value="getFormattedDate(user.creationDateTime)"
                       label="FECHA DE CREACIÓN"
                       prepend-icon="mdi-calendar-plus"
                       readonly
@@ -111,7 +111,7 @@
                 <v-row no-gutters class="mt-7">
                   <v-col cols="8" class="px-2 py-2">
                     <v-text-field
-                      :value="user.wallet.address"
+                      :value="walletAddress"
                       label="Wallet"
                       prepend-icon="mdi-wallet"
                       readonly
@@ -120,9 +120,9 @@
                   </v-col>
                   <v-col cols="4" class="px-2 py-2">
                     <v-text-field
-                      :value="user.wallet.balance"
-                      label="ETH"
-                      prepend-icon="mdi-ethereum"
+                      :value="walletBalance"
+                      :label="getEthOrUsdText()"
+                      :prepend-icon="getEthOrUsdIcon()"
                       readonly
                       dense
                     ></v-text-field>
@@ -283,8 +283,11 @@ import CreatedProjects from '@/components/CreatedProjects'
 import InvestedProjects from '@/components/InvestedProjects'
 import SeerProjects from '@/components/SeerProjects'
 import UserReviews from '@/components/UserReviews'
+import common from '@/mixins/common'
 
 export default {
+  mixins: [common],
+
   components: {
     Map,
     FavoritedProjects,
@@ -343,6 +346,12 @@ export default {
         return 0
       }
       return Math.round(this.reviews.reduce((acc, review) => acc + review?.generalScore, 0) / this.reviews.length)
+    },
+    walletAddress () {
+      return this.user?.wallet?.address
+    },
+    walletBalance () {
+      return this.getEthOrUsd(this.user?.wallet?.balance)
     },
     items () {
       return [{
