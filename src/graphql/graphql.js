@@ -277,7 +277,6 @@ export const USER_QUERY = gql`
             currentState
             creationDate
             amountCollected
-            signedUrl
           }
         }
       }

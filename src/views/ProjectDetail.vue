@@ -236,7 +236,6 @@
                   <ProjectStages
                     :stages="stages"
                     :eth-and-usd-text="ethAndUsdText"
-                    :get-formatted-date="getFormattedDate"
                     :current-state="project.currentState"
                     :amountCollected="project.amountCollected"
                     :investors="investors"
@@ -306,8 +305,11 @@ import { PROJECT_QUERY, BLOCK_PROJECT_MUTATION, UNBLOCK_PROJECT_MUTATION } from 
 import ProjectFavs from '@/components/ProjectFavs'
 import Reviews from '@/components/Reviews'
 import ProjectStages from '@/components/ProjectStages'
+import common from '@/mixins/common'
 
 export default {
+  mixins: [common],
+
   components: {
     InvestorsTable,
     ProjectFavs,
@@ -419,10 +421,6 @@ export default {
         ? `${user.firstName} ${user.lastName}`
         : user.email
       return user.username || fullNameOrEmail
-    },
-    getFormattedDate (rawDate) {
-      const date = new Date(rawDate)
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
     },
     ethAndUsdText (amount) {
       const formattedAmount = parseFloat(amount).toFixed(4)

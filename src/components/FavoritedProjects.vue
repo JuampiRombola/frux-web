@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="favorites"
+    :items="items"
     :items-per-page="5"
   ></v-data-table>
 </template>
@@ -9,7 +9,7 @@
 <script>
 export default {
   props: {
-    favorites: {
+    items: {
       type: Array,
       default: () => []
     }

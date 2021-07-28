@@ -180,7 +180,7 @@
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Proyectos Favoritos ({{ user.favoriteCount }})</v-card-title>
                           <v-card-text>
-                            <FavoritedProjects :favorites="favorites"></FavoritedProjects>
+                            <FavoritedProjects :items="favorites"></FavoritedProjects>
                           </v-card-text>
                         </v-col>
                       </v-row>
@@ -192,7 +192,10 @@
 
             <v-tab-item value="tab-2" v-if="isSeeder">
               <v-card flat>
-                <v-card-text>Emprendedor</v-card-text>
+                <v-card-title>Proyectos Creados ({{ created && created.length || '-' }})</v-card-title>
+                <v-card-text>
+                  <CreatedProjects :items="created"></CreatedProjects>
+                </v-card-text>
               </v-card>
             </v-tab-item>
 
@@ -252,11 +255,13 @@
 import Map from '@/components/Map'
 import { BLOCK_USER_MUTATION, UNBLOCK_USER_MUTATION, USER_QUERY } from '@/graphql/graphql'
 import FavoritedProjects from '@/components/FavoritedProjects'
+import CreatedProjects from '@/components/CreatedProjects'
 
 export default {
   components: {
     Map,
-    FavoritedProjects
+    FavoritedProjects,
+    CreatedProjects
   },
 
   name: 'UserDetail',
@@ -290,6 +295,9 @@ export default {
     },
     favorites () {
       return this.user?.favoritedProjects?.edges?.map(i => i?.node.project) || []
+    },
+    created () {
+      return this.user?.createdProjects?.edges?.map(i => i?.node) || []
     },
     items () {
       return [{
