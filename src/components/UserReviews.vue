@@ -2,7 +2,8 @@
   <v-data-table
     :headers="headers"
     :items="items"
-    :items-per-page="5"
+    :items-per-page="3"
+    :footer-props="footerProps"
   >
     <template v-slot:item.score="{ item }">
       <v-icon x-small left color="amber">mdi-star</v-icon>
@@ -35,7 +36,10 @@ export default {
       { text: 'Nombre', sortable: false, value: 'name' },
       { text: 'Categoría', sortable: false, value: 'categoryName' },
       { text: 'Opinión', sortable: false, value: 'description' }
-    ]
+    ],
+    footerProps: {
+      'items-per-page-options': [3, 5, 10]
+    }
   })
 }
 </script>

@@ -63,7 +63,7 @@
                   <v-col cols="2" class="px-2">
                     <v-text-field
                       :value="id"
-                      label="USER ID"
+                      label="ID USUARIO"
                       prepend-icon="mdi-identifier"
                       readonly
                       dense
@@ -112,7 +112,7 @@
                   <v-col cols="8" class="px-2 py-2">
                     <v-text-field
                       :value="walletAddress"
-                      label="Wallet"
+                      label="Billetera"
                       prepend-icon="mdi-wallet"
                       readonly
                       dense
@@ -155,6 +155,15 @@
                           <v-card-title>Descripción</v-card-title>
                           <v-card-text>{{ user.description }}</v-card-text>
                         </v-col>
+                        <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
+                          <v-card-title>Ubicación</v-card-title>
+                          <Map :latitude="parseFloat(user.latitude)" :longitude="parseFloat(user.longitude)" class="px-4"></Map>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                    <v-divider vertical class="my-2 vertical-divider"></v-divider>
+                    <v-col cols="6">
+                      <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Intereses</v-card-title>
                           <v-card-text>
@@ -168,18 +177,15 @@
                             </v-chip>
                           </v-card-text>
                         </v-col>
-                        <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
-                          <v-card-title>Ubicación</v-card-title>
-                          <Map :latitude="parseFloat(user.latitude)" :longitude="parseFloat(user.longitude)" class="px-4"></Map>
+                        <v-col cols="12" class="my-0 py-0">
+                          <v-card-title>Proyectos Favoritos <span class=" ml-1 caption">({{ user.favoriteCount }})</span></v-card-title>
+                          <v-card-text>
+                            <FavoritedProjects :items="favorites"></FavoritedProjects>
+                          </v-card-text>
                         </v-col>
-                      </v-row>
-                    </v-col>
-                    <v-divider vertical class="my-2 vertical-divider"></v-divider>
-                    <v-col cols="6">
-                      <v-row>
                         <v-col cols="12" class="my-0 py-0" v-if="reviews.length">
                           <v-card-title>
-                            Opiniones
+                            Opiniones del Usuario
                             <span class=" ml-1 caption">({{ reviews.length }})</span>
                             <v-rating
                               :value="averageScore"
@@ -193,12 +199,6 @@
                           </v-card-title>
                           <v-card-text>
                             <UserReviews :items="reviews"></UserReviews>
-                          </v-card-text>
-                        </v-col>
-                        <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Proyectos Favoritos <span class=" ml-1 caption">({{ user.favoriteCount }})</span></v-card-title>
-                          <v-card-text>
-                            <FavoritedProjects :items="favorites"></FavoritedProjects>
                           </v-card-text>
                         </v-col>
                       </v-row>
