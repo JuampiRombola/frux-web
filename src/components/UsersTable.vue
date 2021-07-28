@@ -206,7 +206,7 @@ export default {
           { [this.operator]: [{ isSeeder: this.isSeederFilter ? true : undefined }] },
           { [this.operator]: [{ isSeer: this.isSeerFilter ? true : undefined }] },
           { [this.operator]: [{ isSponsor: this.isSponsorFilter ? true : undefined }] },
-          { [this.operator]: [{ or: [{ usernameIlike: (this.search.length) ? this.search : undefined }, { emailLike: (this.search.length) ? this.search : undefined }] }] }
+          { [this.operator]: [{ or: [{ usernameIlike: (this.search.length) ? `%${this.search}%` : undefined }, { emailLike: (this.search.length) ? `%${this.search}%` : undefined }] }] }
         ]
       }
     }
