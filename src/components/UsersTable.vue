@@ -64,6 +64,10 @@
       </div>
     </template>
 
+    <template v-slot:item.creationDateTime="{ item }">
+      {{ getFormattedDate(item.creationDateTime) }}
+    </template>
+
     <template v-slot:item.rol="{ item }">
       <div>
         <v-chip v-if="item.isSeeder" small outlined class="my-1" color="green darken-2 mr-1">Emprendedor</v-chip>
@@ -99,6 +103,7 @@
 
 <script>
 import { ALL_USERS_QUERY } from '@/graphql/graphql'
+import common from '@/mixins/common'
 
 const DEFAULT_ROWS_PER_PAGE = 10
 const USER_SORT_ENUM = {
@@ -111,6 +116,8 @@ const USER_SORT_ENUM = {
 }
 
 export default {
+  mixins: [common],
+
   props: {
     itemsPerPage: {
       type: Number,

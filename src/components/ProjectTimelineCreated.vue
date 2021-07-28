@@ -33,16 +33,17 @@
 </template>
 
 <script>
+import common from '@/mixins/common'
+
 export default {
+  mixins: [common],
+
   props: {
     stages: {
       type: Array,
       default: () => []
     },
     ethAndUsdText: {
-      type: Function
-    },
-    getFormattedDate: {
       type: Function
     }
   },

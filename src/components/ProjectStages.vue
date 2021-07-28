@@ -52,28 +52,24 @@
           <ProjectTimelineCreated
             :stages="sortByCreatedDate(stages)"
             :eth-and-usd-text="ethAndUsdText"
-            :get-formatted-date="getFormattedDate"
           />
         </v-stepper-content>
         <v-stepper-content step="2">
           <ProjectTimelineFunding
             :stages="sortByCreatedDate(fundingStages)"
             :eth-and-usd-text="ethAndUsdText"
-            :get-formatted-date="getFormattedDate"
           />
         </v-stepper-content>
         <v-stepper-content step="3">
           <ProjectTimelineInProgress
             :stages="sortByCreatedDate(stages)"
             :eth-and-usd-text="ethAndUsdText"
-            :get-formatted-date="getFormattedDate"
           />
         </v-stepper-content>
         <v-stepper-content step="4">
           <ProjectTimelineComplete
             :stages="sortByCreatedDate(fundingStages)"
             :eth-and-usd-text="ethAndUsdText"
-            :get-formatted-date="getFormattedDate"
           />
         </v-stepper-content>
       </v-stepper-items>
@@ -99,9 +95,6 @@ export default {
     currentState: {
       type: String,
       default: 'CREATED'
-    },
-    getFormattedDate: {
-      type: Function
     },
     amountCollected: {
       type: Number,

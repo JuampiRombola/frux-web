@@ -95,20 +95,11 @@
                       dense
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="6" class="px-2 py-2">
+                  <v-col cols="12" class="px-2 py-2">
                     <v-text-field
                       :value="user.creationDateTime"
                       label="FECHA DE CREACIÓN"
                       prepend-icon="mdi-calendar-plus"
-                      readonly
-                      dense
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6" class="px-2 py-2">
-                    <v-text-field
-                      :value="user.lastLogin"
-                      label="ÚLTIMA CONEXIÓN"
-                      prepend-icon="mdi-update"
                       readonly
                       dense
                     ></v-text-field>
@@ -120,7 +111,7 @@
                 <v-row no-gutters class="mt-7">
                   <v-col cols="8" class="px-2 py-2">
                     <v-text-field
-                      :value="user.walletAddress"
+                      :value="user.wallet.address"
                       label="Wallet"
                       prepend-icon="mdi-wallet"
                       readonly
@@ -129,7 +120,7 @@
                   </v-col>
                   <v-col cols="4" class="px-2 py-2">
                     <v-text-field
-                      :value="mockUser.ethereum"
+                      :value="user.wallet.balance"
                       label="ETH"
                       prepend-icon="mdi-ethereum"
                       readonly
@@ -158,21 +149,12 @@
               <v-card flat>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" xl="6">
+                    <v-col cols="6">
                       <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Descripción</v-card-title>
                           <v-card-text>{{ user.description }}</v-card-text>
                         </v-col>
-                        <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
-                          <v-card-title>Ubicación</v-card-title>
-                          <Map :latitude="parseFloat(user.latitude)" :longitude="parseFloat(user.longitude)" class="px-4"></Map>
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                    <v-divider vertical class="my-2 vertical-divider"></v-divider>
-                    <v-col cols="12" xl="6">
-                      <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Intereses</v-card-title>
                           <v-card-text>
@@ -186,14 +168,37 @@
                             </v-chip>
                           </v-card-text>
                         </v-col>
-                        <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Proyectos Favoritos ({{ user.favoriteCount }})</v-card-title>
+                        <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
+                          <v-card-title>Ubicación</v-card-title>
+                          <Map :latitude="parseFloat(user.latitude)" :longitude="parseFloat(user.longitude)" class="px-4"></Map>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                    <v-divider vertical class="my-2 vertical-divider"></v-divider>
+                    <v-col cols="6">
+                      <v-row>
+                        <v-col cols="12" class="my-0 py-0" v-if="reviews.length">
+                          <v-card-title>
+                            Opiniones
+                            <span class=" ml-1 caption">({{ reviews.length }})</span>
+                            <v-rating
+                              :value="averageScore"
+                              color="amber"
+                              dense
+                              half-increments
+                              readonly
+                              size="14"
+                              class="ml-1"
+                            ></v-rating>
+                          </v-card-title>
                           <v-card-text>
-                            <v-data-table
-                              :headers="favoriteHeaders"
-                              :items="favorites"
-                              :items-per-page="5"
-                            ></v-data-table>
+                            <UserReviews :items="reviews"></UserReviews>
+                          </v-card-text>
+                        </v-col>
+                        <v-col cols="12" class="my-0 py-0">
+                          <v-card-title>Proyectos Favoritos <span class=" ml-1 caption">({{ user.favoriteCount }})</span></v-card-title>
+                          <v-card-text>
+                            <FavoritedProjects :items="favorites"></FavoritedProjects>
                           </v-card-text>
                         </v-col>
                       </v-row>
@@ -205,19 +210,28 @@
 
             <v-tab-item value="tab-2" v-if="isSeeder">
               <v-card flat>
-                <v-card-text>Emprendedor</v-card-text>
+                <v-card-title>Proyectos Creados <span class=" ml-1 caption">({{ created && created.length || '-' }})</span></v-card-title>
+                <v-card-text>
+                  <CreatedProjects :items="created"></CreatedProjects>
+                </v-card-text>
               </v-card>
             </v-tab-item>
 
             <v-tab-item value="tab-3" v-if="isSponsor">
               <v-card flat>
-                <v-card-text>Patrocinador</v-card-text>
+                <v-card-title>Proyectos Patrocinados <span class=" ml-1 caption">({{ investmentProjects && investmentProjects.length || '-' }})</span></v-card-title>
+                <v-card-text>
+                  <InvestedProjects :items="investmentProjects"></InvestedProjects>
+                </v-card-text>
               </v-card>
             </v-tab-item>
 
             <v-tab-item value="tab-4" v-if="isSeer">
               <v-card flat>
-                <v-card-text>Veedor</v-card-text>
+                <v-card-title>Proyectos Supervisados <span class=" ml-1 caption">({{ seerProjects && seerProjects.length || '-' }})</span></v-card-title>
+                <v-card-text>
+                  <SeerProjects :items="seerProjects"></SeerProjects>
+                </v-card-text>
               </v-card>
             </v-tab-item>
           </v-tabs-items>
@@ -264,26 +278,27 @@
 <script>
 import Map from '@/components/Map'
 import { BLOCK_USER_MUTATION, UNBLOCK_USER_MUTATION, USER_QUERY } from '@/graphql/graphql'
+import FavoritedProjects from '@/components/FavoritedProjects'
+import CreatedProjects from '@/components/CreatedProjects'
+import InvestedProjects from '@/components/InvestedProjects'
+import SeerProjects from '@/components/SeerProjects'
+import UserReviews from '@/components/UserReviews'
 
 export default {
   components: {
-    Map
+    Map,
+    FavoritedProjects,
+    CreatedProjects,
+    InvestedProjects,
+    SeerProjects,
+    UserReviews
   },
 
   name: 'UserDetail',
 
   data: () => ({
     dialog: false,
-    tab: null,
-    mockUser: {
-      ethereum: 0.0096
-    },
-    favoriteHeaders: [
-      { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
-      { text: 'Nombre', sortable: false, value: 'name' },
-      { text: 'Categoría', sortable: false, value: 'categoryName' },
-      { text: 'Favoritos', align: 'end', sortable: false, value: 'favoriteCount' }
-    ]
+    tab: null
   }),
 
   computed: {
@@ -302,11 +317,32 @@ export default {
     isSeer () {
       return this.user.isSeer
     },
+    lastLogin () {
+      return this.user.lastLogin || 'Sin datos'
+    },
     interests () {
       return this.user?.interests?.edges?.map(i => i?.node?.name) || []
     },
     favorites () {
-      return this.user?.favoritedProjects?.edges?.map(i => i?.node) || []
+      return this.user?.favoritedProjects?.edges?.map(i => i?.node.project) || []
+    },
+    created () {
+      return this.user?.createdProjects?.edges?.map(i => i?.node) || []
+    },
+    investmentProjects () {
+      return this.user?.projectInvestments?.edges?.map(i => this.flattenObject(i.node)) || []
+    },
+    seerProjects () {
+      return this.user?.seerProjects?.edges?.map(i => i.node) || []
+    },
+    reviews () {
+      return this.user?.reviews?.edges?.map(i => this.flattenObject(i.node)) || []
+    },
+    averageScore () {
+      if (!this.reviews.length) {
+        return 0
+      }
+      return Math.round(this.reviews.reduce((acc, review) => acc + review?.generalScore, 0) / this.reviews.length)
     },
     items () {
       return [{
@@ -347,6 +383,19 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
+    },
+    flattenObject (obj) {
+      const flattened = {}
+
+      Object.keys(obj).forEach((key) => {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          Object.assign(flattened, this.flattenObject(obj[key]))
+        } else {
+          flattened[key] = obj[key]
+        }
+      })
+
+      return flattened
     }
   },
 
