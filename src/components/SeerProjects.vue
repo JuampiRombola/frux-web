@@ -3,10 +3,6 @@
     :headers="headers"
     :items="items"
   >
-    <template v-slot:item.creationDate="{ item }">
-      {{ getFormattedDate(item.creationDate) }}
-    </template>
-
     <template v-slot:item.currentState="{ item }">
       <StateChip :state="item.currentState" />
     </template>
@@ -14,12 +10,9 @@
 </template>
 
 <script>
-import common from '@/mixins/common'
 import StateChip from '@/components/StateChip'
 
 export default {
-  mixins: [common],
-
   props: {
     items: {
       type: Array,
@@ -31,12 +24,11 @@ export default {
     StateChip
   },
 
-  name: 'CreatedProjects',
+  name: 'SeerProjects',
 
   data: () => ({
     headers: [
       { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
-      { text: 'Fecha de creación', sortable: false, value: 'creationDate' },
       { text: 'Nombre', sortable: false, value: 'name' },
       { text: 'Categoría', sortable: false, value: 'categoryName' },
       { text: 'Estado', sortable: false, value: 'currentState' },

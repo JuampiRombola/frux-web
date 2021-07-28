@@ -108,6 +108,10 @@
       {{ ethAndUsdText(item.goal) }}
     </template>
 
+    <template v-slot:item.currentState="{ item }">
+      <StateChip :state="item.currentState" />
+    </template>
+
     <template v-slot:item.amountCollected="{ item }">
       {{ ethAndUsdText(item.amountCollected) }}
     </template>
@@ -139,6 +143,7 @@
 
 <script>
 import { ALL_PROJECTS_QUERY, CATEGORIES_QUERY } from '@/graphql/graphql'
+import StateChip from '@/components/StateChip'
 
 const DEFAULT_ROWS_PER_PAGE = 10
 const PROJECT_SORT_ENUM = {
@@ -159,6 +164,10 @@ export default {
   },
 
   name: 'ProjectsTable',
+
+  components: {
+    StateChip
+  },
 
   data () {
     return {

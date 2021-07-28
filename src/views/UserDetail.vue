@@ -201,13 +201,19 @@
 
             <v-tab-item value="tab-3" v-if="isSponsor">
               <v-card flat>
-                <v-card-text>Patrocinador</v-card-text>
+                <v-card-title>Proyectos Patrocinados ({{ investmentProjects && investmentProjects.length || '-' }})</v-card-title>
+                <v-card-text>
+                  <InvestedProjects :items="investmentProjects"></InvestedProjects>
+                </v-card-text>
               </v-card>
             </v-tab-item>
 
             <v-tab-item value="tab-4" v-if="isSeer">
               <v-card flat>
-                <v-card-text>Veedor</v-card-text>
+                <v-card-title>Proyectos Supervisados ({{ seerProjects && seerProjects.length || '-' }})</v-card-title>
+                <v-card-text>
+                  <SeerProjects :items="seerProjects"></SeerProjects>
+                </v-card-text>
               </v-card>
             </v-tab-item>
           </v-tabs-items>
@@ -256,12 +262,16 @@ import Map from '@/components/Map'
 import { BLOCK_USER_MUTATION, UNBLOCK_USER_MUTATION, USER_QUERY } from '@/graphql/graphql'
 import FavoritedProjects from '@/components/FavoritedProjects'
 import CreatedProjects from '@/components/CreatedProjects'
+import InvestedProjects from '@/components/InvestedProjects'
+import SeerProjects from '@/components/SeerProjects'
 
 export default {
   components: {
     Map,
     FavoritedProjects,
-    CreatedProjects
+    CreatedProjects,
+    InvestedProjects,
+    SeerProjects
   },
 
   name: 'UserDetail',
@@ -298,6 +308,12 @@ export default {
     },
     created () {
       return this.user?.createdProjects?.edges?.map(i => i?.node) || []
+    },
+    investmentProjects () {
+      return this.user?.projectInvestments?.edges?.map(i => this.flattenObject(i.node)) || []
+    },
+    seerProjects () {
+      return this.user?.seerProjects?.edges?.map(i => i.node) || []
     },
     items () {
       return [{
@@ -338,6 +354,19 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
+    },
+    flattenObject (obj) {
+      const flattened = {}
+
+      Object.keys(obj).forEach((key) => {
+        if (typeof obj[key] === 'object' && obj[key] !== null) {
+          Object.assign(flattened, this.flattenObject(obj[key]))
+        } else {
+          flattened[key] = obj[key]
+        }
+      })
+
+      return flattened
     }
   },
 

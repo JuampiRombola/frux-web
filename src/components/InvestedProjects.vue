@@ -3,8 +3,8 @@
     :headers="headers"
     :items="items"
   >
-    <template v-slot:item.creationDate="{ item }">
-      {{ getFormattedDate(item.creationDate) }}
+    <template v-slot:item.dateOfInvestment="{ item }">
+      {{ getFormattedDate(item.dateOfInvestment) }}
     </template>
 
     <template v-slot:item.currentState="{ item }">
@@ -27,16 +27,16 @@ export default {
     }
   },
 
+  name: 'InvestedProjects',
+
   components: {
     StateChip
   },
 
-  name: 'CreatedProjects',
-
   data: () => ({
     headers: [
       { text: 'ID', align: 'start', sortable: false, value: 'dbId' },
-      { text: 'Fecha de creación', sortable: false, value: 'creationDate' },
+      { text: 'Fecha de patrocinio', sortable: false, value: 'dateOfInvestment' },
       { text: 'Nombre', sortable: false, value: 'name' },
       { text: 'Categoría', sortable: false, value: 'categoryName' },
       { text: 'Estado', sortable: false, value: 'currentState' },
