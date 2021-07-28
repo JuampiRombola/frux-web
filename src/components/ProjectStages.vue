@@ -49,28 +49,16 @@
 
       <v-stepper-items>
         <v-stepper-content step="1">
-          <ProjectTimelineCreated
-            :stages="sortByCreatedDate(stages)"
-            :eth-and-usd-text="ethAndUsdText"
-          />
+          <ProjectTimelineCreated :stages="sortByCreatedDate(stages)"/>
         </v-stepper-content>
         <v-stepper-content step="2">
-          <ProjectTimelineFunding
-            :stages="sortByCreatedDate(fundingStages)"
-            :eth-and-usd-text="ethAndUsdText"
-          />
+          <ProjectTimelineFunding :stages="sortByCreatedDate(fundingStages)"/>
         </v-stepper-content>
         <v-stepper-content step="3">
-          <ProjectTimelineInProgress
-            :stages="sortByCreatedDate(stages)"
-            :eth-and-usd-text="ethAndUsdText"
-          />
+          <ProjectTimelineInProgress :stages="sortByCreatedDate(stages)"/>
         </v-stepper-content>
         <v-stepper-content step="4">
-          <ProjectTimelineComplete
-            :stages="sortByCreatedDate(fundingStages)"
-            :eth-and-usd-text="ethAndUsdText"
-          />
+          <ProjectTimelineComplete :stages="sortByCreatedDate(fundingStages)"/>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -88,9 +76,6 @@ export default {
     stages: {
       type: Array,
       default: () => []
-    },
-    ethAndUsdText: {
-      type: Function
     },
     currentState: {
       type: String,

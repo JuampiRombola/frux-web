@@ -50,7 +50,7 @@ export const ALL_PROJECTS_QUERY = gql`
       pageInfo {
         startCursor
         endCursor
-      },
+      }
       totalCount
     }
   }

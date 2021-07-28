@@ -6,13 +6,24 @@
     <template v-slot:item.currentState="{ item }">
       <StateChip :state="item.currentState" />
     </template>
+
+    <template v-slot:item.amountCollected="{ item }">
+      {{ getEthOrUsd(item.amountCollected) }} {{ getEthOrUsdText() }}
+    </template>
+
+    <template v-slot:item.goal="{ item }">
+      {{ getEthOrUsd(item.goal) }} {{ getEthOrUsdText() }}
+    </template>
   </v-data-table>
 </template>
 
 <script>
 import StateChip from '@/components/StateChip'
+import common from '@/mixins/common'
 
 export default {
+  mixins: [common],
+
   props: {
     items: {
       type: Array,

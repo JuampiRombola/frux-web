@@ -79,6 +79,18 @@
           <v-radio label="OR" value="or" class="pa-0 my-0 mx-2"></v-radio>
           <v-radio label="AND" value="and" class="pa-0 ma-0 mx-2"></v-radio>
         </v-radio-group>
+        <v-divider vertical class="mx-2 my-1"></v-divider>
+        <div style="width: 200px;" class="ml-3">
+          <v-text-field
+            v-model="search"
+            dense
+            outlined
+            hide-details
+            :append-icon="search.length ? 'mdi-close' : ''"
+            label="Buscador"
+            @click:append="cleanSearch">
+          </v-text-field>
+        </div>
       </v-card-actions>
       <v-divider></v-divider>
     </template>
@@ -104,16 +116,16 @@
       <a href="#" @click.prevent="goToUserDetails(item.owner.dbId)">{{ item.owner.email }}</a>
     </template>
 
-    <template v-slot:item.goal="{ item }">
-      {{ ethAndUsdText(item.goal) }}
-    </template>
-
     <template v-slot:item.currentState="{ item }">
       <StateChip :state="item.currentState" />
     </template>
 
     <template v-slot:item.amountCollected="{ item }">
-      {{ ethAndUsdText(item.amountCollected) }}
+      {{ getEthOrUsd(item.amountCollected) }} {{ getEthOrUsdText() }}
+    </template>
+
+    <template v-slot:item.goal="{ item }">
+      {{ getEthOrUsd(item.goal) }} {{ getEthOrUsdText() }}
     </template>
 
     <template v-slot:item.actions="{ item }">
@@ -144,6 +156,7 @@
 <script>
 import { ALL_PROJECTS_QUERY, CATEGORIES_QUERY } from '@/graphql/graphql'
 import StateChip from '@/components/StateChip'
+import common from '@/mixins/common'
 
 const DEFAULT_ROWS_PER_PAGE = 10
 const PROJECT_SORT_ENUM = {
@@ -156,6 +169,8 @@ const PROJECT_SORT_ENUM = {
 }
 
 export default {
+  mixins: [common],
+
   props: {
     itemsPerPage: {
       type: Number,
@@ -172,7 +187,6 @@ export default {
   data () {
     return {
       options: {},
-      ethToUsd: undefined,
       headers: [
         { text: 'ID', align: 'start', sortable: true, value: 'dbId' },
         { text: 'Activo', sortable: true, value: 'blocked' },
@@ -188,6 +202,8 @@ export default {
       activeFilter: false,
       selectedCategories: [],
       selectedStates: [],
+      search: '',
+      searchDebounce: undefined,
       states: [{
         text: 'Created',
         value: 'CREATED'
@@ -252,7 +268,8 @@ export default {
         [this.operator]: [
           { [this.operator]: [{ isBlocked: (this.blockedFilter === this.activeFilter) ? undefined : this.blockedFilter || !this.activeFilter }] },
           { [this.operator]: [{ categoryNameIn: (this.selectedCategories.length) ? this.selectedCategories : undefined }] },
-          { [this.operator]: [{ currentStateIn: (this.selectedStates.length) ? this.selectedStates : undefined }] }
+          { [this.operator]: [{ currentStateIn: (this.selectedStates.length) ? this.selectedStates : undefined }] },
+          { [this.operator]: [{ or: [{ nameIlike: (this.search.length) ? this.search : undefined }, { descriptionIlike: (this.search.length) ? this.search : undefined }] }] }
         ]
       }
     }
@@ -310,13 +327,8 @@ export default {
         filters: this.filters
       })
     },
-    ethAndUsdText (amount) {
-      const formattedAmount = parseFloat(amount).toFixed(4)
-      if (!this.ethToUsd) {
-        return `${formattedAmount} ETH`
-      }
-      const usd = Math.round(amount * this.ethToUsd)
-      return `${usd} USD  (${formattedAmount} ETH)`
+    cleanSearch () {
+      this.search = ''
     }
   },
 
@@ -329,7 +341,8 @@ export default {
     },
     filters: {
       handler (val, oldVal) {
-        this.paginate(val, oldVal)
+        clearTimeout(this.searchDebounce)
+        this.searchDebounce = setTimeout(() => this.paginate(val, oldVal), 200)
       }
     }
   },
@@ -346,13 +359,6 @@ export default {
     allCategories: {
       query: CATEGORIES_QUERY
     }
-  },
-
-  mounted () {
-    fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
-      .then(response => response.json()).then(jsonData => {
-        this.ethToUsd = jsonData.USD
-      })
   }
 }
 </script>

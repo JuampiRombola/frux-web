@@ -18,7 +18,8 @@
         class="ml-2 pointer"
         @click="redirect('Dashboard')"
       ></v-img>
-
+      <v-spacer></v-spacer>
+      <EthOrUsd></EthOrUsd>
     </v-app-bar>
 
     <v-navigation-drawer
@@ -62,7 +63,13 @@
 
 <script>
 
+import EthOrUsd from '@/components/EthOrUsd'
+
 export default {
+  components: {
+    EthOrUsd
+  },
+
   name: 'App',
 
   data () {

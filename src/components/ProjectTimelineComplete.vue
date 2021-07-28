@@ -22,8 +22,8 @@
           <v-col>
             <strong>{{ stage.title }}</strong>
             <div class="text-caption">
-              <v-icon left class="py-1">mdi-cash</v-icon>
-              <strong>{{ ethAndUsdText(stage.goal) }}</strong>
+              <v-icon left small class="py-1">{{ getEthOrUsdIcon() }}</v-icon>
+              <strong>{{ getEthOrUsd(stage.goal) }} {{ getEthOrUsdText() }}</strong>
             </div>
             <div class="text-caption">
               {{ stage.description }}
@@ -45,9 +45,6 @@ export default {
     stages: {
       type: Array,
       default: () => []
-    },
-    ethAndUsdText: {
-      type: Function
     }
   },
 

@@ -43,6 +43,18 @@
           <v-radio label="OR" value="or" class="pa-0 my-0 mx-2"></v-radio>
           <v-radio label="AND" value="and" class="pa-0 ma-0 mx-2"></v-radio>
         </v-radio-group>
+        <v-divider vertical class="mx-2 my-1"></v-divider>
+        <div style="width: 200px;" class="ml-3">
+          <v-text-field
+            v-model="search"
+            dense
+            outlined
+            hide-details
+            :append-icon="search.length ? 'mdi-close' : ''"
+            label="Buscador"
+            @click:append="cleanSearch">
+          </v-text-field>
+        </div>
       </v-card-actions>
       <v-divider></v-divider>
     </template>
@@ -146,7 +158,9 @@ export default {
       isSeederFilter: false,
       isSeerFilter: false,
       isSponsorFilter: false,
-      operator: 'or'
+      operator: 'or',
+      search: '',
+      searchDebounce: undefined
     }
   },
 
@@ -191,7 +205,8 @@ export default {
           { [this.operator]: [{ isBlocked: (this.blockedFilter === this.activeFilter) ? undefined : this.blockedFilter || !this.activeFilter }] },
           { [this.operator]: [{ isSeeder: this.isSeederFilter ? true : undefined }] },
           { [this.operator]: [{ isSeer: this.isSeerFilter ? true : undefined }] },
-          { [this.operator]: [{ isSponsor: this.isSponsorFilter ? true : undefined }] }
+          { [this.operator]: [{ isSponsor: this.isSponsorFilter ? true : undefined }] },
+          { [this.operator]: [{ or: [{ usernameIlike: (this.search.length) ? this.search : undefined }, { emailLike: (this.search.length) ? this.search : undefined }] }] }
         ]
       }
     }
@@ -244,6 +259,9 @@ export default {
         sort: this.sorting,
         filters: this.filters
       })
+    },
+    cleanSearch () {
+      this.search = ''
     }
   },
 
@@ -256,7 +274,8 @@ export default {
     },
     filters: {
       handler (val, oldVal) {
-        this.paginate(val, oldVal)
+        clearTimeout(this.searchDebounce)
+        this.searchDebounce = setTimeout(() => this.paginate(val, oldVal), 200)
       }
     }
   },

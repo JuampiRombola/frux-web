@@ -112,7 +112,7 @@
                     <v-text-field
                       :value="amountCollected"
                       label="RECAUDADO"
-                      prepend-icon="mdi-account-cash"
+                      :prepend-icon="getEthOrUsdIcon()"
                       readonly
                       dense
                     ></v-text-field>
@@ -121,7 +121,7 @@
                     <v-text-field
                       :value="goal"
                       label="OBJETIVO"
-                      prepend-icon="mdi-cash"
+                      :prepend-icon="getEthOrUsdIcon()"
                       readonly
                       dense
                     ></v-text-field>
@@ -235,7 +235,6 @@
                 <v-card-text>
                   <ProjectStages
                     :stages="stages"
-                    :eth-and-usd-text="ethAndUsdText"
                     :current-state="project.currentState"
                     :amountCollected="project.amountCollected"
                     :investors="investors"
@@ -247,7 +246,7 @@
             <v-tab-item value="tab-2" v-if="!currentStateIsCreated">
               <v-card flat>
                 <v-card-text>
-                  <InvestorsTable :projectId="parseInt(id)" :eth-to-usd="ethToUsd"></InvestorsTable>
+                  <InvestorsTable :projectId="parseInt(id)"></InvestorsTable>
                 </v-card-text>
               </v-card>
             </v-tab-item>
@@ -325,8 +324,7 @@ export default {
     dialog: false,
     favDialog: false,
     reviewsDialog: false,
-    tab: null,
-    ethToUsd: undefined
+    tab: null
   }),
 
   computed: {
@@ -360,10 +358,10 @@ export default {
       return this.getFormattedDate(this.project.deadline)
     },
     amountCollected () {
-      return this.ethAndUsdText(this.project.amountCollected)
+      return this.getEthOrUsd(this.project.amountCollected) + ' ' + this.getEthOrUsdText()
     },
     goal () {
-      return this.ethAndUsdText(this.project.goal)
+      return this.getEthOrUsd(this.project.goal) + ' ' + this.getEthOrUsdText()
     },
     hashtags () {
       return this.project.hashtags.edges.map(e => e.node.hashtag)
@@ -424,14 +422,6 @@ export default {
         : user.email
       return user.username || fullNameOrEmail
     },
-    ethAndUsdText (amount) {
-      const formattedAmount = parseFloat(amount).toFixed(4)
-      if (!this.ethToUsd) {
-        return `${formattedAmount} ETH`
-      }
-      const usd = Math.round(amount * this.ethToUsd)
-      return `${usd} USD  (${formattedAmount} ETH)`
-    },
     closeFavsDialog () {
       this.favDialog = false
     },
@@ -449,13 +439,6 @@ export default {
         }
       }
     }
-  },
-
-  mounted () {
-    fetch('https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD')
-      .then(response => response.json()).then(jsonData => {
-        this.ethToUsd = jsonData.USD
-      })
   }
 }
 </script>

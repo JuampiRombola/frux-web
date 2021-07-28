@@ -7,21 +7,24 @@
     :loading="loading"
   >
     <template v-slot:item.investedAmount="{ item }">
-      {{ ethAndUsdText(item.investedAmount) }}
+      {{ getEthOrUsd(item.investedAmount) }} {{ getEthOrUsdText() }}
+    </template>
+
+    <template v-slot:item.dateOfInvestment="{ item }">
+      {{ getFormattedDate(item.dateOfInvestment) }}
     </template>
   </v-data-table>
 </template>
 
 <script>
 import { INVESTORS_QUERY } from '@/graphql/graphql'
+import common from '@/mixins/common'
 
 export default {
+  mixins: [common],
+
   props: {
     projectId: {
-      type: Number,
-      default: undefined
-    },
-    ethToUsd: {
       type: Number,
       default: undefined
     }
@@ -52,17 +55,6 @@ export default {
 
     loading () {
       return this.project?.investors === undefined
-    }
-  },
-
-  methods: {
-    ethAndUsdText (amount) {
-      const formattedAmount = parseFloat(amount).toFixed(4)
-      if (!this.ethToUsd) {
-        return `${formattedAmount} ETH`
-      }
-      const usd = Math.round(amount * this.ethToUsd)
-      return `${usd} USD  (${formattedAmount} ETH)`
     }
   },
 
