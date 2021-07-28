@@ -23,7 +23,7 @@
               <v-col cols="12" class="my-0">
                 <div class="display-1 pb-0 mb-0 mt-2 text-center px-4">
                   {{ project.name }}
-                  <v-chip small class="ml-2">{{ project.currentState }}</v-chip>
+                  <StateChip class="ml-2" :state="project.currentState" />
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
@@ -305,6 +305,7 @@ import { PROJECT_QUERY, BLOCK_PROJECT_MUTATION, UNBLOCK_PROJECT_MUTATION } from 
 import ProjectFavs from '@/components/ProjectFavs'
 import Reviews from '@/components/Reviews'
 import ProjectStages from '@/components/ProjectStages'
+import StateChip from '@/components/StateChip'
 import common from '@/mixins/common'
 
 export default {
@@ -314,7 +315,8 @@ export default {
     InvestorsTable,
     ProjectFavs,
     Reviews,
-    ProjectStages
+    ProjectStages,
+    StateChip
   },
 
   name: 'ProjectDetail',
