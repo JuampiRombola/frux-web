@@ -269,7 +269,7 @@ export default {
           { [this.operator]: [{ isBlocked: (this.blockedFilter === this.activeFilter) ? undefined : this.blockedFilter || !this.activeFilter }] },
           { [this.operator]: [{ categoryNameIn: (this.selectedCategories.length) ? this.selectedCategories : undefined }] },
           { [this.operator]: [{ currentStateIn: (this.selectedStates.length) ? this.selectedStates : undefined }] },
-          { [this.operator]: [{ nameIlike: (this.search.length) ? this.search : undefined }] }
+          { [this.operator]: [{ or: [{ nameIlike: (this.search.length) ? this.search : undefined }, { descriptionIlike: (this.search.length) ? this.search : undefined }] }] }
         ]
       }
     }
