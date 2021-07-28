@@ -149,21 +149,12 @@
               <v-card flat>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" xl="6">
+                    <v-col cols="6">
                       <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Descripción</v-card-title>
                           <v-card-text>{{ user.description }}</v-card-text>
                         </v-col>
-                        <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
-                          <v-card-title>Ubicación</v-card-title>
-                          <Map :latitude="parseFloat(user.latitude)" :longitude="parseFloat(user.longitude)" class="px-4"></Map>
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                    <v-divider vertical class="my-2 vertical-divider"></v-divider>
-                    <v-col cols="12" xl="6">
-                      <v-row>
                         <v-col cols="12" class="my-0 py-0">
                           <v-card-title>Intereses</v-card-title>
                           <v-card-text>
@@ -177,8 +168,35 @@
                             </v-chip>
                           </v-card-text>
                         </v-col>
+                        <v-col cols="12" class="mt-0 pt-0" v-if="user.latitude && user.longitude">
+                          <v-card-title>Ubicación</v-card-title>
+                          <Map :latitude="parseFloat(user.latitude)" :longitude="parseFloat(user.longitude)" class="px-4"></Map>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                    <v-divider vertical class="my-2 vertical-divider"></v-divider>
+                    <v-col cols="6">
+                      <v-row>
+                        <v-col cols="12" class="my-0 py-0" v-if="reviews.length">
+                          <v-card-title>
+                            Opiniones
+                            <span class=" ml-1 caption">({{ reviews.length }})</span>
+                            <v-rating
+                              :value="averageScore"
+                              color="amber"
+                              dense
+                              half-increments
+                              readonly
+                              size="14"
+                              class="ml-1"
+                            ></v-rating>
+                          </v-card-title>
+                          <v-card-text>
+                            <UserReviews :items="reviews"></UserReviews>
+                          </v-card-text>
+                        </v-col>
                         <v-col cols="12" class="my-0 py-0">
-                          <v-card-title>Proyectos Favoritos ({{ user.favoriteCount }})</v-card-title>
+                          <v-card-title>Proyectos Favoritos <span class=" ml-1 caption">({{ user.favoriteCount }})</span></v-card-title>
                           <v-card-text>
                             <FavoritedProjects :items="favorites"></FavoritedProjects>
                           </v-card-text>
@@ -192,7 +210,7 @@
 
             <v-tab-item value="tab-2" v-if="isSeeder">
               <v-card flat>
-                <v-card-title>Proyectos Creados ({{ created && created.length || '-' }})</v-card-title>
+                <v-card-title>Proyectos Creados <span class=" ml-1 caption">({{ created && created.length || '-' }})</span></v-card-title>
                 <v-card-text>
                   <CreatedProjects :items="created"></CreatedProjects>
                 </v-card-text>
@@ -201,7 +219,7 @@
 
             <v-tab-item value="tab-3" v-if="isSponsor">
               <v-card flat>
-                <v-card-title>Proyectos Patrocinados ({{ investmentProjects && investmentProjects.length || '-' }})</v-card-title>
+                <v-card-title>Proyectos Patrocinados <span class=" ml-1 caption">({{ investmentProjects && investmentProjects.length || '-' }})</span></v-card-title>
                 <v-card-text>
                   <InvestedProjects :items="investmentProjects"></InvestedProjects>
                 </v-card-text>
@@ -210,7 +228,7 @@
 
             <v-tab-item value="tab-4" v-if="isSeer">
               <v-card flat>
-                <v-card-title>Proyectos Supervisados ({{ seerProjects && seerProjects.length || '-' }})</v-card-title>
+                <v-card-title>Proyectos Supervisados <span class=" ml-1 caption">({{ seerProjects && seerProjects.length || '-' }})</span></v-card-title>
                 <v-card-text>
                   <SeerProjects :items="seerProjects"></SeerProjects>
                 </v-card-text>
@@ -264,6 +282,7 @@ import FavoritedProjects from '@/components/FavoritedProjects'
 import CreatedProjects from '@/components/CreatedProjects'
 import InvestedProjects from '@/components/InvestedProjects'
 import SeerProjects from '@/components/SeerProjects'
+import UserReviews from '@/components/UserReviews'
 
 export default {
   components: {
@@ -271,7 +290,8 @@ export default {
     FavoritedProjects,
     CreatedProjects,
     InvestedProjects,
-    SeerProjects
+    SeerProjects,
+    UserReviews
   },
 
   name: 'UserDetail',
@@ -314,6 +334,15 @@ export default {
     },
     seerProjects () {
       return this.user?.seerProjects?.edges?.map(i => i.node) || []
+    },
+    reviews () {
+      return this.user?.reviews?.edges?.map(i => this.flattenObject(i.node)) || []
+    },
+    averageScore () {
+      if (!this.reviews.length) {
+        return 0
+      }
+      return Math.round(this.reviews.reduce((acc, review) => acc + review?.generalScore, 0) / this.reviews.length)
     },
     items () {
       return [{
