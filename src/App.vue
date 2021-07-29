@@ -58,7 +58,7 @@
       <router-view></router-view>
     </v-main>
 
-    <v-snackbar v-model="snackBar" top right>
+    <v-snackbar v-model="snackBar" top right color="grey darken-3">
       <div>{{ snackBarText }}</div>
       <div v-if="currencyIsUsd">{{ conversionText }}</div>
       <template v-slot:action="{ attrs }">
