@@ -40,8 +40,8 @@
         </span>
         <v-spacer></v-spacer>
         <v-radio-group v-model="operator" row dense hide-details class="pa-0 ma-0">
-          <v-radio label="OR" value="or" class="pa-0 my-0 mx-2"></v-radio>
-          <v-radio label="AND" value="and" class="pa-0 ma-0 mx-2"></v-radio>
+          <v-radio label="Contiene" value="or" class="pa-0 my-0 mx-2"></v-radio>
+          <v-radio label="Es igual" value="and" class="pa-0 ma-0 mx-2"></v-radio>
         </v-radio-group>
         <v-divider vertical class="mx-2 my-1"></v-divider>
         <div style="width: 200px;" class="ml-3">
@@ -51,7 +51,7 @@
             outlined
             hide-details
             :append-icon="search.length ? 'mdi-close' : ''"
-            label="Buscador"
+            label="Buscar por nombre o email"
             @click:append="cleanSearch">
           </v-text-field>
         </div>
@@ -206,7 +206,7 @@ export default {
           { [this.operator]: [{ isSeeder: this.isSeederFilter ? true : undefined }] },
           { [this.operator]: [{ isSeer: this.isSeerFilter ? true : undefined }] },
           { [this.operator]: [{ isSponsor: this.isSponsorFilter ? true : undefined }] },
-          { [this.operator]: [{ or: [{ usernameIlike: (this.search.length) ? this.search : undefined }, { emailLike: (this.search.length) ? this.search : undefined }] }] }
+          { [this.operator]: [{ or: [{ usernameIlike: (this.search.length) ? `%${this.search}%` : undefined }, { emailLike: (this.search.length) ? `%${this.search}%` : undefined }] }] }
         ]
       }
     }
