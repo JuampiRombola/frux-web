@@ -32,10 +32,10 @@ Frux is currently being developed by
 ## How does frux-web look like?
 
 <table align="center">
-    <tr><td><img src="https://user-images.githubusercontent.com/11811232/127417686-0d1316c2-caed-47b8-85b8-381e3c6b5d17.PNG" alt="screenshot1" height="500px"></td></tr>
-    <tr><td><img src="https://user-images.githubusercontent.com/11811232/127417692-9a51d928-06ce-485b-bbe0-e50e8dde2c43.PNG" alt="screenshot4" height="500px"></td></tr>
-    <tr><td><img src="https://user-images.githubusercontent.com/11811232/127417690-693fdbed-2bfb-4a24-81b2-ef4980b29614.PNG" alt="screenshot3" height="500px"></td></tr>
-    <tr><td><img src="https://user-images.githubusercontent.com/11811232/127417688-aa82c9c5-db87-4671-b45a-f6c7f7d7fca9.PNG" alt="screenshot2" height="500px"></td></tr>
+    <tr><td><img src="https://user-images.githubusercontent.com/11811232/127417686-0d1316c2-caed-47b8-85b8-381e3c6b5d17.PNG" alt="screenshot1" max-height="500px"></td></tr>
+    <tr><td><img src="https://user-images.githubusercontent.com/11811232/127417692-9a51d928-06ce-485b-bbe0-e50e8dde2c43.PNG" alt="screenshot4" max-height="500px"></td></tr>
+    <tr><td><img src="https://user-images.githubusercontent.com/11811232/127417690-693fdbed-2bfb-4a24-81b2-ef4980b29614.PNG" alt="screenshot3" max-height="500px"></td></tr>
+    <tr><td><img src="https://user-images.githubusercontent.com/11811232/127417688-aa82c9c5-db87-4671-b45a-f6c7f7d7fca9.PNG" alt="screenshot2" max-height="500px"></td></tr>
 </table>
 
 ## Project setup
