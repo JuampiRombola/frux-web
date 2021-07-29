@@ -57,7 +57,7 @@
                   <v-col cols="6" class="px-2">
                     <v-text-field
                       :value="id"
-                      label="PROJECT ID"
+                      label="ID PROYECTO"
                       prepend-icon="mdi-identifier"
                       readonly
                       dense
