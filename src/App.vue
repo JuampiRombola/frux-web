@@ -58,12 +58,23 @@
       <router-view></router-view>
     </v-main>
 
+    <v-snackbar v-model="snackBar" top right>
+      <div>{{ snackBarText }}</div>
+      <div v-if="currencyIsUsd">{{ conversionText }}</div>
+      <template v-slot:action="{ attrs }">
+        <v-btn text v-bind="attrs" @click="setShowSnackBar(false)" icon>
+          <v-icon color="grey lighten-1">mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
+
   </v-app>
 </template>
 
 <script>
 
 import EthOrUsd from '@/components/EthOrUsd'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   components: {
@@ -87,7 +98,32 @@ export default {
     }
   },
 
+  computed: {
+    ...mapState([
+      'showSnackBar',
+      'currencyIsUsd',
+      'ethToUsd'
+    ]),
+    snackBar: {
+      set (newValue) {
+        this.setShowSnackBar(newValue)
+      },
+      get () {
+        return this.showSnackBar
+      }
+    },
+    snackBarText () {
+      return `La moneda actual es ${this.currencyIsUsd ? 'USD' : 'ETH'}`
+    },
+    conversionText () {
+      return `La conversión es 1 ETH = ${this.ethToUsd ? this.ethToUsd : '-'} USD`
+    }
+  },
+
   methods: {
+    ...mapMutations([
+      'setShowSnackBar'
+    ]),
     redirect (routeName) {
       this.$router.push({ name: routeName })
     },

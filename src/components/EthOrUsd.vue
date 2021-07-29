@@ -4,7 +4,7 @@
     prepend-icon="mdi-ethereum"
     append-icon="mdi-cash"
     hide-details
-    class="my-0 mx-4 pa-0"
+    class="my-0 mx-4 pa-0 custom-red"
     color="green lighten-1"
     @change="fetchConversion"
   ></v-switch>
