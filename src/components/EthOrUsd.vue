@@ -5,7 +5,7 @@
     append-icon="mdi-cash"
     hide-details
     class="my-0 mx-4 pa-0 custom-red"
-    color="green lighten-1"
+    color="green darken-2"
     @change="fetchConversion"
   ></v-switch>
 </template>
