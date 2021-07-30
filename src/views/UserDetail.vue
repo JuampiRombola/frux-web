@@ -31,7 +31,7 @@
                     </v-avatar>
                   </v-col>
                   <v-col cols="12" class="mt-2 mb-4">
-                    <div class="overline my-0">{{ user.username }}</div>
+                    <div class="overline my-0">{{ getUserName(user) }}</div>
                     <div v-if="isSeeder"><v-chip small outlined class="my-1" color="green darken-2">Emprendedor</v-chip></div>
                     <div v-if="isSponsor"><v-chip small outlined class="my-1" color="pink darken-1">Patrocinador</v-chip></div>
                     <div v-if="isSeer"><v-chip small outlined class="my-1" color="amber darken-4">Veedor</v-chip></div>

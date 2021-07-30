@@ -28,7 +28,7 @@
         <DashboardCardNumber title="Hashtags" :quantity="stats.totalHashtags" icon="mdi-pound" caption="Histórico" color="purple lighten-1"></DashboardCardNumber>
       </v-col>
     </v-row>
-    <v-subheader class="subheader-font pl-2 mt-2">Servidores <v-divider class="ml-4"></v-divider></v-subheader>
+    <v-subheader class="subheader-font pl-2 mt-2">Servicios <v-divider class="ml-4"></v-divider></v-subheader>
     <v-row class="my-2">
       <v-col cols="4" v-for="server in servers" :key="server.name">
         <ServerCard :server="server" color="grey darken-1"></ServerCard>
@@ -52,21 +52,21 @@ export default {
 
   data: () => ({
     servers: [{
-      name: 'App Server',
+      name: 'App Service',
       creationDate: '10-04-21',
-      description: 'Servidor principal donde residen las entidades de usuario y proyecto.',
+      description: 'Servicio principal donde residen las entidades de usuario y proyecto.',
       icon: 'mdi-sprout',
       healthUrl: 'https://frux-app-server.herokuapp.com/health'
     }, {
-      name: 'Smart Contract Server',
+      name: 'Smart Contract Service',
       creationDate: '07-06-21',
-      description: 'Servidor encargado de procesar las transferencias y registrarlas en un Smart Contract.',
+      description: 'Servicio encargado de procesar las transferencias y registrarlas en un Smart Contract.',
       icon: 'mdi-file-document-edit',
       healthUrl: 'https://frux-smart-contract.herokuapp.com/health'
     }, {
-      name: 'Chat Server',
+      name: 'Chat Service',
       creationDate: '12-07-21',
-      description: 'Servidor dedicado a manejar los mensajes entre usuarios y las notificaciones.',
+      description: 'Servicio dedicado a manejar los mensajes entre usuarios y las notificaciones.',
       icon: 'mdi-chat-processing',
       healthUrl: 'https://frux-chat.herokuapp.com/health'
     }]

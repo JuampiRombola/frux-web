@@ -76,6 +76,10 @@
       </div>
     </template>
 
+    <template v-slot:item.username="{ item }">
+      {{ getUserName(item) }}
+    </template>
+
     <template v-slot:item.creationDateTime="{ item }">
       {{ getFormattedDate(item.creationDateTime) }}
     </template>

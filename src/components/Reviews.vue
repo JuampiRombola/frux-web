@@ -3,7 +3,7 @@
     class="mx-auto"
     max-width="600"
   >
-    <v-toolbar color="grey lighten-2">
+    <v-toolbar color="primary lighten-2" dark>
       <v-toolbar-title>Opiniones</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-blur icon @click="cancelCallback">

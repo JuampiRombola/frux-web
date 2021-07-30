@@ -40,38 +40,33 @@
                 small-chips
                 prepend-icon="mdi-tag"
               ></v-autocomplete>
-              <v-autocomplete
-                v-model="selectedStates"
-                :items="states"
-                label="Estados"
-                chips
-                deletable-chips
-                clearable
-                multiple
-                small-chips
-                prepend-icon="mdi-state-machine"
-              ></v-autocomplete>
             </v-card-text>
           </v-card>
         </v-menu>
         <span class="mx-4">
-          <v-chip small class="mr-2 my-1" :color="activeFilter ? 'primary lighten-3' : ''" @click="clickActiveFilter">
-            <v-icon small left v-if="activeFilter">mdi-check</v-icon>
+          <v-chip
+            small
+            class="mr-2 my-1"
+            :color="selectedStates.includes(state.value) ? 'primary lighten-3' : ''"
+            v-for="state in states"
+            :key="state.value"
+            @click="clickStateFilter(state.value)"
+          >
+            <v-icon small left v-if="selectedStates.includes(state.value)">mdi-check</v-icon>
             <v-icon small left v-else>mdi-minus</v-icon>
-            Activos
+            {{ state.text }}
           </v-chip>
-          <v-chip small class="mr-2 my-1" :color="blockedFilter ? 'primary lighten-3' : ''" @click="clickBlockedFilter">
-            <v-icon small left v-if="blockedFilter">mdi-check</v-icon>
-            <v-icon small left v-else>mdi-minus</v-icon>
-            Bloqueados
-          </v-chip>
-          <v-chip small class="mr-2 my-1" color="amber lighten-3" v-for="category in selectedCategories" :key="category">
+          <v-chip
+            small
+            class="mr-2 my-1"
+            color="amber lighten-3"
+            v-for="category in selectedCategories"
+            :key="category"
+            close
+            @click:close="removeCategory(category)"
+          >
             <v-icon small left>mdi-check</v-icon>
             {{ category }}
-          </v-chip>
-          <v-chip small class="mr-2 my-1" color="pink lighten-3" v-for="state in states.filter(s => selectedStates.includes(s.value)).map(f => f.text)" :key="state">
-            <v-icon small left>mdi-check</v-icon>
-            {{ state }}
           </v-chip>
         </span>
         <v-spacer></v-spacer>
@@ -95,25 +90,13 @@
       <v-divider></v-divider>
     </template>
 
-    <template v-slot:item.blocked="{ item }">
-      <div>
-        <v-tooltip bottom v-if="item.isBlocked">
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon color="red" dark v-bind="attrs" v-on="on">mdi-cancel</v-icon>
-          </template>
-          <span>Usuario bloqueado</span>
-        </v-tooltip>
-        <v-tooltip bottom v-else>
-          <template v-slot:activator="{ on, attrs }">
-            <v-icon color="green" dark v-bind="attrs" v-on="on">mdi-check-circle-outline</v-icon>
-          </template>
-          <span>Activo</span>
-        </v-tooltip>
-      </div>
+    <template v-slot:item.owner="{ item }">
+      <a href="#" @click.prevent="goToUserDetails(item.owner.dbId)">{{ getUserName(item.owner) }}</a>
     </template>
 
-    <template v-slot:item.owner="{ item }">
-      <a href="#" @click.prevent="goToUserDetails(item.owner.dbId)">{{ item.owner.email }}</a>
+    <template v-slot:item.seer="{ item }">
+      <a href="#" @click.prevent="goToUserDetails(item.seer.dbId)" v-if="item.seer">{{ getUserName(item.seer) }}</a>
+      <v-chip v-if="!item.seer" small>Sin Asignar</v-chip>
     </template>
 
     <template v-slot:item.currentState="{ item }">
@@ -189,17 +172,15 @@ export default {
       options: {},
       headers: [
         { text: 'ID', align: 'start', sortable: true, value: 'dbId' },
-        { text: 'Activo', sortable: true, value: 'blocked' },
         { text: 'Nombre', sortable: true, value: 'name' },
         { text: 'Categoría', sortable: true, value: 'category.name' },
         { text: 'Estado', sortable: true, value: 'currentState' },
         { text: 'Recaudado', sortable: false, value: 'amountCollected' },
         { text: 'Objetivo', sortable: true, value: 'goal' },
         { text: 'Emprendedor', sortable: true, value: 'owner' },
+        { text: 'Veedor', sortable: true, value: 'seer' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
       ],
-      blockedFilter: false,
-      activeFilter: false,
       selectedCategories: [],
       selectedStates: [],
       search: '',
@@ -263,14 +244,23 @@ export default {
       }
     },
 
+    categoriesFilters () {
+      return this.selectedCategories.map(category => {
+        return ({ [this.operator]: [{ categoryNameLike: category }] })
+      })
+    },
+
+    stateFilters () {
+      return this.selectedStates.map(state => {
+        return ({ [this.operator]: [{ currentState: state }] })
+      })
+    },
+
     filters () {
       return {
         [this.operator]: [
-          { [this.operator]: [{ isBlocked: (this.blockedFilter === this.activeFilter) ? undefined : this.blockedFilter || !this.activeFilter }] },
-          { [this.operator]: [{ categoryNameIn: (this.selectedCategories.length) ? this.selectedCategories : undefined }] },
-          { [this.operator]: [{ currentStateIn: (this.selectedStates.length) ? this.selectedStates : undefined }] },
           { [this.operator]: [{ nameIlike: (this.search.length) ? `%${this.search}%` : undefined }] }
-        ]
+        ].concat(this.categoriesFilters).concat(this.stateFilters)
       }
     }
   },
@@ -284,14 +274,18 @@ export default {
       this.$router.push({ name: 'ProjectDetail', params: { id: id } })
     },
 
-    clickActiveFilter () {
-      this.blockedFilter = false
-      this.activeFilter = !this.activeFilter
+    clickStateFilter (state) {
+      if (this.selectedStates.includes(state)) {
+        this.selectedStates.splice(this.selectedStates.indexOf(state), 1)
+      } else {
+        this.selectedStates.push(state)
+      }
     },
 
-    clickBlockedFilter () {
-      this.activeFilter = false
-      this.blockedFilter = !this.blockedFilter
+    removeCategory (category) {
+      if (this.selectedCategories.includes(category)) {
+        this.selectedCategories.splice(this.selectedCategories.indexOf(category), 1)
+      }
     },
 
     paginate (val, oldVal) {

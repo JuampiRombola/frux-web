@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto" max-width="500">
-    <v-toolbar color="grey lighten-2">
+    <v-toolbar color="primary lighten-2" dark>
       <v-toolbar-title>Favoritos</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn v-blur icon @click="cancelCallback">
@@ -14,10 +14,7 @@
         :key="user.dbId"
       >
         <v-list-item-avatar>
-          <v-img
-            :alt="`${user.username} avatar`"
-            :src="require('@/assets/frux-logo.svg')"
-          ></v-img>
+          <v-icon>mdi-account</v-icon>
         </v-list-item-avatar>
 
         <v-list-item-content>
