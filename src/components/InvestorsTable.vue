@@ -13,6 +13,29 @@
     <template v-slot:item.dateOfInvestment="{ item }">
       {{ getFormattedDate(item.dateOfInvestment) }}
     </template>
+
+    <template v-slot:item.actions="{ item }">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary lighten-2"
+            dark
+            v-bind="attrs"
+            v-on="on"
+            icon
+            small
+            @click="goToUserDetails(item.user.dbId)"
+            left
+            class="mr-2"
+          >
+            <v-icon dark>
+              mdi-eye
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Ver detalles del usuario</span>
+      </v-tooltip>
+    </template>
   </v-data-table>
 </template>
 
@@ -39,7 +62,8 @@ export default {
         { text: 'User ID', align: 'start', sortable: false, value: 'user.dbId' },
         { text: 'Email', sortable: false, value: 'user.email' },
         { text: 'Fecha', sortable: false, value: 'dateOfInvestment' },
-        { text: 'Aporte', sortable: false, value: 'investedAmount' }
+        { text: 'Aporte', sortable: false, value: 'investedAmount' },
+        { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
       ]
     }
   },

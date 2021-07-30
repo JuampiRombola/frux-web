@@ -18,6 +18,29 @@
     <template v-slot:item.goal="{ item }">
       {{ getEthOrUsd(item.goal) }} {{ getEthOrUsdText() }}
     </template>
+
+    <template v-slot:item.actions="{ item }">
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary lighten-2"
+            dark
+            v-bind="attrs"
+            v-on="on"
+            icon
+            small
+            @click="goToProjectDetails(item.dbId)"
+            left
+            class="mr-2"
+          >
+            <v-icon dark>
+              mdi-eye
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Ver detalles del proyecto</span>
+      </v-tooltip>
+    </template>
   </v-data-table>
 </template>
 
@@ -49,7 +72,8 @@ export default {
       { text: 'Categoría', sortable: false, value: 'categoryName' },
       { text: 'Estado', sortable: false, value: 'currentState' },
       { text: 'Recaudado', sortable: false, value: 'amountCollected' },
-      { text: 'Objetivo', sortable: false, value: 'goal' }
+      { text: 'Objetivo', sortable: false, value: 'goal' },
+      { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
     ]
   })
 }

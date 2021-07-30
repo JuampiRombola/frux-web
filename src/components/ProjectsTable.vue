@@ -264,14 +264,6 @@ export default {
   },
 
   methods: {
-    goToUserDetails (id) {
-      this.$router.push({ name: 'UserDetail', params: { id: id } })
-    },
-
-    goToProjectDetails (id) {
-      this.$router.push({ name: 'ProjectDetail', params: { id: id } })
-    },
-
     clickStateFilter (state) {
       if (this.selectedStates.includes(state)) {
         this.selectedStates.splice(this.selectedStates.indexOf(state), 1)

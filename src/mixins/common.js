@@ -9,6 +9,12 @@ export default {
   },
 
   methods: {
+    goToUserDetails (id) {
+      this.$router.push({ name: 'UserDetail', params: { id: id } })
+    },
+    goToProjectDetails (id) {
+      this.$router.push({ name: 'ProjectDetail', params: { id: id } })
+    },
     getFormattedDate (rawDate) {
       const date = new Date(rawDate)
       return date.toLocaleDateString() + ' ' + date.toLocaleTimeString()

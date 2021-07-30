@@ -215,10 +215,6 @@ export default {
   },
 
   methods: {
-    goToUserDetails (id) {
-      this.$router.push({ name: 'UserDetail', params: { id: id } })
-    },
-
     clickActiveFilter () {
       this.blockedFilter = false
       this.activeFilter = !this.activeFilter
