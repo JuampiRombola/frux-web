@@ -198,9 +198,6 @@ export default {
       }, {
         text: 'Complete',
         value: 'COMPLETE'
-      }, {
-        text: 'Canceled',
-        value: 'CANCELED'
       }],
       operator: 'or'
     }
