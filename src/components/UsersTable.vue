@@ -127,8 +127,7 @@ const USER_SORT_ENUM = {
   blocked: 'IS_BLOCKED',
   username: 'USERNAME',
   email: 'EMAIL',
-  creationDateTime: 'CREATION_DATE_TIME',
-  lastLogin: 'LAST_LOGIN'
+  creationDateTime: 'CREATION_DATE_TIME'
 }
 
 export default {
@@ -153,7 +152,6 @@ export default {
         { text: 'Nombre de usuario', sortable: true, value: 'username' },
         { text: 'Email', sortable: true, value: 'email' },
         { text: 'Fecha de creación', sortable: true, value: 'creationDateTime' },
-        { text: 'Último ingreso', sortable: true, value: 'lastLogin' },
         { text: 'Rol', sortable: false, value: 'rol' },
         { text: 'Detalles', align: 'end', sortable: false, value: 'actions' }
       ],
