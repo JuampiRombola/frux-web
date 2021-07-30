@@ -148,7 +148,8 @@ const PROJECT_SORT_ENUM = {
   currentState: 'CURRENT_STATE',
   'category.name': 'CATEGORY_NAME',
   goal: 'GOAL',
-  owner: 'USER_ID'
+  owner: 'USER_ID',
+  seer: 'SEER_ID'
 }
 
 export default {
