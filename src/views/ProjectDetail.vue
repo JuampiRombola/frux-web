@@ -24,23 +24,6 @@
                 <div class="display-1 pb-0 mb-0 mt-2 text-center px-4">
                   {{ project.name }}
                   <StateChip class="ml-2" :state="project.currentState" />
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn
-                        :color="isBlocked ? 'red darken-1' : 'grey darken-1'"
-                        dark
-                        v-bind="attrs"
-                        v-on="on"
-                        small
-                        class="float-right mt-2"
-                        @click="dialog = true"
-                      >
-                        <v-icon left>mdi-cancel</v-icon>
-                        {{ isBlocked ? 'Desbloquear' : 'Bloquear' }}
-                      </v-btn>
-                    </template>
-                    <span>{{ isBlocked ? 'Desbloquear proyecto' : 'Bloquear proyecto' }}</span>
-                  </v-tooltip>
                 </div>
               </v-col>
               <v-col cols="12">
@@ -415,12 +398,6 @@ export default {
       }).catch((error) => {
         console.error(error)
       })
-    },
-    getUserName (user) {
-      const fullNameOrEmail = (user.firstName && user.lastName)
-        ? `${user.firstName} ${user.lastName}`
-        : user.email
-      return user.username || fullNameOrEmail
     },
     closeFavsDialog () {
       this.favDialog = false

@@ -31,7 +31,7 @@
         </v-icon>
         <v-progress-circular :size="13" width="1" indeterminate color="grey" class="mr-1" v-if="loading"></v-progress-circular>
         <span class="grey--text font-weight-light" v-if="!loading && ok">{{ responseTimeMS }} ms</span>
-        <span class="grey--text font-weight-light" v-if="!loading && error">No se pudo conectar con el servidor</span>
+        <span class="grey--text font-weight-light" v-if="!loading && error">No se pudo conectar con el servicio</span>
         <v-spacer></v-spacer>
         <v-btn small color="primary lighten-2" dark @click="pingServer()">Ping</v-btn>
       </v-card-actions>

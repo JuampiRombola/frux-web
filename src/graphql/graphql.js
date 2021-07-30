@@ -42,7 +42,17 @@ export const ALL_PROJECTS_QUERY = gql`
           amountCollected
           owner {
             dbId
+            username
             email
+            firstName
+            lastName
+          }
+          seer {
+            dbId
+            username
+            email
+            firstName
+            lastName
           }
           isBlocked
         }

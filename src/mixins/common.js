@@ -27,6 +27,12 @@ export default {
     },
     getEthOrUsdIcon () {
       return (this.currencyIsUsd && this.ethToUsd) ? 'mdi-cash' : 'mdi-ethereum'
+    },
+    getUserName (user) {
+      const fullNameOrEmail = (user.firstName && user.lastName)
+        ? `${user.firstName} ${user.lastName}`
+        : user.email.split('@')[0]
+      return user.username || fullNameOrEmail
     }
   }
 }
